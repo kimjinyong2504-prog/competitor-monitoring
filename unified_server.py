@@ -446,8 +446,12 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         parsed_path = urlparse(self.path)
         path = parsed_path.path
         
+        # 루트 경로를 메인 대시보드로 리다이렉트
+        if path == '/' or path == '':
+            self.path = '/competitor-monitoring.html'
+        
         # 각 업체별 index.html 경로 매핑
-        if path == '/hwasung' or path == '/hwasung/':
+        elif path == '/hwasung' or path == '/hwasung/':
             self.path = '/251215/index.html'
         elif path == '/yuil' or path == '/yuil/':
             self.path = '/251215_yuil/index.html'
@@ -455,7 +459,11 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.path = '/251215_aia/index.html'
         
         # 정적 파일 서빙
-        super().do_GET()
+        try:
+            super().do_GET()
+        except Exception as e:
+            print(f"파일 서빙 오류: {str(e)}")
+            self.send_error(404, "File not found")
 
 def start_web_server(port=None):
     """웹 서버 시작"""
