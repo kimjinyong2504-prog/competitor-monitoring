@@ -35,37 +35,40 @@ def backup_to_github():
             print("[백업] 백업할 데이터 파일이 없습니다.")
             return True
         
-        # Git 사용자 정보 확인 (환경 변수 우선)
+        # Git 사용자 정보 설정 (환경 변수 우선, 없으면 기본값 사용)
         user_name = os.environ.get('GIT_USER_NAME', '')
         user_email = os.environ.get('GIT_USER_EMAIL', '')
         
+        # 환경 변수가 없으면 Git 설정에서 가져오기
         if not user_name:
-            user_name = subprocess.run(
+            result = subprocess.run(
                 ['git', 'config', 'user.name'],
                 capture_output=True,
                 text=True,
                 cwd=os.getcwd()
-            ).stdout.strip()
+            )
+            user_name = result.stdout.strip()
         
         if not user_email:
-            user_email = subprocess.run(
+            result = subprocess.run(
                 ['git', 'config', 'user.email'],
                 capture_output=True,
                 text=True,
                 cwd=os.getcwd()
-            ).stdout.strip()
+            )
+            user_email = result.stdout.strip()
         
-        if not user_name or not user_email:
-            print("[백업] Git 사용자 정보가 설정되지 않았습니다.")
-            print(f"[백업] user_name: {user_name}, user_email: {user_email}")
-            # 환경 변수로 설정 시도
-            if os.environ.get('GIT_USER_NAME') and os.environ.get('GIT_USER_EMAIL'):
-                subprocess.run(['git', 'config', '--global', 'user.name', os.environ.get('GIT_USER_NAME')], cwd=os.getcwd(), check=False)
-                subprocess.run(['git', 'config', '--global', 'user.email', os.environ.get('GIT_USER_EMAIL')], cwd=os.getcwd(), check=False)
-                user_name = os.environ.get('GIT_USER_NAME')
-                user_email = os.environ.get('GIT_USER_EMAIL')
-            else:
-                return False
+        # 여전히 없으면 기본값 사용
+        if not user_name:
+            user_name = os.environ.get('GIT_USER_NAME', 'GitHub Backup')
+        if not user_email:
+            user_email = os.environ.get('GIT_USER_EMAIL', 'backup@noreply.github.com')
+        
+        # Git 설정에 명시적으로 설정
+        subprocess.run(['git', 'config', 'user.name', user_name], cwd=os.getcwd(), check=False)
+        subprocess.run(['git', 'config', 'user.email', user_email], cwd=os.getcwd(), check=False)
+        
+        print(f"[백업] Git 사용자 정보: {user_name} <{user_email}>")
         
         # 파일 추가
         for file in data_files:
@@ -118,6 +121,12 @@ def backup_to_github():
 def load_from_github():
     """GitHub에서 최신 데이터 파일 가져오기"""
     try:
+        # Git 사용자 정보 설정 (복원 시에도 필요)
+        user_name = os.environ.get('GIT_USER_NAME', 'GitHub Backup')
+        user_email = os.environ.get('GIT_USER_EMAIL', 'backup@noreply.github.com')
+        subprocess.run(['git', 'config', 'user.name', user_name], cwd=os.getcwd(), check=False)
+        subprocess.run(['git', 'config', 'user.email', user_email], cwd=os.getcwd(), check=False)
+        
         # GitHub 토큰이 있으면 인증 설정
         github_token = os.environ.get('GITHUB_TOKEN', '')
         if github_token:
