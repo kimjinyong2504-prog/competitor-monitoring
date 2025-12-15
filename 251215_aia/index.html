@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIA(아이아) 뉴스 모니터링</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            height: calc(100vh - 40px) !important;
+            max-height: calc(100vh - 40px) !important;
+            min-height: calc(100vh - 40px) !important;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            contain: layout size style;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            flex-shrink: 0;
+            min-height: 120px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .status-bar {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            min-width: 120px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .status-badge.active {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-badge.inactive {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            width: 120px;
+            height: 40px;
+            min-width: 120px;
+            max-width: 120px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .refresh-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+        
+        .refresh-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .refresh-btn.loading {
+            position: relative;
+            color: transparent;
+        }
+        
+        .refresh-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .content {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+            max-height: 100%;
+            contain: layout size;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            height: 120px !important;
+            min-height: 120px !important;
+            max-height: 120px !important;
+            flex-shrink: 0;
+            contain: layout size;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            height: 1.2em;
+            line-height: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+        }
+        
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            height: 1.2em;
+            line-height: 1.2em;
+        }
+        
+        .articles-container {
+            margin-top: 30px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            transition: none;
+            min-height: 0;
+            contain: layout size;
+        }
+        
+        .articles-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .articles-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .articles-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .articles-container::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+        
+        .article-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            max-width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            min-height: 80px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        .article-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .article-card .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            z-index: 10;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .article-card .delete-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+        
+        .article-card .delete-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .article-card .title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .article-card .meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        
+        .article-card .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            height: 24px;
+            line-height: 24px;
+        }
+        
+        .article-card .description {
+            color: #555;
+            line-height: 1.5;
+            margin-top: 8px;
+            font-size: 0.95em;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .article-card .keyword-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            height: 20px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 20px;
+            padding: 0;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+            flex: 1;
+        }
+        
+        .modal-close {
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+        
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .modal-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .modal-content-text {
+            line-height: 1.8;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-link-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .modal-link-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .modal-loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 AIA(아이아) 뉴스 모니터링</h1>
+            <div class="subtitle">실시간 뉴스 크롤링 및 모니터링 시스템</div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="status-item">
+                <a href="/competitor-monitoring.html" style="text-decoration: none; color: #667eea; font-weight: 600; padding: 8px 15px; border-radius: 5px; background: #f0f0f0; transition: all 0.3s;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">← 메인으로</a>
+            </div>
+            <div class="status-item">
+                <span>상태:</span>
+                <span class="status-badge active" id="statusBadge">실시간 모니터링 중</span>
+            </div>
+            <div class="status-item">
+                <span>마지막 업데이트:</span>
+                <span id="lastUpdate">로딩 중...</span>
+            </div>
+            <div class="status-item">
+                <button class="refresh-btn" id="refreshBtn" onclick="refreshAndUpdate()">🔄 새로고침</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="number" id="totalCount">0</div>
+                    <div class="label">총 기사 수</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="todayCount">0</div>
+                    <div class="label">오늘 기사</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="newCount">0</div>
+                    <div class="label">새로운 기사</div>
+                </div>
+            </div>
+            
+            <div class="articles-container" id="articlesContainer">
+                <div class="loading">데이터를 불러오는 중</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 모달 -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">기사 제목</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="modal-loading">기사 내용을 불러오는 중...</div>
+            </div>
+            <div class="modal-footer">
+                <div id="modalMeta"></div>
+                <a id="modalLink" href="#" target="_blank" class="modal-link-btn">원본 기사 보기</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let lastArticleIds = new Set();
+        let lastUpdateTime = null;
+        let isUpdating = false;
+        
+        // 새로고침 및 업데이트 (크롤링 실행)
+        async function refreshAndUpdate() {
+            if (isUpdating) {
+                return; // 이미 업데이트 중이면 무시
+            }
+            
+            const btn = document.getElementById('refreshBtn');
+            const originalText = btn.textContent || btn.innerHTML;
+            
+            try {
+                isUpdating = true;
+                btn.disabled = true;
+                btn.classList.add('loading');
+                btn.textContent = '업데이트 중...';
+                
+                // API 호출하여 크롤링 실행
+                const response = await fetch('/api/update/aia', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 업데이트 성공 후 데이터 다시 로드
+                    await loadData();
+                    
+                    // 성공 메시지 표시
+                    const statusBadge = document.getElementById('statusBadge');
+                    const originalStatusText = statusBadge.textContent;
+                    statusBadge.textContent = `완료 (${result.new_count}개)`;
+                    statusBadge.style.background = '#28a745';
+                    
+                    setTimeout(() => {
+                        statusBadge.textContent = originalStatusText;
+                        statusBadge.style.background = '';
+                    }, 2000);
+                } else {
+                    alert('업데이트 중 오류가 발생했습니다: ' + (result.error || '알 수 없는 오류'));
+                }
+            } catch (error) {
+                console.error('업데이트 오류:', error);
+                alert('업데이트 중 오류가 발생했습니다.');
+            } finally {
+                isUpdating = false;
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                btn.textContent = originalText;
+            }
+        }
+        
+        // 데이터 로드 (파일에서 읽기만)
+        async function loadData() {
+            try {
+                const response = await fetch('/251215_aia/data.json?' + new Date().getTime());
+                const data = await response.json();
+                
+                // 마지막 업데이트 시간 표시
+                if (data.last_updated) {
+                    document.getElementById('lastUpdate').textContent = data.last_updated;
+                    lastUpdateTime = data.last_updated;
+                }
+                
+                // 통계 업데이트 (레이아웃 시프트 방지)
+                const articles = data.articles || [];
+                
+                // 오늘 날짜의 기사 수 계산
+                const today = new Date().toISOString().split('T')[0];
+                const todayArticles = articles.filter(article => {
+                    if (!article.pub_date) return false;
+                    const articleDate = article.pub_date.split(' ')[0].replace(/\./g, '-');
+                    return articleDate === today;
+                });
+                
+                // 새로운 기사 수 계산
+                const currentArticleIds = new Set(articles.map(a => a.article_id));
+                const newArticles = articles.filter(a => !lastArticleIds.has(a.article_id));
+                lastArticleIds = currentArticleIds;
+                
+                // 통계 숫자 업데이트 (텍스트만 변경, 레이아웃 영향 최소화)
+                const totalCountEl = document.getElementById('totalCount');
+                const todayCountEl = document.getElementById('todayCount');
+                const newCountEl = document.getElementById('newCount');
+                
+                // 기존 값과 동일하면 업데이트하지 않음
+                if (totalCountEl.textContent !== String(articles.length)) {
+                    totalCountEl.textContent = articles.length;
+                }
+                if (todayCountEl.textContent !== String(todayArticles.length)) {
+                    todayCountEl.textContent = todayArticles.length;
+                }
+                if (newCountEl.textContent !== String(newArticles.length)) {
+                    newCountEl.textContent = newArticles.length;
+                }
+                
+                // 기사 목록 렌더링
+                renderArticles(articles);
+                
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+                document.getElementById('articlesContainer').innerHTML = 
+                    '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div>데이터를 불러올 수 없습니다.</div></div>';
+            }
+        }
+        
+        // 기사 목록 렌더링
+        function renderArticles(articles) {
+            const container = document.getElementById('articlesContainer');
+            
+            if (articles.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📰</div><div>기사가 없습니다.</div></div>';
+                return;
+            }
+            
+            container.innerHTML = articles.map((article, index) => `
+                <div class="article-card">
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteArticle('${article.article_id}', ${index})" title="기사 삭제">
+                        🗑️ 삭제
+                    </button>
+                    <div onclick="showArticleModal(${index})">
+                        <div class="title">
+                            <span style="color: #667eea; cursor: pointer;">${escapeHtml(article.title)}</span>
+                        </div>
+                        <div class="meta">
+                            <div class="meta-item">
+                                <span>📅</span>
+                                <span>${article.pub_date || '날짜 없음'}</span>
+                            </div>
+                            ${article.source && article.source !== '출처 없음' ? `
+                            <div class="meta-item">
+                                <span>📰</span>
+                                <span>${escapeHtml(article.source)}</span>
+                            </div>
+                            ` : ''}
+                            <div class="meta-item">
+                                <span class="keyword-badge">${escapeHtml(article.search_keyword || '')}</span>
+                            </div>
+                        </div>
+                        ${article.description ? `<div class="description">${escapeHtml(article.description)}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            // 기사 데이터 저장 (모달에서 사용)
+            window.articlesData = articles;
+        }
+        
+        // 모달 표시
+        async function showArticleModal(index) {
+            if (!window.articlesData || !window.articlesData[index]) {
+                return;
+            }
+            
+            const article = window.articlesData[index];
+            const modal = document.getElementById('articleModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalMeta = document.getElementById('modalMeta');
+            const modalLink = document.getElementById('modalLink');
+            
+            // 모달 열기
+            modal.classList.add('show');
+            modalTitle.textContent = article.title;
+            modalLink.href = article.link;
+            modalBody.innerHTML = '<div class="modal-loading">기사 내용을 불러오는 중...</div>';
+            
+            // 메타 정보 표시
+            const sourceHtml = article.source && article.source !== '출처 없음' 
+                ? `<div>📰 ${escapeHtml(article.source)}</div>` 
+                : '';
+            modalMeta.innerHTML = `
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; font-size: 0.9em; color: #666;">
+                    <div>📅 ${article.pub_date || '날짜 없음'}</div>
+                    ${sourceHtml}
+                    <div><span class="keyword-badge">${escapeHtml(article.search_keyword || '')}</span></div>
+                </div>
+            `;
+            
+            // 기사 전체 내용 가져오기
+            try {
+                const response = await fetch('/api/article/aia', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: article.link })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.content) {
+                    modalBody.innerHTML = `<div class="modal-content-text">${escapeHtml(result.content)}</div>`;
+                } else {
+                    // 본문을 가져오지 못한 경우 description 표시
+                    const fallbackContent = article.description || '기사 본문을 가져올 수 없습니다. 원본 링크를 확인해주세요.';
+                    modalBody.innerHTML = `<div class="modal-content-text">${escapeHtml(fallbackContent)}</div>`;
+                }
+            } catch (error) {
+                console.error('기사 내용 가져오기 오류:', error);
+                const fallbackContent = article.description || '기사 내용을 불러오는 중 오류가 발생했습니다.';
+                modalBody.innerHTML = `<div class="modal-content-text">${escapeHtml(fallbackContent)}</div>`;
+            }
+        }
+        
+        // 모달 닫기
+        function closeModal() {
+            const modal = document.getElementById('articleModal');
+            modal.classList.remove('show');
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('articleModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // 기사 삭제
+        async function deleteArticle(articleId, index) {
+            if (!confirm('이 기사를 삭제하시겠습니까?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/delete/aia', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ article_id: articleId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 화면에서 즉시 제거
+                    const articles = window.articlesData || [];
+                    articles.splice(index, 1);
+                    window.articlesData = articles;
+                    renderArticles(articles);
+                    
+                    // 통계 업데이트
+                    document.getElementById('totalCount').textContent = articles.length;
+                } else {
+                    alert('기사 삭제 중 오류가 발생했습니다: ' + (result.error || '알 수 없는 오류'));
+                }
+            } catch (error) {
+                console.error('기사 삭제 오류:', error);
+                alert('기사 삭제 중 오류가 발생했습니다.');
+            }
+        }
+        
+        // HTML 이스케이프
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 초기 로드
+        loadData();
+        
+        // 1분마다 자동 새로고침
+        setInterval(loadData, 60000);
+        
+        // 페이지 표시 여부 확인 (탭이 보일 때만 새로고침)
+        let isPageVisible = true;
+        document.addEventListener('visibilitychange', () => {
+            isPageVisible = !document.hidden;
+        });
+    </script>
+</body>
+</html>

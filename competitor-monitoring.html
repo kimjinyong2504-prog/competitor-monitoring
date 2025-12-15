@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>경쟁사 동향 파악</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Market Report Generator - Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fbfbfc;
+            --surface: #ffffff;
+            --text: #2f2f33;
+            --muted: #666a73;
+            --border: #e9ecf1;
+            --primary-50: #f7f5ff;
+            --primary-100: #efeaff;
+            --primary-200: #ded5ff;
+            --primary-300: #c4b6ff;
+            --primary-400: #a08dff;
+            --primary-500: #7b64ff;
+            --primary-600: #6a54f0;
+            --accent: #12b886;
+            --shadow: 0 8px 30px rgba(17, 17, 26, 0.05);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            background: linear-gradient(180deg, var(--surface) 0%, #f7f8fb 100%);
+            padding: 56px 40px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 36px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            color: var(--text);
+            font-size: 2.4em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1.05em;
+            font-weight: 400;
+        }
+
+        .home-section {
+            background: var(--surface);
+            padding: 36px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 28px;
+            border: 1px solid var(--border);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .nav-button {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            padding: 28px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(123, 100, 255, 0.2);
+            user-select: none;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(123, 100, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-button:hover::before {
+            left: 100%;
+        }
+
+        .nav-button:hover,
+        .nav-button:active {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(17, 17, 26, 0.12);
+            border-color: var(--primary-400);
+            background: linear-gradient(180deg, var(--surface), var(--primary-50));
+        }
+
+        .nav-button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(17, 17, 26, 0.1);
+        }
+
+        .nav-button h3 {
+            color: var(--text);
+            margin-bottom: 12px;
+            font-size: 1.4em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-button .icon {
+            font-size: 1.6em;
+        }
+
+        .nav-button p {
+            color: var(--muted);
+            font-size: 1em;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .nav-button .status {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 14px;
+            background: var(--primary-100);
+            color: var(--primary-600);
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: linear-gradient(180deg, var(--primary-50), var(--surface));
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border: 1px solid var(--primary-200);
+        }
+
+        .info-box h4 {
+            color: var(--text);
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            color: var(--muted);
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .info-box li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-500);
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .home-section {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            header {
+                padding: 36px 24px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .button-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .nav-button {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 경쟁사 동향 파악</h1>
+            <p class="subtitle">실시간 뉴스 모니터링 및 분석 시스템</p>
+        </header>
+
+        <div class="home-section">
+            <div class="button-grid">
+                <a href="/hwasung" class="nav-button">
+                    <h3>
+                        <span class="icon">🔍</span>
+                        <span>화승 R&A</span>
+                    </h3>
+                    <p>화승R&A 관련 뉴스 기사를 실시간으로 모니터링하고 분석합니다.</p>
+                    <span class="status">실시간 모니터링 중</span>
+                </a>
+
+                <a href="/yuil" class="nav-button">
+                    <h3>
+                        <span class="icon">🔍</span>
+                        <span>유일고무</span>
+                    </h3>
+                    <p>유일고무 관련 뉴스 기사를 실시간으로 모니터링하고 분석합니다.</p>
+                    <span class="status">실시간 모니터링 중</span>
+                </a>
+
+                <a href="/aia" class="nav-button">
+                    <h3>
+                        <span class="icon">🔍</span>
+                        <span>AIA(아이아)</span>
+                    </h3>
+                    <p>AIA(아이아) 관련 뉴스 기사를 실시간으로 모니터링하고 분석합니다.</p>
+                    <span class="status">실시간 모니터링 중</span>
+                </a>
+            </div>
+
+            <div class="info-box">
+                <h4>
+                    <span>ℹ️</span>
+                    <span>시스템 안내</span>
+                </h4>
+                <ul>
+                    <li>각 경쟁사별로 독립적인 뉴스 모니터링 시스템이 운영됩니다.</li>
+                    <li>1시간마다 자동으로 최신 뉴스 기사를 수집하고 업데이트합니다.</li>
+                    <li>새로고침 버튼을 클릭하면 즉시 최신 뉴스를 수집할 수 있습니다.</li>
+                    <li>기사 카드를 클릭하면 전체 기사 내용을 확인할 수 있습니다.</li>
+                    <li>모든 기사는 날짜순으로 정렬되어 최신 기사가 상단에 표시됩니다.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

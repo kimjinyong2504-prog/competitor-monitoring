@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.log
+*.tmp
+temp/
+tmp/
+
+# Data files (optional - you may want to track these)
+# Uncomment if you don't want to track data files
+# *.json
+# data/
+# 251215/data.json
+# 251215_yuil/data.json
+# 251215_aia/data.json
+
+# Environment variables
+.env
+.env.local
+
+# Render
+.render/
+
