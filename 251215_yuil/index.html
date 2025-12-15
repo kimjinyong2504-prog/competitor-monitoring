@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>유일고무 뉴스 모니터링</title>
     <style>
         * {
@@ -21,21 +21,22 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             overflow: hidden;
             box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
+            border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
-            height: calc(100vh - 40px) !important;
-            max-height: calc(100vh - 40px) !important;
-            min-height: calc(100vh - 40px) !important;
+            height: calc(100vh - 20px) !important;
+            max-height: calc(100vh - 20px) !important;
+            min-height: calc(100vh - 20px) !important;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -45,16 +46,17 @@
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 24px 20px;
             text-align: center;
             flex-shrink: 0;
-            min-height: 120px;
+            min-height: 100px;
         }
         
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            line-height: 1.2;
         }
         
         .header .subtitle {
@@ -64,12 +66,13 @@
         
         .status-bar {
             background: #f8f9fa;
-            padding: 15px 30px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #e9ecef;
             flex-wrap: wrap;
+            gap: 8px;
         }
         
         .status-item {
@@ -120,6 +123,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
         }
         
         .refresh-btn:hover {
@@ -163,7 +168,7 @@
         }
         
         .content {
-            padding: 30px;
+            padding: 20px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -279,7 +284,7 @@
             background: #dc3545;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.8em;
@@ -288,6 +293,10 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(220, 53, 69, 0.3);
+            min-width: 50px;
+            min-height: 32px;
         }
         
         .article-card .delete-btn:hover {
@@ -408,12 +417,12 @@
         
         .modal-content {
             background-color: white;
-            margin: 20px;
+            margin: 10px;
             padding: 0;
             border-radius: 10px;
-            width: 90%;
+            width: calc(100% - 20px);
             max-width: 800px;
-            max-height: 90vh;
+            max-height: calc(100vh - 20px);
             display: flex;
             flex-direction: column;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
@@ -523,17 +532,189 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                height: calc(100vh - 16px) !important;
+                max-height: calc(100vh - 16px) !important;
+                min-height: calc(100vh - 16px) !important;
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 20px 16px;
+                min-height: 90px;
+            }
+
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.6em;
+                margin-bottom: 8px;
+            }
+
+            .header .subtitle {
+                font-size: 0.95em;
             }
             
             .status-bar {
                 flex-direction: column;
                 gap: 10px;
+                padding: 12px 16px;
+                align-items: stretch;
+            }
+
+            .status-item {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .refresh-btn {
+                width: 100%;
+                max-width: none;
+                min-width: auto;
             }
             
+            .content {
+                padding: 16px;
+            }
+
             .stats {
                 grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 20px;
+                height: auto !important;
+                min-height: auto !important;
+                max-height: none !important;
+            }
+
+            .stat-card {
+                height: auto;
+                padding: 16px;
+            }
+
+            .stat-card .number {
+                font-size: 2em;
+            }
+
+            .stat-card .label {
+                font-size: 0.85em;
+            }
+
+            .article-card {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .article-card .title {
+                font-size: 1.1em;
+                padding-right: 60px;
+            }
+
+            .article-card .meta {
+                font-size: 0.8em;
+                gap: 10px;
+            }
+
+            .article-card .description {
+                font-size: 0.9em;
+            }
+
+            .modal-content {
+                margin: 5px;
+                width: calc(100% - 10px);
+                max-height: calc(100vh - 10px);
+                border-radius: 8px;
+            }
+
+            .modal-header {
+                padding: 16px 20px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.2em;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .modal-footer {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .modal-link-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                height: calc(100vh - 10px) !important;
+                max-height: calc(100vh - 10px) !important;
+                min-height: calc(100vh - 10px) !important;
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 16px 12px;
+                min-height: 80px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .header .subtitle {
+                font-size: 0.85em;
+            }
+
+            .status-bar {
+                padding: 10px 12px;
+            }
+
+            .status-badge {
+                font-size: 0.8em;
+                padding: 4px 12px;
+                min-width: 100px;
+            }
+
+            .content {
+                padding: 12px;
+            }
+
+            .stats {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-card .number {
+                font-size: 1.8em;
+            }
+
+            .article-card {
+                padding: 10px;
+            }
+
+            .article-card .title {
+                font-size: 1em;
+            }
+
+            .article-card .delete-btn {
+                padding: 5px 10px;
+                font-size: 0.75em;
+                min-width: 45px;
+                min-height: 28px;
             }
         }
     </style>
