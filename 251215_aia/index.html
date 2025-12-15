@@ -183,9 +183,9 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
-            height: 120px !important;
-            min-height: 120px !important;
-            max-height: 120px !important;
+            height: 120px;
+            min-height: 120px;
+            max-height: 120px;
             flex-shrink: 0;
             contain: layout size;
         }
@@ -235,6 +235,7 @@
             transition: none;
             min-height: 0;
             contain: layout size;
+            flex-shrink: 1;
         }
         
         .articles-container::-webkit-scrollbar {
@@ -577,6 +578,7 @@
             
             .content {
                 padding: 16px;
+                overflow: visible;
             }
 
             .stats {
@@ -587,6 +589,7 @@
                 min-height: auto !important;
                 max-height: none !important;
                 flex-shrink: 0;
+                contain: none;
             }
 
             .stat-card {
@@ -606,6 +609,8 @@
             .articles-container {
                 margin-top: 20px !important;
                 padding-top: 0;
+                contain: none;
+                flex-shrink: 1;
             }
 
             .article-card {
@@ -695,11 +700,13 @@
 
             .content {
                 padding: 12px;
+                overflow: visible;
             }
 
             .stats {
                 gap: 10px;
                 margin-bottom: 25px !important;
+                contain: none;
             }
 
             .stat-card {
@@ -713,6 +720,8 @@
 
             .articles-container {
                 margin-top: 15px !important;
+                contain: none;
+                flex-shrink: 1;
             }
 
             .article-card {
