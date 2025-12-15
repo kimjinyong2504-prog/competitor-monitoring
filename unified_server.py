@@ -13,7 +13,14 @@ import socketserver
 import threading
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# 한국 시간대 (KST, UTC+9)
+KST = timezone(timedelta(hours=9))
+
+def get_kst_now():
+    """한국 시간 현재 시각 반환"""
+    return datetime.now(KST)
 
 # 각 업체별 크롤러 import (독립적으로 로드)
 import importlib.util
@@ -60,7 +67,7 @@ class UnifiedNewsScheduler:
         """뉴스 업데이트 실행"""
         try:
             print(f"\n{'='*60}")
-            print(f"[{self.company_name} 자동 업데이트] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"[{self.company_name} 자동 업데이트] {get_kst_now().strftime('%Y-%m-%d %H:%M:%S')}")
             print(f"{'='*60}")
             
             # 크롤링 실행
@@ -189,7 +196,7 @@ def update_news_now(company: str):
         }
     
     try:
-        print(f"\n[{company} 수동 업데이트 요청] {time.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"\n[{company} 수동 업데이트 요청] {get_kst_now().strftime('%Y-%m-%d %H:%M:%S')}")
         new_crawled_articles = crawler.crawl_all_news()
         
         # 삭제된 기사 ID 목록 로드
@@ -219,7 +226,14 @@ def update_news_now(company: str):
             try:
                 if len(date_str) >= 19 and date_str[4] == '-':
                     return date_str[:19]
-                from datetime import datetime
+                from datetime import datetime, timezone, timedelta
+
+# 한국 시간대 (KST, UTC+9)
+KST = timezone(timedelta(hours=9))
+
+def get_kst_now():
+    """한국 시간 현재 시각 반환"""
+    return datetime.now(KST)
                 dt = datetime.strptime(date_str[:25], "%a, %d %b %Y %H:%M:%S")
                 return dt.strftime("%Y-%m-%d %H:%M:%S")
             except:
@@ -234,7 +248,7 @@ def update_news_now(company: str):
             "success": True,
             "total_count": len(all_articles),
             "new_count": len(new_articles),
-            "last_updated": time.strftime('%Y-%m-%d %H:%M:%S')
+            "last_updated": get_kst_now().strftime('%Y-%m-%d %H:%M:%S')
         }
         print(f"[{company} 수동 업데이트 완료] 총 {len(all_articles)}개, 신규 {len(new_articles)}개")
         return result
@@ -288,7 +302,7 @@ def save_deleted_article(company: str, article_id: str):
     
     data = {
         "deleted_ids": list(deleted_ids),
-        "last_updated": time.strftime('%Y-%m-%d %H:%M:%S')
+        "last_updated": get_kst_now().strftime('%Y-%m-%d %H:%M:%S')
     }
     
     try:

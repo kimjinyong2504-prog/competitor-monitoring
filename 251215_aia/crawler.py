@@ -8,7 +8,14 @@ import requests
 import json
 import hashlib
 import re
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# 한국 시간대 (KST, UTC+9)
+KST = timezone(timedelta(hours=9))
+
+def get_kst_now():
+    """한국 시간 현재 시각 반환"""
+    return datetime.now(KST)
 from typing import List, Dict, Optional
 from urllib.parse import urlparse, quote, urlencode
 import urllib3
@@ -498,7 +505,7 @@ class AIANewsCrawler:
         all_articles = []
         seen_ids = set()
         
-        print(f"[크롤링 시작] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"[크롤링 시작] {get_kst_now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         for keyword in self.keywords:
             print(f"  - 네이버 뉴스 검색 중: {keyword}")
@@ -530,7 +537,7 @@ class AIANewsCrawler:
     def save_to_json(self, articles: List[Dict], filepath: str = "data.json"):
         """크롤링된 데이터를 JSON 파일로 저장"""
         data = {
-            "last_updated": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "last_updated": get_kst_now().strftime('%Y-%m-%d %H:%M:%S'),
             "total_count": len(articles),
             "articles": articles
         }
