@@ -346,6 +346,9 @@ def delete_article(company: str, article_id: str):
 class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     """통합 HTTP 핸들러"""
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=os.getcwd(), **kwargs)
+    
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
