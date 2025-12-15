@@ -122,9 +122,12 @@ class UnifiedNewsScheduler:
             # GitHub 백업 (활성화된 경우)
             if BACKUP_AVAILABLE and os.environ.get('ENABLE_GITHUB_BACKUP', 'false').lower() == 'true':
                 try:
+                    print(f"[백업] {self.company_name} 데이터 백업 시작...")
                     backup_to_github()
                 except Exception as e:
                     print(f"[백업 오류] {str(e)}")
+                    import traceback
+                    traceback.print_exc()
             
             if new_articles:
                 print(f"[새로운 기사] {len(new_articles)}개의 새로운 기사 발견")
@@ -255,9 +258,12 @@ def update_news_now(company: str):
         # GitHub 백업 (활성화된 경우)
         if BACKUP_AVAILABLE and os.environ.get('ENABLE_GITHUB_BACKUP', 'false').lower() == 'true':
             try:
+                print(f"[백업] {company} 데이터 백업 시작...")
                 backup_to_github()
             except Exception as e:
                 print(f"[백업 오류] {str(e)}")
+                import traceback
+                traceback.print_exc()
         
         result = {
             "success": True,
@@ -540,12 +546,20 @@ def main():
     print()
     
     # GitHub에서 데이터 복원 (활성화된 경우)
-    if BACKUP_AVAILABLE and os.environ.get('ENABLE_GITHUB_BACKUP', 'false').lower() == 'true':
+    backup_enabled = os.environ.get('ENABLE_GITHUB_BACKUP', 'false').lower() == 'true'
+    if BACKUP_AVAILABLE and backup_enabled:
         try:
+            print("[초기화] GitHub 백업이 활성화되어 있습니다.")
             print("[초기화] GitHub에서 데이터 복원 중...")
             load_from_github()
         except Exception as e:
             print(f"[복원 오류] {str(e)}")
+            import traceback
+            traceback.print_exc()
+    elif backup_enabled and not BACKUP_AVAILABLE:
+        print("[초기화] GitHub 백업이 활성화되어 있지만 data_backup 모듈을 찾을 수 없습니다.")
+    else:
+        print("[초기화] GitHub 백업이 비활성화되어 있습니다. (ENABLE_GITHUB_BACKUP=false)")
     
     # 각 업체별 크롤러 초기화
     print("[초기화] 각 업체별 크롤러 초기화 중...")
