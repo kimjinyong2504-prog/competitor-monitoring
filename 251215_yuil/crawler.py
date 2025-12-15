@@ -9,6 +9,7 @@ import json
 import hashlib
 import re
 from datetime import datetime, timezone, timedelta
+from typing import List, Dict, Optional
 
 # 한국 시간대 (KST, UTC+9)
 KST = timezone(timedelta(hours=9))
@@ -16,7 +17,6 @@ KST = timezone(timedelta(hours=9))
 def get_kst_now():
     """한국 시간 현재 시각 반환"""
     return datetime.now(KST)
-from typing import List, Dict, Optional
 from urllib.parse import urlparse, quote, urlencode
 import urllib3
 from bs4 import BeautifulSoup

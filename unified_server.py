@@ -226,14 +226,7 @@ def update_news_now(company: str):
             try:
                 if len(date_str) >= 19 and date_str[4] == '-':
                     return date_str[:19]
-                from datetime import datetime, timezone, timedelta
-
-# 한국 시간대 (KST, UTC+9)
-KST = timezone(timedelta(hours=9))
-
-def get_kst_now():
-    """한국 시간 현재 시각 반환"""
-    return datetime.now(KST)
+                from datetime import datetime
                 dt = datetime.strptime(date_str[:25], "%a, %d %b %Y %H:%M:%S")
                 return dt.strftime("%Y-%m-%d %H:%M:%S")
             except:
