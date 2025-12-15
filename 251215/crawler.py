@@ -34,6 +34,7 @@ class HwasungNewsCrawler:
         }
         # 검색 키워드 목록
         self.keywords = [
+            "화승",
             "화승R&A",
             "화승 RnA",
             "화승알엔에이",
