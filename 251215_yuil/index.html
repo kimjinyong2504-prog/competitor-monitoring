@@ -582,14 +582,16 @@
             .stats {
                 grid-template-columns: 1fr;
                 gap: 12px;
-                margin-bottom: 20px;
+                margin-bottom: 24px;
                 height: auto !important;
                 min-height: auto !important;
                 max-height: none !important;
+                flex-shrink: 0;
             }
 
             .stat-card {
                 height: auto;
+                min-height: 100px;
                 padding: 16px;
             }
 
@@ -599,6 +601,11 @@
 
             .stat-card .label {
                 font-size: 0.85em;
+            }
+
+            .articles-container {
+                margin-top: 0 !important;
+                padding-top: 0;
             }
 
             .article-card {
@@ -692,14 +699,20 @@
 
             .stats {
                 gap: 10px;
+                margin-bottom: 20px;
             }
 
             .stat-card {
                 padding: 14px;
+                min-height: 90px;
             }
 
             .stat-card .number {
                 font-size: 1.8em;
+            }
+
+            .articles-container {
+                margin-top: 0 !important;
             }
 
             .article-card {

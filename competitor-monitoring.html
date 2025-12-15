@@ -137,11 +137,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-        }
-
-        .nav-button .icon {
-            font-size: 1.6em;
+            gap: 8px;
         }
 
         .nav-button p {
@@ -149,6 +145,10 @@
             font-size: 1em;
             margin-top: 8px;
             line-height: 1.6;
+        }
+
+        .mobile-break {
+            display: none;
         }
 
         .nav-button .status {
@@ -257,6 +257,10 @@
                 margin-top: 6px;
             }
 
+            .mobile-break {
+                display: inline;
+            }
+
             .info-box {
                 padding: 20px 16px;
                 margin-top: 24px;
@@ -282,8 +286,6 @@
             }
 
             h1 {
-                font-size: 1.4em;
-            }
 
             .subtitle {
                 font-size: 0.85em;
@@ -299,12 +301,6 @@
 
             .nav-button h3 {
                 font-size: 1.1em;
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .nav-button .icon {
-                font-size: 1.4em;
             }
 
             .nav-button .status {
@@ -325,28 +321,25 @@
             <div class="button-grid">
                 <a href="/hwasung" class="nav-button">
                     <h3>
-                        <span class="icon">🔍</span>
-                        <span>화승 R&A</span>
+                        <span>🔍 화승 R&A</span>
                     </h3>
-                    <p>화승R&A 관련 뉴스 기사를 실시간으로 모니터링하고 분석합니다.</p>
+                    <p>화승R&A 관련 뉴스기사를<br class="mobile-break">실시간으로 모니터링하고 분석합니다.</p>
                     <span class="status">실시간 모니터링 중</span>
                 </a>
 
                 <a href="/yuil" class="nav-button">
                     <h3>
-                        <span class="icon">🔍</span>
-                        <span>유일고무</span>
+                        <span>🔍 유일고무</span>
                     </h3>
-                    <p>유일고무 관련 뉴스 기사를 실시간으로 모니터링하고 분석합니다.</p>
+                    <p>유일고무 관련 뉴스기사를<br class="mobile-break">실시간으로 모니터링하고 분석합니다.</p>
                     <span class="status">실시간 모니터링 중</span>
                 </a>
 
                 <a href="/aia" class="nav-button">
                     <h3>
-                        <span class="icon">🔍</span>
-                        <span>AIA(아이아)</span>
+                        <span>🔍 AIA(아이아)</span>
                     </h3>
-                    <p>AIA(아이아) 관련 뉴스 기사를 실시간으로 모니터링하고 분석합니다.</p>
+                    <p>AIA(아이아) 관련 뉴스기사를<br class="mobile-break">실시간으로 모니터링하고 분석합니다.</p>
                     <span class="status">실시간 모니터링 중</span>
                 </a>
             </div>
