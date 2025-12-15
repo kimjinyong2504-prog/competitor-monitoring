@@ -15,6 +15,14 @@ from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 from datetime import datetime, timezone, timedelta
 
+# 데이터 백업 모듈 import (선택적)
+try:
+    from data_backup import backup_to_github, load_from_github
+    BACKUP_AVAILABLE = True
+except ImportError:
+    BACKUP_AVAILABLE = False
+    print("[백업] data_backup 모듈을 사용할 수 없습니다. 백업 기능이 비활성화됩니다.")
+
 # 한국 시간대 (KST, UTC+9)
 KST = timezone(timedelta(hours=9))
 
@@ -110,6 +118,13 @@ class UnifiedNewsScheduler:
             
             # 모든 기사 저장
             self.crawler.save_to_json(all_articles, data_file)
+            
+            # GitHub 백업 (활성화된 경우)
+            if BACKUP_AVAILABLE and os.environ.get('ENABLE_GITHUB_BACKUP', 'false').lower() == 'true':
+                try:
+                    backup_to_github()
+                except Exception as e:
+                    print(f"[백업 오류] {str(e)}")
             
             if new_articles:
                 print(f"[새로운 기사] {len(new_articles)}개의 새로운 기사 발견")
@@ -236,6 +251,13 @@ def update_news_now(company: str):
         
         # 모든 기사 저장
         crawler.save_to_json(all_articles, data_file)
+        
+        # GitHub 백업 (활성화된 경우)
+        if BACKUP_AVAILABLE and os.environ.get('ENABLE_GITHUB_BACKUP', 'false').lower() == 'true':
+            try:
+                backup_to_github()
+            except Exception as e:
+                print(f"[백업 오류] {str(e)}")
         
         result = {
             "success": True,
@@ -516,6 +538,14 @@ def main():
     print("통합 경쟁사 뉴스 모니터링 시스템")
     print("="*60)
     print()
+    
+    # GitHub에서 데이터 복원 (활성화된 경우)
+    if BACKUP_AVAILABLE and os.environ.get('ENABLE_GITHUB_BACKUP', 'false').lower() == 'true':
+        try:
+            print("[초기화] GitHub에서 데이터 복원 중...")
+            load_from_github()
+        except Exception as e:
+            print(f"[복원 오류] {str(e)}")
     
     # 각 업체별 크롤러 초기화
     print("[초기화] 각 업체별 크롤러 초기화 중...")
