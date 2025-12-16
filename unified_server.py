@@ -600,11 +600,26 @@ def main():
     for company_name, (folder, CrawlerClass) in companies.items():
         data_file = f"{folder}/data.json"
         if not os.path.exists(data_file):
-            print(f"[초기화] {company_name} 데이터 파일이 없습니다. 초기 크롤링을 시작합니다...")
+            print(f"[초기화] {company_name} 데이터 파일이 없습니다.")
+            print(f"[초기화] 초기 크롤링은 백그라운드에서 진행됩니다. (서버 시작 우선)")
+            # 초기 크롤링은 백그라운드에서 실행 (서버 시작을 지연시키지 않음)
+            def initial_crawl(company, folder_path, crawler_instance):
+                try:
+                    print(f"[초기 크롤링 시작] {company}")
+                    articles = crawler_instance.crawl_all_news()
+                    crawler_instance.save_to_json(articles, f"{folder_path}/data.json")
+                    print(f"[초기 크롤링 완료] {company}: {len(articles)}개 기사")
+                except Exception as e:
+                    print(f"[초기 크롤링 오류] {company}: {str(e)}")
+            
             crawler = get_crawler(company_name)
-            articles = crawler.crawl_all_news()
-            crawler.save_to_json(articles, data_file)
-            print(f"[초기화] {company_name} 초기 크롤링 완료\n")
+            crawl_thread = threading.Thread(
+                target=initial_crawl, 
+                args=(company_name, folder, crawler),
+                daemon=True
+            )
+            crawl_thread.start()
+            print(f"[초기화] {company_name} 백그라운드 크롤링 시작됨\n")
     
     # 각 업체별 스케줄러 시작 (1시간 = 3600초)
     print("[스케줄러 시작] 각 업체별 자동 업데이트 스케줄러를 시작합니다...")
@@ -625,10 +640,11 @@ def main():
     
     print()
     
-    # 웹 서버 시작 (별도 스레드)
-    server_thread = threading.Thread(target=start_web_server, daemon=True)
-    server_thread.start()
+    # 웹 서버 시작 (메인 스레드에서 직접 실행 - Render 헬스체크를 위해)
+    print("[서버 시작] 웹 서버를 시작합니다...")
+    start_web_server()
     
+    # 아래 코드는 실행되지 않음 (serve_forever가 블로킹)
     try:
         # 메인 스레드가 종료되지 않도록 대기
         while True:
