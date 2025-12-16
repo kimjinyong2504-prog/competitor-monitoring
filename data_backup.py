@@ -176,11 +176,20 @@ def backup_to_github():
         
         remote_url = remote_url_result.stdout.strip()
         
+        # URL 끝의 슬래시 제거
+        if remote_url.endswith('/'):
+            remote_url = remote_url.rstrip('/')
+            subprocess.run(['git', 'remote', 'set-url', 'origin', remote_url], cwd=os.getcwd(), check=False)
+        
         if github_token and remote_url.startswith('https://') and 'github.com' in remote_url:
-            # HTTPS URL에 토큰 추가
-            auth_url = remote_url.replace('https://', f'https://{github_token}@')
-            subprocess.run(['git', 'remote', 'set-url', 'origin', auth_url], cwd=os.getcwd(), check=False)
-            print("[백업] GitHub 토큰을 사용하여 인증 설정")
+            # 토큰이 이미 URL에 포함되어 있는지 확인
+            if f'{github_token}@' not in remote_url and '@github.com' not in remote_url:
+                # HTTPS URL에 토큰 추가
+                auth_url = remote_url.replace('https://', f'https://{github_token}@')
+                subprocess.run(['git', 'remote', 'set-url', 'origin', auth_url], cwd=os.getcwd(), check=False)
+                print("[백업] GitHub 토큰을 사용하여 인증 설정")
+            else:
+                print("[백업] GitHub 토큰이 이미 설정되어 있습니다.")
         
         push_result = subprocess.run(
             ['git', 'push', 'origin', 'main'],
