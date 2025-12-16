@@ -8,6 +8,14 @@ import os
 import subprocess
 import json
 from pathlib import Path
+from datetime import datetime, timezone, timedelta
+
+# 한국 시간대 (KST, UTC+9)
+KST = timezone(timedelta(hours=9))
+
+def get_kst_now():
+    """한국 시간 현재 시각 반환"""
+    return datetime.now(KST)
 
 def backup_to_github():
     """데이터 파일을 GitHub에 백업"""
