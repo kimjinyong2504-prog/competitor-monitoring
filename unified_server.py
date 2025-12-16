@@ -390,6 +390,16 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=os.getcwd(), **kwargs)
     
+    def safe_write(self, data):
+        """안전하게 데이터를 쓰기 (BrokenPipeError 처리)"""
+        try:
+            if isinstance(data, str):
+                data = data.encode('utf-8')
+            self.wfile.write(data)
+        except (BrokenPipeError, ConnectionResetError, OSError):
+            # 클라이언트가 연결을 끊었을 때 발생하는 정상적인 상황
+            pass
+    
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
