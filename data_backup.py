@@ -43,7 +43,27 @@ def backup_to_github():
             subprocess.run(['git', 'remote', 'add', 'origin', github_repo], cwd=os.getcwd(), check=False)
             print(f"[백업] 원격 저장소 설정: {github_repo}")
         
-        # 변경된 데이터 파일 확인
+        # 데이터 파일 목록 (강제로 확인)
+        data_files = []
+        data_file_paths = [
+            '251215/data.json',
+            '251215/deleted_articles.json',
+            '251215_yuil/data.json',
+            '251215_yuil/deleted_articles.json',
+            '251215_aia/data.json',
+            '251215_aia/deleted_articles.json'
+        ]
+        
+        # 존재하는 파일만 추가
+        for file_path in data_file_paths:
+            if os.path.exists(file_path):
+                data_files.append(file_path)
+        
+        if not data_files:
+            print("[백업] 백업할 데이터 파일이 없습니다.")
+            return True
+        
+        # 변경된 파일 확인
         result = subprocess.run(
             ['git', 'status', '--porcelain'],
             capture_output=True,
@@ -51,15 +71,12 @@ def backup_to_github():
             cwd=os.getcwd()
         )
         
-        # 데이터 파일만 필터링
-        data_files = []
-        for line in result.stdout.strip().split('\n'):
-            if line and any(x in line for x in ['data.json', 'deleted_articles.json']):
-                data_files.append(line.split()[-1])
+        # 변경된 파일이 있는지 확인
+        changed_files = [line.split()[-1] for line in result.stdout.strip().split('\n') if line]
+        has_changes = any(f in changed_files or f in result.stdout for f in data_files)
         
-        if not data_files:
-            print("[백업] 백업할 데이터 파일이 없습니다.")
-            return True
+        # 모든 데이터 파일을 강제로 추가 (변경 여부와 관계없이)
+        print(f"[백업] 백업할 파일: {', '.join(data_files)}")
         
         # Git 사용자 정보 설정 (환경 변수 우선, 없으면 기본값 사용)
         user_name = os.environ.get('GIT_USER_NAME', '')
@@ -96,17 +113,25 @@ def backup_to_github():
         
         print(f"[백업] Git 사용자 정보: {user_name} <{user_email}>")
         
-        # 파일 추가
+        # 파일 추가 (강제로)
         for file in data_files:
-            subprocess.run(['git', 'add', file], cwd=os.getcwd(), check=False)
+            add_result = subprocess.run(['git', 'add', '-f', file], cwd=os.getcwd(), capture_output=True, text=True, check=False)
+            if add_result.returncode != 0:
+                print(f"[백업] 파일 추가 실패: {file} - {add_result.stderr}")
         
-        # 커밋
-        commit_message = f"Auto backup: Update data files"
-        subprocess.run(
-            ['git', 'commit', '-m', commit_message],
+        # 커밋 (변경사항이 없어도 강제로)
+        commit_message = f"Auto backup: Update data files - {get_kst_now().strftime('%Y-%m-%d %H:%M:%S')}"
+        commit_result = subprocess.run(
+            ['git', 'commit', '-m', commit_message, '--allow-empty'],
             cwd=os.getcwd(),
+            capture_output=True,
+            text=True,
             check=False
         )
+        
+        if commit_result.returncode != 0 and 'nothing to commit' not in commit_result.stdout.lower():
+            print(f"[백업] 커밋 실패: {commit_result.stderr}")
+            # 변경사항이 없어도 계속 진행
         
         # 푸시 (GitHub Personal Access Token 사용 가능)
         # 환경 변수에서 GitHub 토큰 확인
@@ -210,8 +235,20 @@ def load_from_github():
             cwd=os.getcwd()
         )
         
+        if fetch_result.returncode != 0:
+            print(f"[복원] Fetch 실패: {fetch_result.stderr}")
+        
+        # Pull 전에 로컬 변경사항 스태시 (충돌 방지)
+        stash_result = subprocess.run(
+            ['git', 'stash'],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd(),
+            check=False
+        )
+        
         pull_result = subprocess.run(
-            ['git', 'pull', 'origin', 'main', '--no-edit'],
+            ['git', 'pull', 'origin', 'main', '--no-edit', '--no-rebase'],
             capture_output=True,
             text=True,
             cwd=os.getcwd()
@@ -231,11 +268,14 @@ def load_from_github():
             restored = [f for f in data_files if os.path.exists(f)]
             if restored:
                 print(f"[복원] 복원된 파일: {', '.join(restored)}")
+            else:
+                print("[복원] 경고: 데이터 파일이 복원되지 않았습니다.")
             return True
         else:
             print(f"[복원 실패] {pull_result.stderr}")
             if pull_result.stdout:
                 print(f"[복원] stdout: {pull_result.stdout}")
+            # Pull 실패해도 계속 진행 (기존 파일 사용)
             return False
             
     except Exception as e:

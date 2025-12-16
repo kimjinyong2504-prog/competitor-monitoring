@@ -567,15 +567,21 @@ def main():
         try:
             print("[초기화] GitHub 백업이 활성화되어 있습니다.")
             print("[초기화] GitHub에서 데이터 복원 중...")
-            load_from_github()
+            restore_success = load_from_github()
+            if restore_success:
+                print("[초기화] 데이터 복원 완료")
+            else:
+                print("[초기화] 경고: 데이터 복원에 실패했지만 계속 진행합니다.")
         except Exception as e:
             print(f"[복원 오류] {str(e)}")
             import traceback
             traceback.print_exc()
+            print("[초기화] 복원 실패했지만 계속 진행합니다.")
     elif backup_enabled and not BACKUP_AVAILABLE:
         print("[초기화] GitHub 백업이 활성화되어 있지만 data_backup 모듈을 찾을 수 없습니다.")
     else:
         print("[초기화] GitHub 백업이 비활성화되어 있습니다. (ENABLE_GITHUB_BACKUP=false)")
+        print("[초기화] 참고: 데이터 영구 저장을 위해 ENABLE_GITHUB_BACKUP=true를 설정하세요.")
     
     # 각 업체별 크롤러 초기화
     print("[초기화] 각 업체별 크롤러 초기화 중...")
