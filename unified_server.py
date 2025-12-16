@@ -409,7 +409,7 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             
             response_json = json.dumps(result, ensure_ascii=False)
-            self.wfile.write(response_json.encode('utf-8'))
+            self.safe_write(response_json)
         elif path.startswith('/api/delete/'):
             # 기사 삭제 API: /api/delete/{company}
             company = path.split('/')[-1]
@@ -428,7 +428,7 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.end_headers()
                     
                     response_json = json.dumps(result, ensure_ascii=False)
-                    self.wfile.write(response_json.encode('utf-8'))
+                    self.safe_write(response_json)
                 else:
                     self.send_response(400)
                     self.end_headers()
@@ -437,7 +437,7 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
                 error_response = json.dumps({"success": False, "error": str(e)}, ensure_ascii=False)
-                self.wfile.write(error_response.encode('utf-8'))
+                self.safe_write(error_response)
             
         elif path.startswith('/api/article/'):
             # 기사 전체 내용 가져오기 API: /api/article/{company}
@@ -459,7 +459,7 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                         self.end_headers()
                         
                         response_json = json.dumps(article_content, ensure_ascii=False)
-                        self.wfile.write(response_json.encode('utf-8'))
+                        self.safe_write(response_json)
                     else:
                         self.send_response(400)
                         self.end_headers()
@@ -471,7 +471,7 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.end_headers()
                 error_response = json.dumps({"success": False, "error": str(e)}, ensure_ascii=False)
-                self.wfile.write(error_response.encode('utf-8'))
+                self.safe_write(error_response)
         else:
             self.send_response(404)
             self.end_headers()
