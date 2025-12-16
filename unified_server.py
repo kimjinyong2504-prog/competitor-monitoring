@@ -281,6 +281,12 @@ def update_news_now(company: str):
             "success": False,
             "error": str(e)
         }
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "error": str(e)
+        }
 
 def get_data_file_path(company: str) -> str:
     """업체별 데이터 파일 경로 반환"""
