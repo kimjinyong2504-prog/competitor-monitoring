@@ -37,19 +37,38 @@ def backup_to_github():
             # 원격 저장소가 없으면 환경 변수에서 가져오거나 기본값 사용
             github_repo = os.environ.get('GITHUB_REPO', '')
             if not github_repo:
-                # 환경 변수에서 저장소 정보 추출 시도
+                # Render 환경 변수에서 저장소 정보 추출 시도
                 github_repo = os.environ.get('RENDER_GIT_REPO', '')
                 if not github_repo:
-                    print("[백업] 원격 저장소가 설정되지 않았습니다.")
-                    print("[백업] GITHUB_REPO 환경 변수를 설정하거나 원격 저장소를 수동으로 추가하세요.")
-                    return False
+                    # Render가 자동으로 설정하는 환경 변수 확인
+                    render_repo_url = os.environ.get('RENDER_GIT_REPO_URL', '')
+                    if render_repo_url:
+                        github_repo = render_repo_url
+                    else:
+                        # 기본 저장소 URL 사용 (현재 저장소)
+                        github_repo = 'https://github.com/kimjinyong2504-prog/competitor-monitoring.git'
+                        print(f"[백업] 환경 변수에서 저장소를 찾을 수 없어 기본값 사용: {github_repo}")
             
             # 원격 저장소 추가
             if not github_repo.startswith('http'):
                 github_repo = f'https://github.com/{github_repo}.git'
             
-            subprocess.run(['git', 'remote', 'add', 'origin', github_repo], cwd=os.getcwd(), check=False)
-            print(f"[백업] 원격 저장소 설정: {github_repo}")
+            add_result = subprocess.run(
+                ['git', 'remote', 'add', 'origin', github_repo], 
+                cwd=os.getcwd(), 
+                capture_output=True,
+                text=True,
+                check=False
+            )
+            if add_result.returncode == 0:
+                print(f"[백업] 원격 저장소 추가: {github_repo}")
+            elif 'already exists' in add_result.stderr.lower():
+                print(f"[백업] 원격 저장소가 이미 존재합니다.")
+            else:
+                print(f"[백업] 원격 저장소 추가 실패, URL 업데이트 시도: {add_result.stderr}")
+                # 기존 origin이 있으면 URL만 업데이트
+                subprocess.run(['git', 'remote', 'set-url', 'origin', github_repo], cwd=os.getcwd(), check=False)
+                print(f"[백업] 원격 저장소 URL 업데이트: {github_repo}")
         
         # 데이터 파일 목록 (강제로 확인)
         data_files = []
@@ -207,16 +226,37 @@ def load_from_github():
             # 원격 저장소가 없으면 환경 변수에서 가져오거나 기본값 사용
             github_repo = os.environ.get('GITHUB_REPO', '')
             if not github_repo:
+                # Render 환경 변수에서 저장소 정보 추출 시도
                 github_repo = os.environ.get('RENDER_GIT_REPO', '')
                 if not github_repo:
-                    print("[복원] 원격 저장소가 설정되지 않았습니다.")
-                    return False
+                    # Render가 자동으로 설정하는 환경 변수 확인
+                    render_repo_url = os.environ.get('RENDER_GIT_REPO_URL', '')
+                    if render_repo_url:
+                        github_repo = render_repo_url
+                    else:
+                        # 기본 저장소 URL 사용 (현재 저장소)
+                        github_repo = 'https://github.com/kimjinyong2504-prog/competitor-monitoring.git'
+                        print(f"[복원] 환경 변수에서 저장소를 찾을 수 없어 기본값 사용: {github_repo}")
             
             if not github_repo.startswith('http'):
                 github_repo = f'https://github.com/{github_repo}.git'
             
-            subprocess.run(['git', 'remote', 'add', 'origin', github_repo], cwd=os.getcwd(), check=False)
-            print(f"[복원] 원격 저장소 설정: {github_repo}")
+            add_result = subprocess.run(
+                ['git', 'remote', 'add', 'origin', github_repo], 
+                cwd=os.getcwd(), 
+                capture_output=True,
+                text=True,
+                check=False
+            )
+            if add_result.returncode == 0:
+                print(f"[복원] 원격 저장소 추가: {github_repo}")
+            elif 'already exists' in add_result.stderr.lower():
+                print(f"[복원] 원격 저장소가 이미 존재합니다.")
+            else:
+                print(f"[복원] 원격 저장소 추가 실패, URL 업데이트 시도: {add_result.stderr}")
+                # 기존 origin이 있으면 URL만 업데이트
+                subprocess.run(['git', 'remote', 'set-url', 'origin', github_repo], cwd=os.getcwd(), check=False)
+                print(f"[복원] 원격 저장소 URL 업데이트: {github_repo}")
         
         # GitHub 토큰이 있으면 인증 설정
         github_token = os.environ.get('GITHUB_TOKEN', '')
