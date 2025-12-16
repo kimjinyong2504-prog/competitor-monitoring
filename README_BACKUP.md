@@ -17,21 +17,14 @@ Render의 무료 플랜에서는 서버가 재시작되면 데이터가 초기�
 
 Render 대시보드에서 다음 환경 변수를 추가:
 
+**필수:**
 - `ENABLE_GITHUB_BACKUP`: `true` (백업 기능 활성화)
 - `GITHUB_TOKEN`: 생성한 Personal Access Token
 
-### 3. Git 사용자 정보 설정
-
-Render의 빌드 명령에 다음을 추가하거나, 환경 변수로 설정:
-
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-```
-
-또는 환경 변수로:
-- `GIT_USER_NAME`: Git 사용자 이름
-- `GIT_USER_EMAIL`: Git 사용자 이메일
+**선택사항 (없어도 기본값 사용):**
+- `GIT_USER_NAME`: Git 사용자 이름 (기본값: "GitHub Backup")
+- `GIT_USER_EMAIL`: Git 사용자 이메일 (기본값: "backup@noreply.github.com")
+- `GITHUB_REPO`: GitHub 저장소 URL (예: "kimjinyong2504-prog/competitor-monitoring" 또는 전체 URL)
 
 ## 동작 방식
 

@@ -17,6 +17,32 @@ def backup_to_github():
             print("[백업] Git 저장소가 초기화되지 않았습니다.")
             return False
         
+        # 원격 저장소 확인 및 설정
+        remote_check = subprocess.run(
+            ['git', 'remote', 'get-url', 'origin'],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
+        
+        if remote_check.returncode != 0:
+            # 원격 저장소가 없으면 환경 변수에서 가져오거나 기본값 사용
+            github_repo = os.environ.get('GITHUB_REPO', '')
+            if not github_repo:
+                # 환경 변수에서 저장소 정보 추출 시도
+                github_repo = os.environ.get('RENDER_GIT_REPO', '')
+                if not github_repo:
+                    print("[백업] 원격 저장소가 설정되지 않았습니다.")
+                    print("[백업] GITHUB_REPO 환경 변수를 설정하거나 원격 저장소를 수동으로 추가하세요.")
+                    return False
+            
+            # 원격 저장소 추가
+            if not github_repo.startswith('http'):
+                github_repo = f'https://github.com/{github_repo}.git'
+            
+            subprocess.run(['git', 'remote', 'add', 'origin', github_repo], cwd=os.getcwd(), check=False)
+            print(f"[백업] 원격 저장소 설정: {github_repo}")
+        
         # 변경된 데이터 파일 확인
         result = subprocess.run(
             ['git', 'status', '--porcelain'],
@@ -85,20 +111,24 @@ def backup_to_github():
         # 푸시 (GitHub Personal Access Token 사용 가능)
         # 환경 변수에서 GitHub 토큰 확인
         github_token = os.environ.get('GITHUB_TOKEN', '')
-        if github_token:
-            # 토큰을 사용한 푸시
-            remote_url = subprocess.run(
-                ['git', 'config', '--get', 'remote.origin.url'],
-                capture_output=True,
-                text=True,
-                cwd=os.getcwd()
-            ).stdout.strip()
-            
-            if remote_url.startswith('https://'):
-                # HTTPS URL에 토큰 추가
-                if 'github.com' in remote_url:
-                    auth_url = remote_url.replace('https://', f'https://{github_token}@')
-                    subprocess.run(['git', 'remote', 'set-url', 'origin', auth_url], cwd=os.getcwd(), check=False)
+        remote_url_result = subprocess.run(
+            ['git', 'config', '--get', 'remote.origin.url'],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
+        
+        if remote_url_result.returncode != 0:
+            print("[백업] 원격 저장소 URL을 가져올 수 없습니다.")
+            return False
+        
+        remote_url = remote_url_result.stdout.strip()
+        
+        if github_token and remote_url.startswith('https://') and 'github.com' in remote_url:
+            # HTTPS URL에 토큰 추가
+            auth_url = remote_url.replace('https://', f'https://{github_token}@')
+            subprocess.run(['git', 'remote', 'set-url', 'origin', auth_url], cwd=os.getcwd(), check=False)
+            print("[백업] GitHub 토큰을 사용하여 인증 설정")
         
         push_result = subprocess.run(
             ['git', 'push', 'origin', 'main'],
@@ -121,25 +151,55 @@ def backup_to_github():
 def load_from_github():
     """GitHub에서 최신 데이터 파일 가져오기"""
     try:
+        # Git이 초기화되어 있는지 확인
+        if not os.path.exists('.git'):
+            print("[복원] Git 저장소가 초기화되지 않았습니다.")
+            return False
+        
         # Git 사용자 정보 설정 (복원 시에도 필요)
         user_name = os.environ.get('GIT_USER_NAME', 'GitHub Backup')
         user_email = os.environ.get('GIT_USER_EMAIL', 'backup@noreply.github.com')
         subprocess.run(['git', 'config', 'user.name', user_name], cwd=os.getcwd(), check=False)
         subprocess.run(['git', 'config', 'user.email', user_email], cwd=os.getcwd(), check=False)
         
+        # 원격 저장소 확인 및 설정
+        remote_check = subprocess.run(
+            ['git', 'remote', 'get-url', 'origin'],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
+        
+        if remote_check.returncode != 0:
+            # 원격 저장소가 없으면 환경 변수에서 가져오거나 기본값 사용
+            github_repo = os.environ.get('GITHUB_REPO', '')
+            if not github_repo:
+                github_repo = os.environ.get('RENDER_GIT_REPO', '')
+                if not github_repo:
+                    print("[복원] 원격 저장소가 설정되지 않았습니다.")
+                    return False
+            
+            if not github_repo.startswith('http'):
+                github_repo = f'https://github.com/{github_repo}.git'
+            
+            subprocess.run(['git', 'remote', 'add', 'origin', github_repo], cwd=os.getcwd(), check=False)
+            print(f"[복원] 원격 저장소 설정: {github_repo}")
+        
         # GitHub 토큰이 있으면 인증 설정
         github_token = os.environ.get('GITHUB_TOKEN', '')
-        if github_token:
-            remote_url = subprocess.run(
-                ['git', 'config', '--get', 'remote.origin.url'],
-                capture_output=True,
-                text=True,
-                cwd=os.getcwd()
-            ).stdout.strip()
-            
-            if remote_url.startswith('https://') and 'github.com' in remote_url:
+        remote_url_result = subprocess.run(
+            ['git', 'config', '--get', 'remote.origin.url'],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
+        
+        if remote_url_result.returncode == 0:
+            remote_url = remote_url_result.stdout.strip()
+            if github_token and remote_url.startswith('https://') and 'github.com' in remote_url:
                 auth_url = remote_url.replace('https://', f'https://{github_token}@')
                 subprocess.run(['git', 'remote', 'set-url', 'origin', auth_url], cwd=os.getcwd(), check=False)
+                print("[복원] GitHub 토큰을 사용하여 인증 설정")
         
         # Git fetch 및 pull
         print("[복원] GitHub에서 최신 데이터 가져오는 중...")
