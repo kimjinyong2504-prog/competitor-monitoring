@@ -701,7 +701,16 @@ def main():
         data_file = f"{folder}/data.json"
         if not os.path.exists(data_file):
             print(f"[초기화] {company_name} 데이터 파일이 없습니다.")
-            print(f"[초기화] 새로고침 버튼을 눌러 크롤링을 시작하세요.")
+            print(f"[초기화] 빈 데이터 파일을 생성합니다.")
+            # 빈 데이터 구조 생성 (HTML에서 에러 없이 로드되도록)
+            crawler = get_crawler(company_name)
+            empty_data = {
+                "last_updated": get_kst_now().strftime('%Y-%m-%d %H:%M:%S'),
+                "total_count": 0,
+                "articles": []
+            }
+            crawler.save_to_json([], data_file)
+            print(f"[초기화] {company_name} 빈 데이터 파일 생성 완료. 새로고침 버튼을 눌러 크롤링을 시작하세요.")
     
     # 자동 스케줄러 비활성화 (수동 업데이트만 사용)
     # 각 업체별 스케줄러 시작 (1시간 = 3600초)

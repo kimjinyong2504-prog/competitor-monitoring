@@ -30,12 +30,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 번역 라이브러리 (선택적 사용)
 try:
-    from googletrans import Translator
+    from deep_translator import GoogleTranslator
     TRANSLATOR_AVAILABLE = True
-    translator = Translator()
 except ImportError:
     TRANSLATOR_AVAILABLE = False
-    translator = None
 
 NAVER_CLIENT_ID = "00q938ugMTSfuzjWuLk4"
 NAVER_CLIENT_SECRET = "MrIG7TWaGW"
@@ -93,22 +91,87 @@ class SaarGummiNewsCrawler:
             return False
         return (english_chars / total_chars) > 0.7
     
-    def _translate_to_korean(self, text: str) -> Optional[str]:
-        """영어 텍스트를 한국어로 번역"""
-        if not text or not TRANSLATOR_AVAILABLE or not translator:
+    def _translate_to_korean(self, text: str, chunk_size: int = 5000) -> Optional[str]:
+        """영어 텍스트를 한국어로 번역 (긴 텍스트는 청크로 나눠서 번역)"""
+        if not text or not TRANSLATOR_AVAILABLE:
             return None
         
         try:
-            # 텍스트가 너무 길면 잘라서 번역
-            max_length = 5000
-            if len(text) > max_length:
-                text = text[:max_length]
-            
-            result = translator.translate(text, src='en', dest='ko')
-            if result and result.text:
-                return result.text
+            # 텍스트가 길면 청크로 나눠서 번역
+            if len(text) <= chunk_size:
+                # 짧은 텍스트는 바로 번역
+                return self._translate_chunk(text)
+            else:
+                # 긴 텍스트는 문장 단위로 나눠서 번역
+                sentences = re.split(r'(?<=[.!?])\s+', text)
+                translated_parts = []
+                current_chunk = ""
+                
+                for sentence in sentences:
+                    if len(current_chunk) + len(sentence) <= chunk_size:
+                        current_chunk += sentence + " "
+                    else:
+                        if current_chunk:
+                            translated = self._translate_chunk(current_chunk.strip())
+                            if translated:
+                                translated_parts.append(translated)
+                        current_chunk = sentence + " "
+                
+                # 마지막 청크 번역
+                if current_chunk:
+                    translated = self._translate_chunk(current_chunk.strip())
+                    if translated:
+                        translated_parts.append(translated)
+                
+                # 번역된 부분들을 합치기
+                if translated_parts:
+                    return "\n\n".join(translated_parts)
+                return None
         except Exception as e:
             print(f"    [번역 오류] {str(e)}")
+            return None
+    
+    def _translate_chunk(self, text: str) -> Optional[str]:
+        """텍스트 청크를 번역하는 헬퍼 메서드"""
+        if not text or not TRANSLATOR_AVAILABLE:
+            return None
+        
+        try:
+            # SSL 검증 비활성화를 위한 requests 세션 패치
+            import requests
+            original_get = requests.get
+            original_session = requests.Session
+            
+            # requests.get을 패치하여 SSL 검증 비활성화
+            def patched_get(*args, **kwargs):
+                kwargs['verify'] = False
+                return original_get(*args, **kwargs)
+            
+            # requests.Session을 패치하여 SSL 검증 비활성화
+            class PatchedSession(original_session):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.verify = False
+                
+                def request(self, *args, **kwargs):
+                    kwargs['verify'] = False
+                    return super().request(*args, **kwargs)
+            
+            try:
+                requests.get = patched_get
+                requests.Session = PatchedSession
+                
+                translator = GoogleTranslator(source='en', target='ko')
+                result = translator.translate(text)
+                
+                if result:
+                    return result
+            finally:
+                # 원래 함수 복원
+                requests.get = original_get
+                requests.Session = original_session
+        except Exception as e:
+            print(f"    [번역 청크 오류] {str(e)}")
             return None
         
         return None
@@ -928,9 +991,18 @@ class SaarGummiNewsCrawler:
                 text = re.sub(r'\n{3,}', '\n\n', text)  # 연속된 줄바꿈 정리
                 text = text.strip()
                 
+                # 본문 번역 (영어인 경우) - 전체 본문 번역
+                content_translated = None
+                if text and self._is_mostly_english(text):
+                    print(f"    [번역 시작] 본문 길이: {len(text)}자")
+                    content_translated = self._translate_to_korean(text)
+                    if content_translated:
+                        print(f"    [번역 완료] 번역된 본문 길이: {len(content_translated)}자")
+                
                 result = {
                     "success": True,
                     "content": text,
+                    "content_translated": content_translated,
                     "url": url
                 }
                 

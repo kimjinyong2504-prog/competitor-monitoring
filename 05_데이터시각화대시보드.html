@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 데이터 시각화 대시보드</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            color: #f1f5f9;
+        }
+
+        .header .time {
+            font-size: 1.1em;
+            color: #94a3b8;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid #334155;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .kpi-label {
+            font-size: 0.85em;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .kpi-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin: 10px 0;
+        }
+
+        .kpi-change {
+            font-size: 0.9em;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .kpi-change.negative {
+            color: #ef4444;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid #334155;
+        }
+
+        .chart-card h3 {
+            color: #f1f5f9;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #475569;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 15px 0;
+        }
+
+        .chart-container-large {
+            height: 400px;
+        }
+
+        .table-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid #334155;
+            margin-bottom: 25px;
+        }
+
+        .table-card h3 {
+            color: #f1f5f9;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #475569;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+            color: #e2e8f0;
+        }
+
+        th {
+            background: #0f172a;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background: #1e293b;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-pending {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-inactive {
+            background: #6b7280;
+            color: white;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #94a3b8;
+        }
+
+        .metric-value {
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .progress-bar-bg {
+            background: #1e293b;
+            border-radius: 10px;
+            height: 20px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 0.75em;
+            font-weight: 600;
+            transition: width 0.5s ease;
+        }
+
+        .progress-1 { background: linear-gradient(90deg, #10b981, #059669); width: 85%; }
+        .progress-2 { background: linear-gradient(90deg, #3b82f6, #2563eb); width: 72%; }
+        .progress-3 { background: linear-gradient(90deg, #f59e0b, #d97706); width: 58%; }
+        .progress-4 { background: linear-gradient(90deg, #8b5cf6, #7c3aed); width: 91%; }
+
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>📊 실시간 데이터 대시보드</h1>
+                <div class="time" id="currentTime"></div>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">총 매출액</div>
+                <div class="kpi-value">₩12.5억</div>
+                <div class="kpi-change">
+                    <span>▲</span> <span>+15.3%</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">활성 고객</div>
+                <div class="kpi-value">1,247</div>
+                <div class="kpi-change">
+                    <span>▲</span> <span>+8.2%</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">주문 건수</div>
+                <div class="kpi-value">3,842</div>
+                <div class="kpi-change">
+                    <span>▲</span> <span>+12.7%</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">평균 주문액</div>
+                <div class="kpi-value">₩325만</div>
+                <div class="kpi-change">
+                    <span>▲</span> <span>+5.1%</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">재고 회전율</div>
+                <div class="kpi-value">8.5회</div>
+                <div class="kpi-change">
+                    <span>▲</span> <span>+0.8회</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">고객 만족도</div>
+                <div class="kpi-value">4.6/5.0</div>
+                <div class="kpi-change">
+                    <span>▲</span> <span>+0.2점</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>📈 매출 추이 (최근 6개월)</h3>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>🎯 제품별 매출 구성</h3>
+                <div class="chart-container">
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>👥 고객 유형별 분포</h3>
+                <div class="chart-container">
+                    <canvas id="customerChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>📊 지역별 매출 현황</h3>
+                <div class="chart-container">
+                    <canvas id="regionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card full-width">
+                <h3>📅 일별 매출 추이 (최근 30일)</h3>
+                <div class="chart-container chart-container-large">
+                    <canvas id="dailyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <h3>🔥 실시간 주문 현황</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>주문번호</th>
+                        <th>고객사</th>
+                        <th>제품</th>
+                        <th>금액</th>
+                        <th>상태</th>
+                        <th>주문일시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#ORD-2025-0428</td>
+                        <td>삼성전자</td>
+                        <td>부품 A</td>
+                        <td>₩1,200만</td>
+                        <td><span class="status-badge status-active">처리중</span></td>
+                        <td>2025-04-01 14:32</td>
+                    </tr>
+                    <tr>
+                        <td>#ORD-2025-0427</td>
+                        <td>LG화학</td>
+                        <td>원자재 B</td>
+                        <td>₩850만</td>
+                        <td><span class="status-badge status-active">처리중</span></td>
+                        <td>2025-04-01 13:15</td>
+                    </tr>
+                    <tr>
+                        <td>#ORD-2025-0426</td>
+                        <td>현대자동차</td>
+                        <td>완제품 C</td>
+                        <td>₩2,100만</td>
+                        <td><span class="status-badge status-pending">대기중</span></td>
+                        <td>2025-04-01 11:48</td>
+                    </tr>
+                    <tr>
+                        <td>#ORD-2025-0425</td>
+                        <td>SK하이닉스</td>
+                        <td>부품 D</td>
+                        <td>₩980만</td>
+                        <td><span class="status-badge status-active">처리중</span></td>
+                        <td>2025-04-01 10:22</td>
+                    </tr>
+                    <tr>
+                        <td>#ORD-2025-0424</td>
+                        <td>포스코</td>
+                        <td>원자재 E</td>
+                        <td>₩1,550만</td>
+                        <td><span class="status-badge status-active">처리중</span></td>
+                        <td>2025-04-01 09:05</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>🎯 목표 달성 현황</h3>
+                <div style="margin-top: 20px;">
+                    <div class="metric-row">
+                        <span class="metric-label">매출 목표</span>
+                        <span class="metric-value">85%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill progress-1">85%</div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">고객 확보</span>
+                        <span class="metric-value">72%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill progress-2">72%</div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">신제품 출시</span>
+                        <span class="metric-value">58%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill progress-3">58%</div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">품질 개선</span>
+                        <span class="metric-value">91%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill progress-4">91%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>📊 성장률 비교</h3>
+                <div class="chart-container">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 현재 시간 업데이트
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 매출 추이 차트
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['9월', '10월', '11월', '12월', '1월', '2월', '3월'],
+                datasets: [{
+                    label: '매출액 (억원)',
+                    data: [9.5, 10.2, 10.8, 11.5, 10.8, 11.2, 12.5],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    }
+                }
+            }
+        });
+
+        // 제품별 매출 구성
+        const productCtx = document.getElementById('productChart').getContext('2d');
+        new Chart(productCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['제품 A', '제품 B', '제품 C', '제품 D', '기타'],
+                datasets: [{
+                    data: [35, 28, 20, 12, 5],
+                    backgroundColor: [
+                        '#10b981',
+                        '#3b82f6',
+                        '#f59e0b',
+                        '#8b5cf6',
+                        '#6b7280'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: '#e2e8f0' }
+                    }
+                }
+            }
+        });
+
+        // 고객 유형별 분포
+        const customerCtx = document.getElementById('customerChart').getContext('2d');
+        new Chart(customerCtx, {
+            type: 'pie',
+            data: {
+                labels: ['대기업', '중견기업', '중소기업', '스타트업'],
+                datasets: [{
+                    data: [45, 30, 20, 5],
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#10b981',
+                        '#f59e0b',
+                        '#8b5cf6'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: '#e2e8f0' }
+                    }
+                }
+            }
+        });
+
+        // 지역별 매출 현황
+        const regionCtx = document.getElementById('regionChart').getContext('2d');
+        new Chart(regionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['서울', '경기', '부산', '대구', '인천', '기타'],
+                datasets: [{
+                    label: '매출액 (억원)',
+                    data: [4.2, 3.8, 1.5, 1.2, 1.0, 0.8],
+                    backgroundColor: '#8b5cf6',
+                    borderColor: '#7c3aed',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    }
+                }
+            }
+        });
+
+        // 일별 매출 추이
+        const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+        const dailyLabels = [];
+        const dailyData = [];
+        for (let i = 29; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            dailyLabels.push((date.getMonth() + 1) + '/' + date.getDate());
+            dailyData.push(Math.random() * 5000 + 3000);
+        }
+
+        new Chart(dailyCtx, {
+            type: 'line',
+            data: {
+                labels: dailyLabels,
+                datasets: [{
+                    label: '일별 매출 (만원)',
+                    data: dailyData,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 },
+                        grid: { color: '#334155' }
+                    }
+                }
+            }
+        });
+
+        // 성장률 비교
+        const growthCtx = document.getElementById('growthChart').getContext('2d');
+        new Chart(growthCtx, {
+            type: 'radar',
+            data: {
+                labels: ['매출', '고객', '주문', '재고회전', '만족도', '효율'],
+                datasets: [{
+                    label: '이번 달',
+                    data: [85, 78, 82, 88, 92, 75],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderWidth: 2
+                }, {
+                    label: '지난 달',
+                    data: [70, 72, 68, 80, 85, 70],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { color: '#94a3b8', stepSize: 20 },
+                        grid: { color: '#334155' },
+                        pointLabels: { color: '#e2e8f0' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

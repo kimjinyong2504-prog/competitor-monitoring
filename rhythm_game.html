@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리듬게임 - DJ맥스 스타일</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .game-container {
+            width: 900px;
+            height: 700px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .game-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            color: white;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .lane {
+            position: absolute;
+            width: calc((100% - 10px) / 6);
+            height: 100%;
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lane:nth-child(1) { left: 0; }
+        .lane:nth-child(2) { left: calc((100% - 10px) / 6); }
+        .lane:nth-child(3) { left: calc((100% - 10px) / 6 * 2); }
+        .lane:nth-child(4) { left: calc((100% - 10px) / 6 * 3); }
+        .lane:nth-child(5) { left: calc((100% - 10px) / 6 * 4); }
+        .lane:nth-child(6) { left: calc((100% - 10px) / 6 * 5); }
+
+        .judge-line {
+            position: absolute;
+            bottom: 80px;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, 
+                #ff0000, #ff6600, #ffcc00, #66ff00, #00ccff, #6600ff);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            z-index: 10;
+        }
+
+        .note {
+            position: absolute;
+            width: calc((100% - 20px) / 6);
+            height: 30px;
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.8);
+            transition: transform 0.1s;
+            z-index: 5;
+        }
+
+        .note.lane-0 { left: 5px; }
+        .note.lane-1 { left: calc((100% - 20px) / 6 + 5px); }
+        .note.lane-2 { left: calc((100% - 20px) / 6 * 2 + 5px); }
+        .note.lane-3 { left: calc((100% - 20px) / 6 * 3 + 5px); }
+        .note.lane-4 { left: calc((100% - 20px) / 6 * 4 + 5px); }
+        .note.lane-5 { left: calc((100% - 20px) / 6 * 5 + 5px); }
+
+        .note.hit {
+            animation: hitEffect 0.3s ease-out;
+        }
+
+        @keyframes hitEffect {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .key-indicator {
+            position: absolute;
+            bottom: 20px;
+            width: calc((100% - 20px) / 6);
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.1s;
+        }
+
+        .key-indicator.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        .key-indicator.lane-0 { left: 5px; }
+        .key-indicator.lane-1 { left: calc((100% - 20px) / 6 + 5px); }
+        .key-indicator.lane-2 { left: calc((100% - 20px) / 6 * 2 + 5px); }
+        .key-indicator.lane-3 { left: calc((100% - 20px) / 6 * 3 + 5px); }
+        .key-indicator.lane-4 { left: calc((100% - 20px) / 6 * 4 + 5px); }
+        .key-indicator.lane-5 { left: calc((100% - 20px) / 6 * 5 + 5px); }
+
+        .judge-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px currentColor;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 20;
+        }
+
+        .judge-text.show {
+            opacity: 1;
+        }
+
+        .judge-text.perfect {
+            color: #ffd700;
+            text-shadow: 0 0 30px #ffd700;
+        }
+
+        .judge-text.great {
+            color: #00ff00;
+            text-shadow: 0 0 30px #00ff00;
+        }
+
+        .judge-text.good {
+            color: #00ccff;
+            text-shadow: 0 0 30px #00ccff;
+        }
+
+        .judge-text.miss {
+            color: #ff0000;
+            text-shadow: 0 0 30px #ff0000;
+        }
+
+        .game-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .combo-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .combo-count {
+            color: #ffd700;
+            font-size: 36px;
+            text-shadow: 0 0 10px #ffd700;
+        }
+
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 100;
+            border-radius: 20px;
+        }
+
+        .game-over.show {
+            display: flex;
+        }
+
+        .game-over h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .game-over .final-score {
+            font-size: 32px;
+            color: #ffd700;
+            margin-bottom: 30px;
+        }
+
+        .settings-panel {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            width: 250px;
+            max-height: 700px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .settings-panel.collapsed {
+            width: 80px;
+            padding: 20px 10px;
+        }
+
+        .settings-panel.collapsed .settings-content {
+            display: none;
+        }
+
+        .settings-toggle {
+            width: 100%;
+            height: 40px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .settings-toggle:hover {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+            transform: scale(1.05);
+        }
+
+        .settings-panel.collapsed .settings-toggle {
+            margin-bottom: 0;
+        }
+
+        .settings-content {
+            flex: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .settings-panel h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setting-item {
+            margin-bottom: 15px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .setting-item .value {
+            display: inline-block;
+            margin-left: 10px;
+            color: #ffd700;
+            font-weight: bold;
+            min-width: 50px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-toggle" id="settingsToggle">⚙️ 설정</div>
+        <div class="settings-content">
+            <h3>⚙️ 게임 설정</h3>
+            <div class="setting-item">
+                <label>
+                    속도: <span class="value" id="speedValue">3</span>
+                </label>
+                <input type="range" class="slider" id="speedSlider" min="1" max="10" value="3" step="0.5">
+            </div>
+            <div class="setting-item">
+                <label>난이도</label>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn active" data-difficulty="easy">쉬움</button>
+                    <button class="difficulty-btn" data-difficulty="normal">보통</button>
+                    <button class="difficulty-btn" data-difficulty="hard">어려움</button>
+                    <button class="difficulty-btn" data-difficulty="expert">전문가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🎵 리듬게임 🎵</h1>
+        </div>
+
+        <div class="score-board">
+            <div class="score-item">
+                <div>점수</div>
+                <div class="score-value" id="score">0</div>
+            </div>
+            <div class="score-item">
+                <div>Perfect</div>
+                <div class="score-value" id="perfect">0</div>
+            </div>
+            <div class="score-item">
+                <div>Great</div>
+                <div class="score-value" id="great">0</div>
+            </div>
+            <div class="score-item">
+                <div>Good</div>
+                <div class="score-value" id="good">0</div>
+            </div>
+            <div class="score-item">
+                <div>Miss</div>
+                <div class="score-value" id="miss">0</div>
+            </div>
+        </div>
+
+        <div class="combo-display">
+            <div>COMBO</div>
+            <div class="combo-count" id="combo">0</div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="judge-line"></div>
+            <div class="judge-text" id="judgeText"></div>
+            
+            <div class="key-indicator lane-0" id="key0">Q</div>
+            <div class="key-indicator lane-1" id="key1">W</div>
+            <div class="key-indicator lane-2" id="key2">E</div>
+            <div class="key-indicator lane-3" id="key3">I</div>
+            <div class="key-indicator lane-4" id="key4">O</div>
+            <div class="key-indicator lane-5" id="key5">P</div>
+        </div>
+
+        <div class="game-controls">
+            <button class="btn" id="startBtn">시작</button>
+            <button class="btn" id="pauseBtn">일시정지</button>
+            <button class="btn" id="resetBtn">리셋</button>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <h2>게임 종료!</h2>
+            <div class="final-score">최종 점수: <span id="finalScore">0</span></div>
+            <button class="btn" onclick="resetGame()">다시 시작</button>
+        </div>
+    </div>
+
+    <script>
+        // 게임 변수
+        const gameArea = document.getElementById('gameArea');
+        const judgeLine = document.querySelector('.judge-line');
+        const judgeText = document.getElementById('judgeText');
+        const keys = ['q', 'w', 'e', 'i', 'o', 'p'];
+        const keyIndicators = document.querySelectorAll('.key-indicator');
+        
+        let gameState = {
+            isPlaying: false,
+            isPaused: false,
+            score: 0,
+            combo: 0,
+            perfect: 0,
+            great: 0,
+            good: 0,
+            miss: 0,
+            notes: [],
+            noteId: 0,
+            speed: 3,
+            lastNoteTime: 0,
+            difficulty: 'normal'
+        };
+
+        // 난이도 설정
+        const difficultySettings = {
+            easy: {
+                noteInterval: 800,      // 노트 생성 간격 (밀리초)
+                noteSpawnChance: 0.4,   // 노트 생성 확률
+                perfectRange: 20,       // Perfect 판정 범위
+                greatRange: 40,          // Great 판정 범위
+                goodRange: 60            // Good 판정 범위
+            },
+            normal: {
+                noteInterval: 600,
+                noteSpawnChance: 0.5,
+                perfectRange: 15,
+                greatRange: 30,
+                goodRange: 50
+            },
+            hard: {
+                noteInterval: 400,
+                noteSpawnChance: 0.6,
+                perfectRange: 10,
+                greatRange: 20,
+                goodRange: 35
+            },
+            expert: {
+                noteInterval: 300,
+                noteSpawnChance: 0.7,
+                perfectRange: 8,
+                greatRange: 15,
+                goodRange: 25
+            }
+        };
+
+        // 판정선 위치 계산 함수 (키 인디케이터 바로 위)
+        function getJudgeLineY() {
+            // CSS에서 bottom: 80px로 설정되어 있으므로
+            // 노트도 bottom 속성을 사용하므로 직접 80을 반환
+            return 80;
+        }
+        
+        const noteHeight = 30;
+        
+        // 현재 난이도에 따른 판정 범위 가져오기
+        function getJudgeRanges() {
+            const settings = difficultySettings[gameState.difficulty];
+            return {
+                perfect: settings.perfectRange,
+                great: settings.greatRange,
+                good: settings.goodRange
+            };
+        }
+
+        // 노트 생성
+        function createNote(lane) {
+            const note = document.createElement('div');
+            note.className = `note lane-${lane}`;
+            note.id = `note-${gameState.noteId++}`;
+            // 노트를 게임 영역 맨 위에서 시작
+            // bottom 위치가 게임 영역 높이면 노트의 하단이 맨 아래에 있음
+            // 노트가 위에서 아래로 내려오려면, 노트의 하단이 게임 영역 맨 위에 있어야 함
+            // 게임 영역 높이에서 노트 높이를 빼면 노트의 하단이 맨 위에 위치
+            const gameAreaHeight = gameArea.offsetHeight;
+            const startY = gameAreaHeight; // 노트의 하단이 게임 영역 맨 위에 위치
+            note.style.bottom = `${startY}px`;
+            note.dataset.lane = lane;
+            note.dataset.id = note.id;
+            gameArea.appendChild(note);
+            
+            gameState.notes.push({
+                element: note,
+                lane: lane,
+                y: startY,
+                id: note.id
+            });
+
+            return note;
+        }
+
+        // 랜덤 노트 생성
+        function generateRandomNote() {
+            const lane = Math.floor(Math.random() * 6);
+            createNote(lane);
+        }
+
+        // 노트 이동
+        function updateNotes() {
+            if (!gameState.isPlaying || gameState.isPaused) return;
+
+            const judgeLineY = getJudgeLineY();
+            const gameAreaHeight = gameArea.offsetHeight;
+            
+            // 역순으로 순회하여 배열 수정 시 인덱스 문제 방지
+            for (let i = gameState.notes.length - 1; i >= 0; i--) {
+                const note = gameState.notes[i];
+                note.y -= gameState.speed;
+                note.element.style.bottom = `${note.y}px`;
+
+                // 노트가 판정선을 너무 지나쳤거나 화면 밖으로 나갔을 때 제거
+                if (note.y < -noteHeight || note.y > gameAreaHeight + 100) {
+                    note.element.remove();
+                    gameState.notes.splice(i, 1);
+                }
+            }
+        }
+
+        // 판정 처리 - 노트가 무지개 선에 닿았을 때 판정
+        function judgeNote(lane) {
+            const judgeLineY = getJudgeLineY();
+            const ranges = getJudgeRanges();
+            let closestNote = null;
+            let minDistance = Infinity;
+
+            // 해당 레인의 모든 노트를 확인
+            for (let i = 0; i < gameState.notes.length; i++) {
+                const note = gameState.notes[i];
+                if (note.lane === lane) {
+                    // note.y는 bottom 위치 (게임 영역 하단에서의 거리)
+                    // 노트의 하단이 판정선에 닿았을 때: note.y ≈ judgeLineY
+                    const noteBottom = note.y;
+                    const distance = Math.abs(judgeLineY - noteBottom);
+                    
+                    // 노트가 판정선에 닿았는지 확인
+                    if (distance <= ranges.good) {
+                        // 가장 가까운 노트 선택
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestNote = { note, index: i, distance };
+                        }
+                    }
+                }
+            }
+
+            // 판정 처리
+            if (closestNote && minDistance <= ranges.good) {
+                const { note, index, distance } = closestNote;
+                let judge = '';
+
+                // 거리에 따라 판정 (노트가 판정선에 가까울수록 높은 판정)
+                if (distance <= ranges.perfect) {
+                    judge = 'PERFECT';
+                    gameState.perfect++;
+                    gameState.score += 1000;
+                    gameState.combo++;
+                } else if (distance <= ranges.great) {
+                    judge = 'GREAT';
+                    gameState.great++;
+                    gameState.score += 500;
+                    gameState.combo++;
+                } else if (distance <= ranges.good) {
+                    judge = 'GOOD';
+                    gameState.good++;
+                    gameState.score += 200;
+                    gameState.combo++;
+                }
+
+                // 판정 표시 및 노트 제거
+                if (judge) {
+                    note.element.classList.add('hit');
+                    showJudgeText(judge, judge.toLowerCase());
+                    // 판정된 노트 제거
+                    note.element.remove();
+                    gameState.notes.splice(index, 1);
+                    updateScore();
+                    return; // 판정 성공 시 종료
+                }
+            }
+            
+            // 판정 실패 (노트가 없거나 범위 밖)
+            gameState.miss++;
+            gameState.combo = 0;
+            showJudgeText('MISS', 'miss');
+            updateScore();
+        }
+
+        // 판정 텍스트 표시
+        function showJudgeText(text, type) {
+            judgeText.textContent = text;
+            judgeText.className = `judge-text ${type} show`;
+            setTimeout(() => {
+                judgeText.classList.remove('show');
+            }, 500);
+        }
+
+        // 점수 업데이트
+        function updateScore() {
+            document.getElementById('score').textContent = gameState.score.toLocaleString();
+            document.getElementById('perfect').textContent = gameState.perfect;
+            document.getElementById('great').textContent = gameState.great;
+            document.getElementById('good').textContent = gameState.good;
+            document.getElementById('miss').textContent = gameState.miss;
+            document.getElementById('combo').textContent = gameState.combo;
+        }
+
+        // 키 입력 처리
+        document.addEventListener('keydown', (e) => {
+            if (!gameState.isPlaying || gameState.isPaused) return;
+
+            const key = e.key.toLowerCase();
+            const laneIndex = keys.indexOf(key);
+
+            if (laneIndex !== -1) {
+                keyIndicators[laneIndex].classList.add('active');
+                judgeNote(laneIndex);
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            const laneIndex = keys.indexOf(key);
+
+            if (laneIndex !== -1) {
+                keyIndicators[laneIndex].classList.remove('active');
+            }
+        });
+
+        // 게임 시작
+        function startGame() {
+            if (gameState.isPlaying) return;
+            
+            gameState.isPlaying = true;
+            gameState.isPaused = false;
+            gameState.lastNoteTime = Date.now();
+
+            const difficulty = difficultySettings[gameState.difficulty];
+
+            // 노트 생성 인터벌 (난이도에 따라 조절)
+            const noteInterval = setInterval(() => {
+                if (!gameState.isPlaying || gameState.isPaused) {
+                    clearInterval(noteInterval);
+                    return;
+                }
+                
+                // 난이도에 따른 노트 생성 확률
+                if (Math.random() < difficulty.noteSpawnChance) {
+                    generateRandomNote();
+                }
+            }, difficulty.noteInterval);
+
+            // 게임 루프
+            const gameLoop = setInterval(() => {
+                if (!gameState.isPlaying) {
+                    clearInterval(gameLoop);
+                    return;
+                }
+                updateNotes();
+            }, 16); // 60fps
+
+            // 30초 후 게임 종료
+            setTimeout(() => {
+                endGame();
+            }, 30000);
+        }
+
+        // 게임 일시정지
+        function pauseGame() {
+            if (!gameState.isPlaying) return;
+            gameState.isPaused = !gameState.isPaused;
+        }
+
+        // 게임 종료
+        function endGame() {
+            gameState.isPlaying = false;
+            document.getElementById('finalScore').textContent = gameState.score.toLocaleString();
+            document.getElementById('gameOver').classList.add('show');
+        }
+
+        // 게임 리셋
+        function resetGame() {
+            gameState.isPlaying = false;
+            gameState.isPaused = false;
+            gameState.score = 0;
+            gameState.combo = 0;
+            gameState.perfect = 0;
+            gameState.great = 0;
+            gameState.good = 0;
+            gameState.miss = 0;
+            gameState.notes = [];
+            gameState.noteId = 0;
+
+            // 모든 노트 제거
+            document.querySelectorAll('.note').forEach(note => note.remove());
+            
+            document.getElementById('gameOver').classList.remove('show');
+            updateScore();
+        }
+
+        // 설정 패널 접기/펼치기
+        const settingsPanel = document.getElementById('settingsPanel');
+        const settingsToggle = document.getElementById('settingsToggle');
+        
+        settingsToggle.addEventListener('click', () => {
+            settingsPanel.classList.toggle('collapsed');
+        });
+
+        // 속도 조절 슬라이더
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        
+        speedSlider.addEventListener('input', (e) => {
+            gameState.speed = parseFloat(e.target.value);
+            speedValue.textContent = gameState.speed.toFixed(1);
+        });
+
+        // 난이도 버튼
+        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+        difficultyButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const difficulty = e.target.dataset.difficulty;
+                gameState.difficulty = difficulty;
+                
+                // 활성화 상태 업데이트
+                difficultyButtons.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+
+        // 버튼 이벤트
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('pauseBtn').addEventListener('click', pauseGame);
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+        // 초기화
+        updateScore();
+    </script>
+</body>
+</html>

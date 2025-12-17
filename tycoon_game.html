@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레스토랑 타이쿤 - 수동 모드</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--dark);
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .top-bar {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+
+        .level-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .level-text {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .level-bar-container {
+            width: 100%;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .level-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .restaurant-simulation {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .restaurant-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        #restaurantCanvas {
+            width: 100%;
+            height: 350px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .management-panels {
+            display: grid;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .panel:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .panel h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 0;
+        }
+
+        .panel-count {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .item-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .item-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .item-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .item-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .item-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .item-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .item-details {
+            font-size: 0.9em;
+            color: #666;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, var(--info), #2563eb);
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100px;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .price-tag {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .cost-tag {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .profit-tag {
+            color: var(--info);
+            font-weight: 700;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            padding: 15px 35px;
+            font-size: 1.1em;
+            min-width: 150px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            font-weight: 600;
+            max-width: 300px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px) scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .customer-queue-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .customer-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .customer-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border-color: var(--success);
+        }
+
+        .wait-time-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .wait-time-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
+            transition: width 0.3s;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: none;
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🍽️ 레스토랑 타이쿤</h1>
+            <p class="subtitle">수동 모드 - 직접 레스토랑을 운영하세요!</p>
+        </div>
+
+        <div class="top-bar">
+            <div class="level-section">
+                <div class="level-info">
+                    <span class="level-text">레벨 <span id="level">1</span></span>
+                    <span id="expText">0 / 100 XP</span>
+                </div>
+                <div class="level-bar-container">
+                    <div class="level-bar-fill" id="levelProgress" style="width: 0%">0%</div>
+                </div>
+            </div>
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">💰</span>
+                    <div class="stat-label">자금</div>
+                    <div class="stat-value" id="money">₩1,000</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">👥</span>
+                    <div class="stat-label">손님 수</div>
+                    <div class="stat-value" id="customersServed">0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">⭐</span>
+                    <div class="stat-label">평점</div>
+                    <div class="stat-value" id="rating">3.0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">⏱️</span>
+                    <div class="stat-label">플레이 시간</div>
+                    <div class="stat-value" id="gameTime">00:00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="restaurant-simulation">
+                <div class="restaurant-title" id="restaurantName">작은 식당</div>
+                <canvas id="restaurantCanvas"></canvas>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button onclick="spawnCustomer()" class="btn-success" style="font-size: 1.1em; padding: 15px 30px;">
+                        👤 손님 입장시키기
+                    </button>
+                </div>
+            </div>
+
+            <div class="management-panels">
+                <div class="customer-queue-panel">
+                    <div class="panel-header">
+                        <h2>👥 대기 손님</h2>
+                        <span class="panel-count" id="queueCount">0</span>
+                    </div>
+                    <div style="background: #f0f9ff; padding: 10px; border-radius: 10px; margin-bottom: 10px; text-align: center;">
+                        <strong>🍳 동시 요리 가능: <span id="concurrentCooking">1</span>개</strong>
+                        <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                            주방장/요리사: <span id="chefCount">0</span>명
+                        </div>
+                    </div>
+                    <div class="item-list" id="customerQueueList"></div>
+                    <div style="text-align: center; margin-top: 10px; color: #666; font-size: 0.9em;">
+                        손님을 클릭하거나 서빙 버튼을 눌러주세요
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="switchTab('menu')">📋 메뉴 관리</button>
+            <button class="tab-button" onclick="switchTab('employee')">👨‍🍳 직원 관리</button>
+            <button class="tab-button" onclick="switchTab('upgrade')">🏗️ 확장 & 업그레이드</button>
+        </div>
+
+        <div id="menuTab" class="tab-content active">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>📋 메뉴 관리</h2>
+                    <span class="panel-count" id="menuCountBadge">3</span>
+                </div>
+                <div class="item-list" id="menuList"></div>
+                <button onclick="showAddMenuModal()" style="width: 100%; margin-top: 15px;" class="btn-success">
+                    + 새 메뉴 추가
+                </button>
+            </div>
+        </div>
+
+        <div id="employeeTab" class="tab-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>👨‍🍳 직원 관리</h2>
+                    <span class="panel-count" id="employeeCountBadge">0</span>
+                </div>
+                <div class="item-list" id="employeeList"></div>
+                <button onclick="showHireEmployeeModal()" style="width: 100%; margin-top: 15px;" class="btn-success">
+                    + 직원 고용
+                </button>
+            </div>
+        </div>
+
+        <div id="upgradeTab" class="tab-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>🏗️ 레스토랑 확장</h2>
+                </div>
+                <div class="item-list" id="upgradeList"></div>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <button class="control-button btn-info" onclick="showStatsModal()">📊 상세 통계</button>
+            <button class="control-button btn-success" onclick="saveGame()">💾 저장</button>
+            <button class="control-button btn-warning" onclick="loadGame()">📂 불러오기</button>
+        </div>
+    </div>
+
+    <!-- 모달들 -->
+    <div id="addMenuModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">새 메뉴 추가</div>
+            <div class="modal-body">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600;">메뉴 이름:</label>
+                <input type="text" id="menuNameInput" style="width: 100%; margin-bottom: 15px;" placeholder="예: 불고기">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600;">판매가 (원):</label>
+                <input type="number" id="menuPriceInput" style="width: 100%; margin-bottom: 15px;" min="1000" value="10000">
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('addMenuModal')" class="btn-danger">취소</button>
+                <button onclick="addNewMenu()" class="btn-success">추가</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="statsModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">📊 상세 통계</div>
+            <div class="modal-body">
+                <div class="stats-grid" id="detailedStats"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('statsModal')" class="btn-info">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="hireEmployeeModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">👨‍🍳 직원 고용</div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px; color: #666;">고용할 직원의 역할을 선택하세요:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="item-card" style="cursor: pointer; text-align: center; padding: 20px;" onclick="hireEmployeeWithRole('주방장')">
+                        <div style="font-size: 3em; margin-bottom: 10px;">👨‍🍳</div>
+                        <div class="item-name">주방장</div>
+                        <div class="item-details" style="margin-top: 10px;">
+                            <div>효과: 동시 요리 +1개</div>
+                            <div style="color: var(--danger); font-weight: bold; margin-top: 5px;">
+                                급여: <span class="cost-tag">₩0/일</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-card" style="cursor: pointer; text-align: center; padding: 20px;" onclick="hireEmployeeWithRole('요리사')">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🍳</div>
+                        <div class="item-name">요리사</div>
+                        <div class="item-details" style="margin-top: 10px;">
+                            <div>효과: 동시 요리 +1개</div>
+                            <div style="color: var(--danger); font-weight: bold; margin-top: 5px;">
+                                급여: <span class="cost-tag">₩0/일</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-card" style="cursor: pointer; text-align: center; padding: 20px;" onclick="hireEmployeeWithRole('서버')">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🍽️</div>
+                        <div class="item-name">서버</div>
+                        <div class="item-details" style="margin-top: 10px;">
+                            <div>효과: 손님 수용 +1명</div>
+                            <div style="color: var(--danger); font-weight: bold; margin-top: 5px;">
+                                급여: <span class="cost-tag">₩0/일</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-card" style="cursor: pointer; text-align: center; padding: 20px;" onclick="hireEmployeeWithRole('홀매니저')">
+                        <div style="font-size: 3em; margin-bottom: 10px;">👔</div>
+                        <div class="item-name">홀매니저</div>
+                        <div class="item-details" style="margin-top: 10px;">
+                            <div>효과: 손님 수용 +2명</div>
+                            <div style="color: var(--danger); font-weight: bold; margin-top: 5px;">
+                                급여: <span class="cost-tag">₩0/일</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 10px;">
+                    <strong>역할 설명:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
+                        <li><strong>주방장/요리사:</strong> 동시에 요리할 수 있는 개수를 증가시킵니다</li>
+                        <li><strong>서버:</strong> 손님 수용 인원을 1명 증가시킵니다</li>
+                        <li><strong>홀매니저:</strong> 손님 수용 인원을 2명 증가시킵니다</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('hireEmployeeModal')" class="btn-danger">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="orderMenuModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">📋 주문 받기</div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px; color: #666;">손님이 주문할 메뉴를 선택해주세요:</p>
+                <div id="orderMenuList" style="max-height: 400px; overflow-y: auto;"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('orderMenuModal')" class="btn-danger">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 게임 상태
+        let gameState = {
+            money: 1000,
+            level: 1,
+            experience: 0,
+            experienceToNext: 100,
+            customersServed: 0,
+            rating: 3.0,
+            gameTime: 0,
+            totalRevenue: 0,
+            totalCost: 0,
+            menus: [
+                { id: 1, name: '김치찌개', price: 8000, cost: 3000, popularity: 1.0, sales: 0 },
+                { id: 2, name: '된장찌개', price: 7000, cost: 2500, popularity: 0.9, sales: 0 },
+                { id: 3, name: '비빔밥', price: 9000, cost: 3500, popularity: 1.1, sales: 0 }
+            ],
+            employees: [],
+            upgrades: [
+                { id: 1, name: '주방 확장', cost: 5000, level: 0, maxLevel: 5, effect: '서빙 속도 +20%', icon: '🍳' },
+                { id: 2, name: '홀 확장', cost: 10000, level: 0, maxLevel: 5, effect: '손님 수용 +2', icon: '🪑' },
+                { id: 3, name: '인테리어 개선', cost: 15000, level: 0, maxLevel: 3, effect: '평점 +0.5', icon: '🎨' },
+                { id: 4, name: '광고 캠페인', cost: 20000, level: 0, maxLevel: 3, effect: '인기도 +30%', icon: '📢' }
+            ],
+            customerQueue: [],
+            maxCustomers: 3,
+            maxConcurrentCooking: 1  // 동시 요리 가능 수 (직원 수에 따라 증가)
+        };
+
+        let gameInterval;
+        let canvas, ctx;
+        let animationFrame;
+
+        function initGame() {
+            console.log('게임 초기화 시작');
+            canvas = document.getElementById('restaurantCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            updateDisplay();
+            renderMenus();
+            renderEmployees();
+            renderUpgrades();
+            updateCookingInfo();
+            renderCustomerQueue();
+            setupCanvasEvents();  // Canvas 이벤트 설정
+            startGameLoop();
+            animateCanvas();
+            console.log('게임 초기화 완료');
+        }
+
+        function startGameLoop() {
+            // 기존 인터벌 정리
+            if (gameInterval) {
+                clearInterval(gameInterval);
+                gameInterval = null;
+            }
+
+            // 게임 루프 시작 (1초마다 실행)
+            gameInterval = setInterval(() => {
+                try {
+                    // 플레이 시간 증가
+                    gameState.gameTime++;
+                    
+                    // 손님 대기 시간 업데이트 및 만족도 감소
+                    const customersToRemove = [];
+                    
+                    // 현재 요리 중인 손님 수 계산
+                    const currentlyCooking = gameState.customerQueue.filter(c => c.orderStatus === 'cooking').length;
+                    
+                    gameState.customerQueue.forEach((customer, index) => {
+                        // 경과 시간 증가 (각 손님 독립적으로)
+                        customer.waitTime += 1;
+                        
+                        // 요리 중인 손님만 요리 시간 증가 (동시 요리 수 제한)
+                        if (customer.orderStatus === 'cooking') {
+                            // 동시 요리 가능 수를 초과하면 대기 상태로 변경
+                            const cookingIndex = gameState.customerQueue
+                                .filter(c => c.orderStatus === 'cooking' || c.orderStatus === 'waiting_to_cook')
+                                .findIndex(c => c.id === customer.id);
+                            
+                            // 동시 요리 가능 수 내에 있으면 요리 진행
+                            if (cookingIndex < gameState.maxConcurrentCooking) {
+                                customer.cookingTime += 1;
+                                if (customer.cookingTime >= customer.cookingTimeNeeded) {
+                                    customer.orderStatus = 'ready';
+                                    // 알림은 한 번만 표시하기 위해 체크
+                                    if (!customer.notifiedReady) {
+                                        customer.notifiedReady = true;
+                                        showNotification(`${customer.order.name} 요리 완료! 서빙하세요!`, 'success');
+                                    }
+                                }
+                            } else {
+                                // 요리 대기 상태
+                                customer.orderStatus = 'waiting_to_cook';
+                            }
+                        } else if (customer.orderStatus === 'waiting_to_cook') {
+                            // 대기 중인 손님이 요리를 시작할 수 있는지 확인
+                            const currentlyCookingCount = gameState.customerQueue.filter(c => c.orderStatus === 'cooking').length;
+                            if (currentlyCookingCount < gameState.maxConcurrentCooking) {
+                                customer.orderStatus = 'cooking';
+                            }
+                        }
+                        
+                        // 남은 시간 계산: 최대 대기 시간 - 경과 시간
+                        const remainingTime = Math.max(0, customer.maxWaitTime - customer.waitTime);
+                        
+                        // 남은 시간에 비례해서 만족도 감소
+                        const waitPercent = customer.waitTime / customer.maxWaitTime;
+                        if (waitPercent > 0.5) {
+                            // 50% 이상 대기 시 만족도 감소 시작
+                            const decreaseRate = (waitPercent - 0.5) * 0.2; // 점진적 감소
+                            customer.satisfaction = Math.max(0.5, customer.satisfaction - decreaseRate);
+                        }
+                        
+                        // 최대 대기 시간 초과 시 손님이 떠남
+                        if (remainingTime <= 0) {
+                            customersToRemove.push(customer.id);
+                        }
+                    });
+                    
+                    // 대기 시간 초과한 손님들 제거
+                    customersToRemove.forEach(customerId => {
+                        const customerIndex = gameState.customerQueue.findIndex(c => c.id === customerId);
+                        if (customerIndex !== -1) {
+                            const customer = gameState.customerQueue[customerIndex];
+                            gameState.customerQueue.splice(customerIndex, 1);
+                            
+                            // 손님이 떠날 때 평점 감소
+                            const ratingPenalty = 0.1;
+                            gameState.rating = Math.max(1.0, gameState.rating - ratingPenalty);
+                            
+                            showNotification(`😤 손님이 기다림에 지쳐 떠났습니다! (평점 -${ratingPenalty})`, 'warning');
+                        }
+                    });
+                    
+                    // 화면 업데이트 (매번 실행)
+                    updateDisplay();
+                    updateCookingInfo();
+                    renderCustomerQueue();
+                } catch (error) {
+                    console.error('게임 루프 오류:', error);
+                    console.error('스택:', error.stack);
+                }
+            }, 1000);
+            
+            console.log('게임 루프 시작됨 - 1초마다 실행됩니다');
+        }
+
+        function spawnCustomer() {
+            if (gameState.customerQueue.length >= gameState.maxCustomers) {
+                showNotification('손님 수용 한도에 도달했습니다!', 'warning');
+                return;
+            }
+
+            // 손님이 입장하고 자동으로 메뉴를 선택
+            const menu = gameState.menus[Math.floor(Math.random() * gameState.menus.length)];
+            const cookingTime = getCookingTime(menu);
+            
+            // 일반 타이쿤 방식: 각 손님은 독립적인 대기 시간을 가짐
+            // 대기 시간 = 요리 시간 + 여유 시간 (요리 시간의 2.5배)
+            const maxWaitTime = Math.floor(cookingTime * 2.5);
+            
+            // 현재 요리 중인 손님 수 확인
+            const currentlyCooking = gameState.customerQueue.filter(c => c.orderStatus === 'cooking').length;
+            
+            // 동시 요리 가능 수를 초과하면 대기 상태로 시작
+            let initialStatus = 'cooking';
+            if (currentlyCooking >= gameState.maxConcurrentCooking) {
+                initialStatus = 'waiting_to_cook';
+            }
+            
+            const customer = {
+                id: Date.now() + Math.random(),
+                order: menu,  // 손님이 자동으로 메뉴 선택
+                orderStatus: initialStatus,  // 요리 시작 또는 대기
+                waitTime: 0,  // 경과 시간
+                maxWaitTime: maxWaitTime,  // 최대 대기 시간 (독립적)
+                cookingTime: 0,  // 현재 요리 진행 시간
+                cookingTimeNeeded: cookingTime,  // 필요한 요리 시간
+                satisfaction: 5.0,
+                startTime: gameState.gameTime  // 입장 시간 기록
+            };
+            
+            gameState.customerQueue.push(customer);
+            renderCustomerQueue();
+            showNotification(`새 손님이 입장했습니다! ${menu.name} 주문 (요리 시간: ${cookingTime}초)`, 'info');
+        }
+        
+        function takeOrder(customerId) {
+            const customerIndex = gameState.customerQueue.findIndex(c => c.id === customerId);
+            if (customerIndex === -1) return;
+            
+            const customer = gameState.customerQueue[customerIndex];
+            
+            if (customer.orderStatus !== 'waiting') {
+                showNotification('이미 주문을 받았습니다!', 'warning');
+                return;
+            }
+            
+            // 메뉴 선택 모달 표시
+            showOrderMenuModal(customerId);
+        }
+        
+        function confirmOrder(customerId, menuId) {
+            const customerIndex = gameState.customerQueue.findIndex(c => c.id === customerId);
+            if (customerIndex === -1) return;
+            
+            const customer = gameState.customerQueue[customerIndex];
+            const menu = gameState.menus.find(m => m.id === menuId);
+            
+            if (!menu) return;
+            
+            // 가격에 비례한 요리 시간 계산
+            const cookingTime = getCookingTime(menu);
+            
+            customer.order = menu;
+            customer.selectedMenu = menu;
+            customer.orderStatus = 'cooking';
+            customer.cookingTime = 0;
+            customer.cookingTimeNeeded = cookingTime;
+            
+            closeModal('orderMenuModal');
+            renderCustomerQueue();
+            showNotification(`${menu.name} 주문을 받았습니다! 요리 중... (${cookingTime}초 소요)`, 'info');
+        }
+        
+        function getCookingTime(menu) {
+            // 가격에 비례해서 요리 시간 계산
+            // 기본 3초 + (가격 / 1000)초 (최소 3초, 최대 15초)
+            const baseTime = 3;
+            const priceBasedTime = Math.floor(menu.price / 1000);
+            const cookingTime = Math.min(Math.max(baseTime + priceBasedTime, 3), 15);
+            return cookingTime;
+        }
+        
+        function showOrderMenuModal(customerId) {
+            const modal = document.getElementById('orderMenuModal');
+            const menuList = document.getElementById('orderMenuList');
+            
+            menuList.innerHTML = '';
+            
+            if (gameState.menus.length === 0) {
+                menuList.innerHTML = '<div class="empty-state"><p>메뉴가 없습니다. 먼저 메뉴를 추가하세요!</p></div>';
+            } else {
+                gameState.menus.forEach(menu => {
+                    const cookingTime = getCookingTime(menu);
+                    const menuDiv = document.createElement('div');
+                    menuDiv.className = 'item-card';
+                    menuDiv.style.cursor = 'pointer';
+                    menuDiv.onclick = () => confirmOrder(customerId, menu.id);
+                    menuDiv.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-name">${menu.name}</div>
+                            <div class="item-details">
+                                <span class="price-tag">₩${menu.price.toLocaleString()}</span>
+                                <span style="color: #666;">요리 시간: ${cookingTime}초</span>
+                            </div>
+                        </div>
+                    `;
+                    menuList.appendChild(menuDiv);
+                });
+            }
+            
+            modal.dataset.customerId = customerId;
+            modal.classList.add('active');
+        }
+
+        function serveCustomer(customerId) {
+            const customerIndex = gameState.customerQueue.findIndex(c => c.id === customerId);
+            if (customerIndex === -1) return;
+
+            const customer = gameState.customerQueue[customerIndex];
+            
+            // 요리가 완료되지 않았으면 서빙 불가
+            if (customer.orderStatus !== 'ready') {
+                if (customer.orderStatus === 'cooking') {
+                    const remainingCookTime = customer.cookingTimeNeeded - customer.cookingTime;
+                    showNotification(`요리 중입니다! ${remainingCookTime}초 남았습니다.`, 'warning');
+                }
+                return;
+            }
+            
+            const profit = customer.order.price - customer.order.cost;
+            
+            // 만족도에 따라 수익 조정 (만족도가 낮으면 팁 감소)
+            const satisfactionMultiplier = customer.satisfaction / 5.0;
+            const adjustedProfit = Math.floor(profit * satisfactionMultiplier);
+            
+            gameState.money += adjustedProfit;
+            gameState.totalRevenue += customer.order.price;
+            gameState.totalCost += customer.order.cost;
+            gameState.customersServed++;
+            gameState.experience += 10;
+            customer.order.sales++;
+            
+            if (gameState.experience >= gameState.experienceToNext) {
+                levelUp();
+            }
+
+            // 평점 계산 (만족도와 대기 시간 고려)
+            const waitPercent = customer.waitTime / customer.maxWaitTime;
+            let satisfactionBonus = customer.satisfaction / 10;
+            
+            // 대기 시간이 짧을수록 보너스
+            if (waitPercent < 0.5) {
+                satisfactionBonus += 0.1; // 빠른 서빙 보너스
+            }
+            
+            gameState.rating = Math.min(5.0, gameState.rating + satisfactionBonus);
+            gameState.rating = Math.max(1.0, gameState.rating);
+
+            gameState.customerQueue.splice(customerIndex, 1);
+            renderCustomerQueue();
+            updateDisplay();
+            
+            // 만족도에 따른 메시지
+            let message = `+₩${adjustedProfit.toLocaleString()} 수익! (${customer.order.name})`;
+            if (customer.satisfaction < 3.0) {
+                message += ' - 만족도가 낮아 수익이 감소했습니다';
+            } else if (waitPercent < 0.5) {
+                message += ' - 빠른 서빙 보너스!';
+            }
+            
+            showNotification(message, customer.satisfaction >= 3.0 ? 'success' : 'warning');
+        }
+
+        function levelUp() {
+            gameState.level++;
+            gameState.experience = 0;
+            gameState.experienceToNext = Math.floor(gameState.experienceToNext * 1.5);
+            gameState.money += gameState.level * 2000;
+            showNotification(`🎉 레벨 업! 레벨 ${gameState.level} 달성!`, 'success');
+        }
+
+        function updateDisplay() {
+            try {
+                // 자금 업데이트
+                const moneyEl = document.getElementById('money');
+                if (moneyEl) moneyEl.textContent = `₩${gameState.money.toLocaleString()}`;
+                
+                // 손님 수 업데이트
+                const customersEl = document.getElementById('customersServed');
+                if (customersEl) customersEl.textContent = gameState.customersServed;
+                
+                // 평점 업데이트
+                const ratingEl = document.getElementById('rating');
+                if (ratingEl) ratingEl.textContent = gameState.rating.toFixed(1);
+                
+                // 레벨 업데이트
+                const levelEl = document.getElementById('level');
+                if (levelEl) levelEl.textContent = gameState.level;
+                
+                // 경험치 업데이트
+                const expEl = document.getElementById('expText');
+                if (expEl) expEl.textContent = `${gameState.experience} / ${gameState.experienceToNext} XP`;
+                
+                // 플레이 시간 업데이트 (중요!)
+                const minutes = Math.floor(gameState.gameTime / 60);
+                const seconds = gameState.gameTime % 60;
+                const gameTimeEl = document.getElementById('gameTime');
+                if (gameTimeEl) {
+                    gameTimeEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }
+
+                // 레벨 진행도 업데이트
+                const progress = (gameState.experience / gameState.experienceToNext) * 100;
+                const levelProgressEl = document.getElementById('levelProgress');
+                if (levelProgressEl) {
+                    levelProgressEl.style.width = `${progress}%`;
+                    levelProgressEl.textContent = `${Math.floor(progress)}%`;
+                }
+
+                // 레스토랑 이름 업데이트
+                const names = ['작은 식당', '인기 식당', '유명 레스토랑', '프리미엄 레스토랑', '미슐랭 레스토랑'];
+                const nameIndex = Math.min(Math.floor(gameState.level / 5), names.length - 1);
+                const restaurantNameEl = document.getElementById('restaurantName');
+                if (restaurantNameEl) restaurantNameEl.textContent = names[nameIndex];
+            } catch (error) {
+                console.error('화면 업데이트 오류:', error);
+            }
+        }
+
+        function renderMenus() {
+            const menuList = document.getElementById('menuList');
+            menuList.innerHTML = '';
+            
+            if (gameState.menus.length === 0) {
+                menuList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🍽️</div><p>메뉴가 없습니다</p></div>';
+                return;
+            }
+
+            gameState.menus.forEach(menu => {
+                const menuDiv = document.createElement('div');
+                menuDiv.className = 'item-card';
+                const profit = menu.price - menu.cost;
+                const profitMargin = ((profit / menu.price) * 100).toFixed(1);
+                
+                menuDiv.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-name">${menu.name}</div>
+                        <div class="item-details">
+                            <span class="detail-item">
+                                <span class="price-tag">판매가: ₩${menu.price.toLocaleString()}</span>
+                            </span>
+                            <span class="detail-item">
+                                <span class="cost-tag">원가: ₩${menu.cost.toLocaleString()}</span>
+                            </span>
+                            <span class="detail-item">
+                                <span class="profit-tag">수익: ₩${profit.toLocaleString()} (${profitMargin}%)</span>
+                            </span>
+                            <span class="detail-item">
+                                판매량: ${menu.sales}개
+                            </span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <input type="number" value="${menu.price}" min="${menu.cost}" 
+                               onchange="updateMenuPrice(${menu.id}, this.value)" 
+                               style="width: 120px;">
+                        <button onclick="removeMenu(${menu.id})" class="btn-danger">삭제</button>
+                    </div>
+                `;
+                menuList.appendChild(menuDiv);
+            });
+            
+            document.getElementById('menuCountBadge').textContent = gameState.menus.length;
+        }
+
+        function renderEmployees() {
+            const employeeList = document.getElementById('employeeList');
+            employeeList.innerHTML = '';
+            
+            if (gameState.employees.length === 0) {
+                employeeList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👤</div><p>직원이 없습니다</p></div>';
+                return;
+            }
+
+            gameState.employees.forEach((employee, index) => {
+                const empDiv = document.createElement('div');
+                empDiv.className = 'item-card';
+                empDiv.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-name">${employee.name} ${employee.role || '직원'}</div>
+                        <div class="item-details">
+                            <span class="detail-item">급여: <span class="cost-tag">₩${employee.salary.toLocaleString()}/일</span></span>
+                            <span class="detail-item">효율: <span class="profit-tag">${employee.efficiency}%</span></span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="fireEmployee(${index})" class="btn-danger">해고</button>
+                    </div>
+                `;
+                employeeList.appendChild(empDiv);
+            });
+            
+            document.getElementById('employeeCountBadge').textContent = gameState.employees.length;
+        }
+
+        function renderUpgrades() {
+            const upgradeList = document.getElementById('upgradeList');
+            upgradeList.innerHTML = '';
+            
+            gameState.upgrades.forEach(upgrade => {
+                const upgradeDiv = document.createElement('div');
+                upgradeDiv.className = 'item-card';
+                const canAfford = gameState.money >= upgrade.cost;
+                const canUpgrade = upgrade.level < upgrade.maxLevel;
+                
+                upgradeDiv.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-name">
+                            ${upgrade.icon} ${upgrade.name} 
+                            <span style="color: #666; font-size: 0.9em;">(레벨 ${upgrade.level}/${upgrade.maxLevel})</span>
+                        </div>
+                        <div class="item-details">
+                            <span class="detail-item">효과: ${upgrade.effect}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <span class="cost-tag" style="font-size: 1.1em; margin-right: 10px;">₩${upgrade.cost.toLocaleString()}</span>
+                        <button onclick="buyUpgrade(${upgrade.id})" 
+                                ${!canAfford || !canUpgrade ? 'disabled' : ''}
+                                class="${canUpgrade ? 'btn-success' : ''}">
+                            ${canUpgrade ? '구매' : '최대 레벨'}
+                        </button>
+                    </div>
+                `;
+                upgradeList.appendChild(upgradeDiv);
+            });
+        }
+
+        function updateCookingInfo() {
+            const concurrentCookingEl = document.getElementById('concurrentCooking');
+            const chefCountEl = document.getElementById('chefCount');
+            
+            if (concurrentCookingEl) {
+                concurrentCookingEl.textContent = gameState.maxConcurrentCooking;
+            }
+            if (chefCountEl) {
+                const chefCount = gameState.employees.filter(e => e.role === '주방장' || e.role === '요리사').length;
+                chefCountEl.textContent = chefCount;
+            }
+        }
+
+        function renderCustomerQueue() {
+            const queueList = document.getElementById('customerQueueList');
+            const queueCount = document.getElementById('queueCount');
+            
+            queueCount.textContent = gameState.customerQueue.length;
+            queueList.innerHTML = '';
+            
+            if (gameState.customerQueue.length === 0) {
+                queueList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👤</div><p>대기 중인 손님이 없습니다</p></div>';
+                return;
+            }
+
+            gameState.customerQueue.forEach((customer, index) => {
+                const customerDiv = document.createElement('div');
+                customerDiv.className = 'customer-card';
+                customerDiv.onclick = () => serveCustomer(customer.id);
+                
+                const remainingTime = Math.max(0, customer.maxWaitTime - customer.waitTime);
+                const waitPercent = (customer.waitTime / customer.maxWaitTime) * 100;
+                let waitColor = '#10b981';
+                let waitStatus = '여유';
+                let statusText = '';
+                let buttonText = '서빙하기';
+                let buttonClass = 'btn-success';
+                
+                // 상태에 따른 표시
+                if (customer.orderStatus === 'waiting_to_cook') {
+                    statusText = '⏳ 요리 대기 중...';
+                    buttonText = '대기 중...';
+                    buttonClass = 'btn-info';
+                    buttonClass += '" disabled';
+                } else if (customer.orderStatus === 'cooking') {
+                    const remainingCookTime = Math.max(0, customer.cookingTimeNeeded - customer.cookingTime);
+                    statusText = `🍳 요리 중... (${remainingCookTime}초 남음)`;
+                    buttonText = '요리 중...';
+                    buttonClass = 'btn-warning';
+                    buttonClass += '" disabled';
+                } else if (customer.orderStatus === 'ready') {
+                    statusText = '✅ 서빙 준비 완료';
+                    buttonText = '서빙하기';
+                    buttonClass = 'btn-success';
+                }
+                
+                if (waitPercent >= 100) {
+                    waitColor = '#dc2626';
+                    waitStatus = '떠나려 함!';
+                } else if (waitPercent > 80) {
+                    waitColor = '#ef4444';
+                    waitStatus = '매우 불만';
+                } else if (waitPercent > 60) {
+                    waitColor = '#f59e0b';
+                    waitStatus = '불만';
+                } else if (waitPercent > 40) {
+                    waitColor = '#fbbf24';
+                    waitStatus = '조금 불만';
+                }
+                
+                const satisfactionColor = customer.satisfaction >= 4.0 ? '#10b981' : 
+                                         customer.satisfaction >= 2.5 ? '#f59e0b' : '#ef4444';
+                
+                // 디버깅용 (나중에 제거 가능)
+                if (index === 0 && gameState.customerQueue.length > 0) {
+                    console.log(`[시간 업데이트] 손님 waitTime: ${customer.waitTime}, maxWaitTime: ${customer.maxWaitTime}, remainingTime: ${remainingTime}, cookingTime: ${customer.cookingTime}/${customer.cookingTimeNeeded}`);
+                }
+                
+                customerDiv.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-name">
+                            손님 ${index + 1}
+                            ${customer.order ? ` - ${customer.order.name}` : ' - 주문 대기'}
+                            ${waitPercent >= 100 ? ' <span style="color: #ef4444; font-weight: bold;">⚠️ 떠나려 함!</span>' : ''}
+                        </div>
+                        <div class="item-details">
+                            <span class="detail-item"><strong>${statusText}</strong></span>
+                            ${customer.order ? `<span class="detail-item">가격: <span class="price-tag">₩${customer.order.price.toLocaleString()}</span></span>` : ''}
+                            <span class="detail-item">⏱️ 남은 시간: <span style="color: ${waitColor}; font-weight: bold; font-size: 1.1em;">${remainingTime}초</span> / ${customer.maxWaitTime}초 (${waitStatus})</span></span>
+                            <span class="detail-item">만족도: <span style="color: ${satisfactionColor}; font-weight: bold;">${customer.satisfaction.toFixed(1)}/5.0</span></span>
+                        </div>
+                        <div class="wait-time-bar">
+                            <div class="wait-time-fill" style="width: ${Math.min(100, waitPercent)}%; background: ${waitColor};"></div>
+                        </div>
+                        ${customer.orderStatus === 'waiting_to_cook' ? `<div style="margin-top: 5px; padding: 8px; background: #e0f2fe; border-radius: 5px; font-size: 0.85em; color: #0369a1;">
+                            ⏳ 요리 대기 중... (주방장이 ${gameState.maxConcurrentCooking}명이어서 동시에 ${gameState.maxConcurrentCooking}개만 요리 가능)
+                        </div>` : ''}
+                        ${customer.orderStatus === 'cooking' ? `<div style="margin-top: 5px;">
+                            <div style="width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                                <div style="width: ${(customer.cookingTime / customer.cookingTimeNeeded) * 100}%; height: 100%; background: var(--warning); transition: width 0.3s;"></div>
+                            </div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">요리 진행도: ${Math.floor((customer.cookingTime / customer.cookingTimeNeeded) * 100)}% (${customer.cookingTime}/${customer.cookingTimeNeeded}초)</div>
+                        </div>` : ''}
+                        ${waitPercent >= 90 ? '<div style="color: #ef4444; font-size: 0.85em; margin-top: 5px; font-weight: bold;">⚠️ 곧 떠날 수 있습니다!</div>' : ''}
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="event.stopPropagation(); serveCustomer(${customer.id})" class="${buttonClass}">
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+                queueList.appendChild(customerDiv);
+            });
+        }
+
+        function animateCanvas() {
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 배경
+                ctx.fillStyle = '#f8f9fa';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // 레스토랑 시각화
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                
+                // 테이블 그리기
+                const tableCount = Math.min(gameState.maxCustomers, 5);
+                const tableSpacing = canvas.width / (tableCount + 1);
+                
+                for (let i = 0; i < tableCount; i++) {
+                    const x = tableSpacing * (i + 1);
+                    const y = centerY;
+                    
+                    // 테이블
+                    ctx.fillStyle = '#8b4513';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 25, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // 손님
+                    if (i < gameState.customerQueue.length) {
+                        const customer = gameState.customerQueue[i];
+                        const customerX = x;
+                        const customerY = y - 40;
+                        
+                        // 손님 원
+                        ctx.fillStyle = '#4a90e2';
+                        ctx.beginPath();
+                        ctx.arc(customerX, customerY, 15, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // 클릭 가능 표시
+                        ctx.strokeStyle = '#10b981';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(customerX, customerY, 18, 0, Math.PI * 2);
+                        ctx.stroke();
+                        
+                        ctx.fillStyle = '#10b981';
+                        ctx.font = 'bold 10px Arial';
+                        ctx.fillText('클릭!', customerX - 15, customerY - 25);
+                        
+                        // 만족도 표시
+                        ctx.fillStyle = '#fbbf24';
+                        ctx.font = '12px Arial';
+                        ctx.fillText('⭐', customerX - 8, customerY - 30);
+                        
+                        // 주문 표시
+                        ctx.fillStyle = '#333';
+                        ctx.font = '10px Arial';
+                        ctx.fillText(customer.order.name.substring(0, 4), customerX - 12, customerY + 5);
+                    }
+                }
+                
+                // 직원 그리기
+                gameState.employees.forEach((emp, index) => {
+                    const x = 50 + (index * 30);
+                    const y = canvas.height - 50;
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 12, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                animationFrame = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function setupCanvasEvents() {
+            // Canvas 클릭 이벤트
+            if (canvas) {
+                canvas.addEventListener('click', function(event) {
+                    if (gameState.customerQueue.length === 0) return;
+                    
+                    const rect = canvas.getBoundingClientRect();
+                    const x = event.clientX - rect.left;
+                    const y = event.clientY - rect.top;
+                    
+                    const tableCount = Math.min(gameState.maxCustomers, 5);
+                    const tableSpacing = canvas.width / (tableCount + 1);
+                    const centerY = canvas.height / 2;
+                    
+                    gameState.customerQueue.forEach((customer, index) => {
+                        const customerX = tableSpacing * (index + 1);
+                        const customerY = centerY - 40;
+                        const distance = Math.sqrt(Math.pow(x - customerX, 2) + Math.pow(y - customerY, 2));
+                        
+                        if (distance < 20) {
+                            serveCustomer(customer.id);
+                        }
+                    });
+                });
+            }
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            const tabEl = document.getElementById(tabName + 'Tab');
+            if (tabEl) {
+                tabEl.classList.add('active');
+            }
+        }
+
+        function showAddMenuModal() {
+            document.getElementById('addMenuModal').classList.add('active');
+            document.getElementById('menuNameInput').focus();
+        }
+
+        function showHireEmployeeModal() {
+            const salary = 5000 + (gameState.employees.length * 1000);
+            if (gameState.money < salary) {
+                showNotification('자금이 부족합니다!', 'danger');
+                return;
+            }
+            
+            // 모달 내 급여 정보 업데이트
+            const salaryElements = document.querySelectorAll('#hireEmployeeModal .cost-tag');
+            salaryElements.forEach(el => {
+                el.textContent = `₩${salary.toLocaleString()}/일`;
+            });
+            
+            document.getElementById('hireEmployeeModal').classList.add('active');
+        }
+
+        function showStatsModal() {
+            const stats = document.getElementById('detailedStats');
+            stats.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">총 매출</div>
+                    <div class="stat-value">₩${gameState.totalRevenue.toLocaleString()}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">총 비용</div>
+                    <div class="stat-value">₩${gameState.totalCost.toLocaleString()}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">순이익</div>
+                    <div class="stat-value">₩${(gameState.totalRevenue - gameState.totalCost).toLocaleString()}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">평균 주문가</div>
+                    <div class="stat-value">₩${gameState.customersServed > 0 ? Math.floor(gameState.totalRevenue / gameState.customersServed).toLocaleString() : 0}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">업그레이드 레벨</div>
+                    <div class="stat-value">${gameState.upgrades.reduce((sum, u) => sum + u.level, 0)}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">직원 수</div>
+                    <div class="stat-value">${gameState.employees.length}</div>
+                </div>
+            `;
+            document.getElementById('statsModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function addNewMenu() {
+            const name = document.getElementById('menuNameInput').value.trim();
+            const price = parseInt(document.getElementById('menuPriceInput').value);
+            
+            if (!name || !price || price < 1000) {
+                showNotification('올바른 정보를 입력하세요!', 'danger');
+                return;
+            }
+            
+            const cost = Math.floor(price / 2.5);
+            const newMenu = {
+                id: Date.now(),
+                name: name,
+                price: price,
+                cost: cost,
+                popularity: 1.0,
+                sales: 0
+            };
+            
+            gameState.menus.push(newMenu);
+            renderMenus();
+            closeModal('addMenuModal');
+            document.getElementById('menuNameInput').value = '';
+            document.getElementById('menuPriceInput').value = '10000';
+            showNotification(`새 메뉴 "${name}" 추가됨!`, 'success');
+        }
+
+        function updateMenuPrice(menuId, newPrice) {
+            const menu = gameState.menus.find(m => m.id === menuId);
+            if (menu) {
+                newPrice = parseInt(newPrice);
+                if (newPrice >= menu.cost) {
+                    menu.price = newPrice;
+                    renderMenus();
+                } else {
+                    showNotification('판매가는 원가보다 높아야 합니다!', 'danger');
+                    renderMenus();
+                }
+            }
+        }
+
+        function removeMenu(menuId) {
+            if (gameState.menus.length <= 1) {
+                showNotification('최소 1개의 메뉴는 필요합니다!', 'danger');
+                return;
+            }
+            if (confirm('정말 이 메뉴를 삭제하시겠습니까?')) {
+                gameState.menus = gameState.menus.filter(m => m.id !== menuId);
+                renderMenus();
+                showNotification('메뉴가 삭제되었습니다.', 'info');
+            }
+        }
+
+        function hireEmployeeWithRole(role) {
+            const baseSalary = 5000;
+            const salary = baseSalary + (gameState.employees.length * 1000);
+            
+            if (gameState.money < salary) {
+                showNotification('자금이 부족합니다!', 'danger');
+                return;
+            }
+            
+            const names = ['김철수', '이영희', '박민수', '정수진', '최동현', '한소영', '강지훈', '윤서연', '임도현', '송미영'];
+            const name = names[Math.floor(Math.random() * names.length)];
+            const efficiency = 50 + Math.floor(Math.random() * 40);
+            
+            const employee = {
+                name: name,
+                role: role,
+                salary: salary,
+                efficiency: efficiency
+            };
+            
+            gameState.money -= salary;
+            gameState.employees.push(employee);
+            
+            // 역할에 따른 효과 적용
+            if (role === '주방장' || role === '요리사') {
+                // 주방 직원: 동시 요리 가능 수 증가
+                gameState.maxConcurrentCooking += 1;
+                showNotification(`${name} ${role} 고용! 동시 요리 가능 수: ${gameState.maxConcurrentCooking}개`, 'success');
+            } else if (role === '서버') {
+                // 서버: 손님 수용 인원 +1
+                gameState.maxCustomers += 1;
+                showNotification(`${name} ${role} 고용! 손님 수용 인원: ${gameState.maxCustomers}명`, 'success');
+            } else if (role === '홀매니저') {
+                // 홀매니저: 손님 수용 인원 +2
+                gameState.maxCustomers += 2;
+                showNotification(`${name} ${role} 고용! 손님 수용 인원: ${gameState.maxCustomers}명`, 'success');
+            }
+            
+            closeModal('hireEmployeeModal');
+            renderEmployees();
+            renderUpgrades();
+            updateCookingInfo();
+            updateDisplay();
+        }
+
+        function fireEmployee(index) {
+            if (confirm('정말 이 직원을 해고하시겠습니까?')) {
+                const employee = gameState.employees[index];
+                gameState.employees.splice(index, 1);
+                
+                // 역할에 따른 효과 제거
+                if (employee.role === '주방장' || employee.role === '요리사') {
+                    gameState.maxConcurrentCooking = Math.max(1, gameState.maxConcurrentCooking - 1);
+                    showNotification(`${employee.name} 해고됨. 동시 요리 가능 수: ${gameState.maxConcurrentCooking}개`, 'info');
+                } else if (employee.role === '서버') {
+                    gameState.maxCustomers = Math.max(3, gameState.maxCustomers - 1);
+                    showNotification(`${employee.name} 해고됨. 손님 수용 인원: ${gameState.maxCustomers}명`, 'info');
+                } else if (employee.role === '홀매니저') {
+                    gameState.maxCustomers = Math.max(3, gameState.maxCustomers - 2);
+                    showNotification(`${employee.name} 해고됨. 손님 수용 인원: ${gameState.maxCustomers}명`, 'info');
+                }
+                
+                renderEmployees();
+                updateCookingInfo();
+            }
+        }
+
+        function buyUpgrade(upgradeId) {
+            const upgrade = gameState.upgrades.find(u => u.id === upgradeId);
+            if (!upgrade || upgrade.level >= upgrade.maxLevel) return;
+            
+            if (gameState.money < upgrade.cost) {
+                showNotification('자금이 부족합니다!', 'danger');
+                return;
+            }
+            
+            gameState.money -= upgrade.cost;
+            upgrade.level++;
+            upgrade.cost = Math.floor(upgrade.cost * 1.8);
+            
+            applyUpgradeEffect(upgrade);
+            
+            renderUpgrades();
+            updateDisplay();
+            showNotification(`${upgrade.name} 레벨 ${upgrade.level} 완료!`, 'success');
+        }
+
+        function applyUpgradeEffect(upgrade) {
+            switch(upgrade.id) {
+                case 1:
+                    // 주방 확장 효과는 수동 모드에서는 적용 안됨
+                    break;
+                case 2:
+                    gameState.maxCustomers += 2;
+                    break;
+                case 3:
+                    gameState.rating = Math.min(5.0, gameState.rating + 0.5);
+                    break;
+                case 4:
+                    gameState.menus.forEach(menu => {
+                        menu.popularity += 0.15;
+                    });
+                    break;
+            }
+        }
+
+        function saveGame() {
+            localStorage.setItem('tycoonGameSave', JSON.stringify(gameState));
+            showNotification('게임이 저장되었습니다!', 'success');
+        }
+
+        function loadGame() {
+            const saveData = localStorage.getItem('tycoonGameSave');
+            if (!saveData) {
+                showNotification('저장된 게임이 없습니다!', 'danger');
+                return;
+            }
+            
+            if (confirm('저장된 게임을 불러오시겠습니까? 현재 진행 상황은 저장되지 않습니다.')) {
+                gameState = JSON.parse(saveData);
+                initGame();
+                showNotification('게임을 불러왔습니다!', 'success');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            const colors = {
+                success: 'linear-gradient(135deg, var(--success), #059669)',
+                danger: 'linear-gradient(135deg, var(--danger), #dc2626)',
+                info: 'linear-gradient(135deg, var(--info), #2563eb)',
+                warning: 'linear-gradient(135deg, var(--warning), #d97706)'
+            };
+            
+            notification.style.background = colors[type] || colors.success;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Enter 키로 모달 확인
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeModal = document.querySelector('.modal.active');
+                if (activeModal && activeModal.id === 'addMenuModal') {
+                    addNewMenu();
+                }
+            }
+        });
+
+        // 창 크기 변경 시 Canvas 리사이즈
+        window.addEventListener('resize', function() {
+            if (canvas) {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+        });
+
+        // 게임 시작
+        initGame();
+    </script>
+</body>
+</html>
+

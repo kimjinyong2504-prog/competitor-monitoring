@@ -287,33 +287,51 @@ class HwasungNewsCrawler:
         all_articles = []
         
         try:
-            # 구글 뉴스 RSS 피드 URL
+            # 구글 뉴스 RSS 피드 URL (여러 언어/지역 시도)
             encoded_query = quote(query)
-            rss_url = f"https://news.google.com/rss/search?q={encoded_query}&hl=ko&gl=KR&ceid=KR:ko"
             
-            print(f"    [구글 뉴스] 검색 URL: {rss_url}")
+            # 한국어 뉴스 검색
+            rss_urls = [
+                f"https://news.google.com/rss/search?q={encoded_query}&hl=ko&gl=KR&ceid=KR:ko",
+                f"https://news.google.com/rss/search?q={encoded_query}&hl=en&gl=US&ceid=US:en",
+                f"https://news.google.com/rss/search?q={encoded_query}&hl=ko&gl=KR&ceid=KR:ko&when=7d"  # 최근 7일
+            ]
             
-            # requests를 사용하여 RSS 피드 가져오기 (SSL 검증 비활성화)
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            }
-            response = requests.get(rss_url, headers=headers, timeout=30, verify=False)
-            response.raise_for_status()
+            for rss_url in rss_urls:
+                try:
+                    print(f"    [구글 뉴스] 검색 URL: {rss_url}")
+                    
+                    # requests를 사용하여 RSS 피드 가져오기 (SSL 검증 비활성화)
+                    headers = {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                    }
+                    response = requests.get(rss_url, headers=headers, timeout=30, verify=False)
+                    response.raise_for_status()
+                    
+                    print(f"    [구글 뉴스] HTTP 상태 코드: {response.status_code}")
+                    print(f"    [구글 뉴스] 응답 크기: {len(response.content)} bytes")
+                    
+                    # RSS 피드 파싱
+                    feed = feedparser.parse(response.content)
+                    
+                    if feed.bozo and feed.bozo_exception:
+                        print(f"    [구글 뉴스 RSS 오류] {str(feed.bozo_exception)}")
+                        continue
+                    
+                    print(f"    [구글 뉴스] 피드 엔트리 수: {len(feed.entries)}")
+                    
+                    if len(feed.entries) == 0:
+                        print(f"    [구글 뉴스] 경고: 피드에 엔트리가 없습니다.")
+                        continue
+                    
+                    # 결과가 있으면 첫 번째 URL만 사용하고 중단
+                    break
+                except Exception as e:
+                    print(f"    [구글 뉴스 URL 시도 실패] {str(e)}")
+                    continue
             
-            print(f"    [구글 뉴스] HTTP 상태 코드: {response.status_code}")
-            print(f"    [구글 뉴스] 응답 크기: {len(response.content)} bytes")
-            
-            # RSS 피드 파싱
-            feed = feedparser.parse(response.content)
-            
-            if feed.bozo and feed.bozo_exception:
-                print(f"    [구글 뉴스 RSS 오류] {str(feed.bozo_exception)}")
-                return all_articles
-            
-            print(f"    [구글 뉴스] 피드 엔트리 수: {len(feed.entries)}")
-            
-            if len(feed.entries) == 0:
-                print(f"    [구글 뉴스] 경고: 피드에 엔트리가 없습니다.")
+            # feed가 정의되지 않았으면 반환
+            if 'feed' not in locals() or len(feed.entries) == 0:
                 return all_articles
             
             matched_count = 0
@@ -456,7 +474,7 @@ class HwasungNewsCrawler:
                     all_articles.append(article)
             
             print(f"  - 구글 뉴스 검색 중: {keyword}")
-            google_articles = self.search_google_news(keyword, max_results=50)
+            google_articles = self.search_google_news(keyword, max_results=100)  # max_results 증가
             
             for article in google_articles:
                 article_id = article["article_id"]

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응 속도 테스트 게임</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .game-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-area {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .waiting {
+            background: rgba(255, 200, 0, 0.3);
+        }
+
+        .ready {
+            background: rgba(0, 255, 0, 0.3);
+        }
+
+        .too-early {
+            background: rgba(255, 0, 0, 0.3);
+        }
+
+        .status-message {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .reaction-time {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 5px;
+            min-width: 100px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .best-time {
+            color: #ffd700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>⚡ 반응 속도 테스트</h1>
+        
+        <div class="game-area" id="gameArea">
+            <div class="status-message" id="statusMessage">시작하려면 버튼을 클릭하세요!</div>
+            <div class="reaction-time" id="reactionTime"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">평균 반응속도</div>
+                <div class="stat-value" id="averageTime">- ms</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">최고 기록</div>
+                <div class="stat-value best-time" id="bestTime">- ms</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">시도 횟수</div>
+                <div class="stat-value" id="attempts">0</div>
+            </div>
+        </div>
+
+        <button id="startButton" onclick="startGame()">게임 시작</button>
+        <button id="resetButton" onclick="resetStats()">통계 초기화</button>
+
+        <div class="instructions">
+            <p><strong>게임 방법:</strong></p>
+            <p>빨간색 화면이 초록색으로 바뀌면<br>가장 빠르게 클릭하세요!</p>
+            <p>너무 빨리 클릭하면 실패합니다.</p>
+        </div>
+    </div>
+
+    <script>
+        let gameState = 'waiting'; // waiting, ready, measuring, finished
+        let startTime = 0;
+        let reactionTimes = [];
+        let bestTime = localStorage.getItem('bestReactionTime') ? 
+                      parseFloat(localStorage.getItem('bestReactionTime')) : null;
+        let attempts = 0;
+
+        const gameArea = document.getElementById('gameArea');
+        const statusMessage = document.getElementById('statusMessage');
+        const reactionTime = document.getElementById('reactionTime');
+        const startButton = document.getElementById('startButton');
+        const averageTimeDisplay = document.getElementById('averageTime');
+        const bestTimeDisplay = document.getElementById('bestTime');
+        const attemptsDisplay = document.getElementById('attempts');
+
+        // 최고 기록 표시
+        if (bestTime) {
+            bestTimeDisplay.textContent = bestTime.toFixed(0) + ' ms';
+        }
+
+        function startGame() {
+            if (gameState !== 'waiting' && gameState !== 'finished') return;
+
+            gameState = 'ready';
+            startButton.disabled = true;
+            startButton.textContent = '준비 중...';
+            
+            gameArea.className = 'game-area waiting';
+            statusMessage.textContent = '기다리세요...';
+            reactionTime.textContent = '';
+
+            // 1~5초 사이 랜덤한 시간 후 초록색으로 변경
+            const waitTime = Math.random() * 4000 + 1000; // 1000~5000ms
+
+            setTimeout(() => {
+                if (gameState === 'ready') {
+                    gameState = 'measuring';
+                    gameArea.className = 'game-area ready';
+                    statusMessage.textContent = '지금 클릭하세요!';
+                    startTime = Date.now();
+                }
+            }, waitTime);
+        }
+
+        function handleClick() {
+            if (gameState === 'measuring') {
+                const endTime = Date.now();
+                const time = endTime - startTime;
+                
+                reactionTimes.push(time);
+                attempts++;
+                
+                if (!bestTime || time < bestTime) {
+                    bestTime = time;
+                    localStorage.setItem('bestReactionTime', bestTime.toString());
+                    bestTimeDisplay.textContent = bestTime.toFixed(0) + ' ms';
+                }
+
+                gameState = 'finished';
+                gameArea.className = 'game-area';
+                statusMessage.textContent = '반응 속도:';
+                reactionTime.textContent = time.toFixed(0) + ' ms';
+                
+                startButton.disabled = false;
+                startButton.textContent = '다시 시작';
+
+                // 평균 계산 및 표시
+                const average = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length;
+                averageTimeDisplay.textContent = average.toFixed(0) + ' ms';
+                attemptsDisplay.textContent = attempts;
+
+            } else if (gameState === 'ready') {
+                // 너무 빨리 클릭함
+                gameState = 'waiting';
+                gameArea.className = 'game-area too-early';
+                statusMessage.textContent = '너무 빨랐습니다!';
+                reactionTime.textContent = '다시 시도하세요';
+                
+                setTimeout(() => {
+                    startButton.disabled = false;
+                    startButton.textContent = '게임 시작';
+                    gameArea.className = 'game-area';
+                    statusMessage.textContent = '시작하려면 버튼을 클릭하세요!';
+                    reactionTime.textContent = '';
+                }, 2000);
+            }
+        }
+
+        function resetStats() {
+            if (confirm('통계를 초기화하시겠습니까?')) {
+                reactionTimes = [];
+                attempts = 0;
+                bestTime = null;
+                localStorage.removeItem('bestReactionTime');
+                
+                averageTimeDisplay.textContent = '- ms';
+                bestTimeDisplay.textContent = '- ms';
+                attemptsDisplay.textContent = '0';
+                
+                gameState = 'waiting';
+                gameArea.className = 'game-area';
+                statusMessage.textContent = '시작하려면 버튼을 클릭하세요!';
+                reactionTime.textContent = '';
+                startButton.disabled = false;
+                startButton.textContent = '게임 시작';
+            }
+        }
+
+        // 게임 영역 클릭 이벤트
+        gameArea.addEventListener('click', handleClick);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

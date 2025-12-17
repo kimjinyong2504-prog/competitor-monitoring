@@ -1026,11 +1026,21 @@
                 const result = await response.json();
                 
                 if (result.success && result.content) {
-                    let contentHtml = `<div class="modal-content-text">${escapeHtml(result.content)}</div>`;
+                    let contentHtml = '';
+                    
+                    // 원문 표시
+                    contentHtml += `<div class="modal-content-text">${escapeHtml(result.content)}</div>`;
+                    
+                    // 번역된 본문이 있으면 추가
+                    if (result.content_translated) {
+                        contentHtml += `<div style="margin-top: 30px; padding-top: 30px; border-top: 3px solid #667eea;"><h4 style="color: #667eea; margin-bottom: 15px; font-size: 1.2em;">🇰🇷 번역된 본문</h4><div style="color: #333; line-height: 1.8; font-size: 1.05em; background: #f8f9fa; padding: 20px; border-radius: 8px;">${escapeHtml(result.content_translated)}</div></div>`;
+                    }
+                    
                     // 번역된 설명이 있으면 추가
                     if (article.description_translated) {
                         contentHtml += `<div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee;"><h4 style="color: #667eea; margin-bottom: 10px;">🇰🇷 번역된 설명</h4><div style="color: #555; line-height: 1.6;">${escapeHtml(article.description_translated)}</div></div>`;
                     }
+                    
                     modalBody.innerHTML = contentHtml;
                 } else {
                     // 본문을 가져오지 못한 경우 description 표시

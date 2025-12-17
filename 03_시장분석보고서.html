@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시장 분석 및 경쟁사 조사 보고서</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+
+        .header .meta {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .executive-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .executive-summary h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .executive-summary ul {
+            margin-left: 25px;
+            font-size: 1.1em;
+        }
+
+        .executive-summary li {
+            margin: 10px 0;
+        }
+
+        .section {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            color: #0f4c75;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3282b8;
+            font-size: 2em;
+        }
+
+        .section h3 {
+            color: #495057;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #3282b8;
+        }
+
+        .stat-box .label {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-box .value {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #0f4c75;
+        }
+
+        .stat-box .sub-value {
+            font-size: 0.95em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 25px 0;
+        }
+
+        .competitor-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .competitor-table th,
+        .competitor-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .competitor-table th {
+            background: #0f4c75;
+            color: white;
+            font-weight: 600;
+        }
+
+        .competitor-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .competitor-table .rank {
+            font-weight: bold;
+            color: #3282b8;
+            font-size: 1.2em;
+        }
+
+        .trend-indicator {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .trend-down {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .trend-stable {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .insight-box {
+            background: #e7f3ff;
+            border-left: 5px solid #3282b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .insight-box h4 {
+            color: #0f4c75;
+            margin-bottom: 10px;
+        }
+
+        .opportunity-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .opportunity-list li {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            border-radius: 5px;
+        }
+
+        .opportunity-list li::before {
+            content: '✓ ';
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .risk-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .risk-list li {
+            padding: 12px;
+            margin: 8px 0;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+        }
+
+        .risk-list li::before {
+            content: '⚠ ';
+            color: #856404;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .comparison-card {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            background: white;
+        }
+
+        .comparison-card h4 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>시장 분석 및 경쟁사 조사 보고서</h1>
+            <div class="meta">제조업 부품 시장 | 2025년 1분기 | 조사일: 2025년 3월</div>
+        </div>
+
+        <div class="executive-summary">
+            <h2>📊 핵심 요약</h2>
+            <ul>
+                <li>전체 시장 규모는 전년 대비 12.5% 성장하여 약 ₩2,500억 규모로 확대</li>
+                <li>신기술 도입으로 인한 시장 재편이 진행 중이며, 디지털화 트렌드가 가속화</li>
+                <li>경쟁사 A사가 시장 점유율 1위를 유지하나, 신규 진입 기업들의 성장세가 두드러짐</li>
+                <li>향후 3년간 연평균 8-10% 성장 전망으로, 신규 진입 기회가 존재</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📈 시장 현황</h2>
+            
+            <div class="market-stats">
+                <div class="stat-box">
+                    <div class="label">시장 규모</div>
+                    <div class="value">₩2,500억</div>
+                    <div class="sub-value">전년 대비 +12.5%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">성장률 (CAGR)</div>
+                    <div class="value">9.2%</div>
+                    <div class="sub-value">2025-2027 예상</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">주요 기업 수</div>
+                    <div class="value">45개</div>
+                    <div class="sub-value">대형 5개, 중소형 40개</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">평균 마진율</div>
+                    <div class="value">18.5%</div>
+                    <div class="sub-value">업계 평균</div>
+                </div>
+            </div>
+
+            <h3>시장 성장 추이</h3>
+            <div class="chart-container">
+                <canvas id="marketGrowthChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏆 주요 경쟁사 분석</h2>
+            
+            <table class="competitor-table">
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>기업명</th>
+                        <th>시장 점유율</th>
+                        <th>매출액 (추정)</th>
+                        <th>주요 강점</th>
+                        <th>트렌드</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rank">1</td>
+                        <td><strong>A기업</strong></td>
+                        <td>28.5%</td>
+                        <td>₩712억</td>
+                        <td>기술력, 브랜드 인지도</td>
+                        <td><span class="trend-indicator trend-stable">유지</span></td>
+                    </tr>
+                    <tr>
+                        <td class="rank">2</td>
+                        <td><strong>B기업</strong></td>
+                        <td>22.3%</td>
+                        <td>₩558억</td>
+                        <td>가격 경쟁력, 공급망</td>
+                        <td><span class="trend-indicator trend-up">상승</span></td>
+                    </tr>
+                    <tr>
+                        <td class="rank">3</td>
+                        <td><strong>C기업</strong></td>
+                        <td>15.8%</td>
+                        <td>₩395억</td>
+                        <td>혁신 제품, R&D</td>
+                        <td><span class="trend-indicator trend-up">상승</span></td>
+                    </tr>
+                    <tr>
+                        <td class="rank">4</td>
+                        <td><strong>D기업</strong></td>
+                        <td>12.2%</td>
+                        <td>₩305억</td>
+                        <td>니치 시장, 품질</td>
+                        <td><span class="trend-indicator trend-stable">유지</span></td>
+                    </tr>
+                    <tr>
+                        <td class="rank">5</td>
+                        <td><strong>E기업</strong></td>
+                        <td>8.5%</td>
+                        <td>₩213억</td>
+                        <td>신규 진입, 성장세</td>
+                        <td><span class="trend-indicator trend-up">상승</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📊 시장 점유율 분석</h2>
+            <div class="chart-container">
+                <canvas id="marketShareChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 경쟁사 비교 분석</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4>가격 경쟁력</h4>
+                    <div class="comparison-item">
+                        <span>A기업</span>
+                        <span>★★★☆☆</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>B기업</span>
+                        <span>★★★★★</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>C기업</span>
+                        <span>★★☆☆☆</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>D기업</span>
+                        <span>★★★☆☆</span>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <h4>기술력</h4>
+                    <div class="comparison-item">
+                        <span>A기업</span>
+                        <span>★★★★★</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>B기업</span>
+                        <span>★★★☆☆</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>C기업</span>
+                        <span>★★★★☆</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>D기업</span>
+                        <span>★★★☆☆</span>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <h4>브랜드 인지도</h4>
+                    <div class="comparison-item">
+                        <span>A기업</span>
+                        <span>★★★★★</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>B기업</span>
+                        <span>★★★★☆</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>C기업</span>
+                        <span>★★★☆☆</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span>D기업</span>
+                        <span>★★☆☆☆</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💡 시장 기회 및 위험 요인</h2>
+            
+            <h3>기회 요인</h3>
+            <ul class="opportunity-list">
+                <li>신기술 도입으로 인한 시장 재편 기회</li>
+                <li>중소형 기업들의 시장 점유율 확대 가능성</li>
+                <li>해외 시장 진출 기회 확대</li>
+                <li>ESG 경영 강화로 인한 친환경 제품 수요 증가</li>
+                <li>디지털 전환 가속화로 인한 신규 수요 창출</li>
+            </ul>
+
+            <h3>위험 요인</h3>
+            <ul class="risk-list">
+                <li>원자재 가격 상승으로 인한 수익성 악화</li>
+                <li>대형 기업들의 시장 독과점 우려</li>
+                <li>규제 강화로 인한 진입 장벽 상승</li>
+                <li>글로벌 경기 침체 가능성</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📅 향후 전망</h2>
+            <div class="insight-box">
+                <h4>2025-2027 시장 전망</h4>
+                <p>시장은 지속적인 성장세를 유지할 것으로 전망되며, 연평균 8-10% 성장률을 기록할 것으로 예상됩니다. 특히 디지털화 및 친환경 트렌드가 시장 성장의 주요 동력이 될 것입니다. 신규 진입 기업들의 성장세가 두드러질 것으로 예상되며, 기존 대형 기업들도 혁신을 통한 경쟁력 강화에 나설 것으로 보입니다.</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="forecastChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 시장 성장 추이 차트
+        const growthCtx = document.getElementById('marketGrowthChart').getContext('2d');
+        new Chart(growthCtx, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                datasets: [{
+                    label: '시장 규모 (억원)',
+                    data: [1800, 1950, 2100, 2220, 2350, 2500],
+                    borderColor: '#3282b8',
+                    backgroundColor: 'rgba(50, 130, 184, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '억원';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 시장 점유율 차트
+        const shareCtx = document.getElementById('marketShareChart').getContext('2d');
+        new Chart(shareCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['A기업', 'B기업', 'C기업', 'D기업', 'E기업', '기타'],
+                datasets: [{
+                    data: [28.5, 22.3, 15.8, 12.2, 8.5, 12.7],
+                    backgroundColor: [
+                        '#0f4c75',
+                        '#3282b8',
+                        '#bbe1fa',
+                        '#1b262c',
+                        '#0f3460',
+                        '#dee2e6'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+
+        // 향후 전망 차트
+        const forecastCtx = document.getElementById('forecastChart').getContext('2d');
+        new Chart(forecastCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2025', '2026', '2027'],
+                datasets: [{
+                    label: '예상 시장 규모 (억원)',
+                    data: [2500, 2725, 2970],
+                    backgroundColor: '#3282b8',
+                    borderColor: '#0f4c75',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '억원';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

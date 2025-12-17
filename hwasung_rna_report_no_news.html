@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>화승알앤에이 기업 분석 보고서</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* Market Report Generator - Base Styles */
+/* Extracted from: 글로벌 러버트랙(MHE&CTL) 시장 전략 보고서 */
+
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+
+:root {
+    --bg: #fbfbfc;
+    --surface: #ffffff;
+    --text: #2f2f33;
+    --muted: #666a73;
+    --border: #e9ecf1;
+    --primary-50: #f7f5ff;
+    --primary-100: #efeaff;
+    --primary-200: #ded5ff;
+    --primary-300: #c4b6ff;
+    --primary-400: #a08dff;
+    --primary-500: #7b64ff;
+    --primary-600: #6a54f0;
+    --accent: #12b886;
+    --shadow: 0 8px 30px rgba(17, 17, 26, 0.05);
+}
+
+body {
+    font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+}
+
+
+
+.container {
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 40px 20px;
+
+}
+
+
+
+header {
+    background: linear-gradient(180deg, var(--surface) 0%, #f7f8fb 100%);
+    padding: 56px 40px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 36px;
+    border: 1px solid var(--border);
+}
+
+
+
+h1 {
+    color: var(--text);
+    font-size: 2.4em;
+    margin-bottom: 8px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+
+
+.subtitle {
+    color: var(--muted);
+    font-size: 1.05em;
+    font-weight: 400;
+}
+
+
+
+.home-section {
+    background: var(--surface);
+    padding: 36px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+}
+
+
+
+.button-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 25px;
+
+    margin-top: 40px;
+
+}
+
+
+
+.nav-button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    text-align: left;
+}
+
+
+
+.nav-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(17, 17, 26, 0.06);
+    border-color: var(--primary-200);
+}
+
+
+
+.nav-button h3 {
+    color: var(--text);
+    margin-bottom: 6px;
+    font-size: 1.15em;
+}
+
+
+
+.nav-button p {
+    color: var(--muted);
+    font-size: 0.95em;
+}
+
+
+
+.content-section {
+    display: none;
+    background: var(--surface);
+    padding: 36px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+}
+
+
+
+.content-section.active {
+
+    display: block;
+
+    animation: fadeIn 0.5s ease;
+
+}
+
+
+
+@keyframes fadeIn {
+
+    from { opacity: 0; transform: translateY(20px); }
+
+    to { opacity: 1; transform: translateY(0); }
+
+}
+
+
+
+h2 {
+    color: var(--text);
+    font-size: 1.8em;
+    margin-bottom: 22px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-100);
+}
+
+
+
+h3 {
+    color: var(--text);
+    font-size: 1.25em;
+    margin-top: 28px;
+    margin-bottom: 14px;
+}
+
+
+
+h4 {
+    color: var(--muted);
+    font-size: 1.05em;
+    margin-top: 22px;
+    margin-bottom: 10px;
+}
+
+
+
+.back-button {
+    background: linear-gradient(180deg, var(--primary-500), var(--primary-600));
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    margin-top: 28px;
+    margin-bottom: 0;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 24px rgba(123, 100, 255, 0.25);
+    font-weight: 600;
+}
+
+
+
+.back-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(123, 100, 255, 0.28);
+}
+
+
+
+.stat-card {
+    background: linear-gradient(180deg, var(--surface), #fafbff);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 18px 0;
+    border: 1px solid var(--border);
+}
+
+
+
+.stat-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 20px;
+
+    margin: 25px 0;
+
+}
+
+
+
+.stat-item {
+    background: var(--surface);
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+
+
+.stat-value {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: var(--primary-600);
+    margin-bottom: 6px;
+}
+
+
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.9em;
+}
+
+
+
+.chart-container {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 24px 0;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 22px 0;
+    background: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+
+
+th {
+    background: linear-gradient(180deg, var(--primary-50), var(--primary-100));
+    color: var(--text);
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+}
+
+
+
+td {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+}
+
+
+
+tr:hover {
+    background: #fbfbff;
+}
+
+
+
+.highlight {
+    background: linear-gradient(180deg, #fffefb, #fffdfa);
+    padding: 18px;
+    border-radius: 12px;
+    margin: 18px 0;
+    border: 1px solid #f2ead6;
+}
+
+
+
+.swot-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+
+    margin: 25px 0;
+
+}
+
+
+
+.swot-item {
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    border: 2px solid;
+
+}
+
+
+
+.strength {
+
+    background: linear-gradient(135deg, #e8f5e8 0%, #dceedc 100%);
+
+    border-color: #a5d5a5;
+
+}
+
+
+
+.weakness {
+
+    background: linear-gradient(135deg, #ffe8e8 0%, #ffdcdc 100%);
+
+    border-color: #f5a5a5;
+
+}
+
+
+
+.opportunity {
+
+    background: linear-gradient(135deg, #e8f0f5 0%, #dce8ee 100%);
+
+    border-color: #a5c5d5;
+
+}
+
+
+
+.threat {
+
+    background: linear-gradient(135deg, #f5e8f0 0%, #eedce8 100%);
+
+    border-color: #d5a5c5;
+
+}
+
+
+
+ul, ol {
+
+    margin-left: 25px;
+
+    margin-top: 15px;
+
+    margin-bottom: 15px;
+
+}
+
+
+
+li {
+
+    margin-bottom: 10px;
+
+    line-height: 1.7;
+
+}
+
+
+
+.competitor-card {
+
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    margin: 20px 0;
+
+    border: 2px solid #f5d5d5;
+
+}
+
+
+
+.region-section {
+
+    background: linear-gradient(135deg, #e8f5fa 0%, #dceef5 100%);
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    margin: 25px 0;
+
+    border-left: 5px solid #a5c5d5;
+
+}
+
+
+
+strong {
+    color: var(--primary-600);
+}
+
+/* Utilities */
+.muted { color: var(--muted); }
+.pill { display:inline-block; padding:6px 10px; border-radius:999px; font-size:12px; background:var(--primary-50); color:var(--primary-600); border:1px solid var(--primary-100); }
+
+/* Print styles: show all sections */
+@media print {
+    body { background: #fff; }
+    .home-section { display: none !important; }
+    .content-section { display: block !important; box-shadow: none; border: none; padding: 0; }
+    header { box-shadow: none; border: none; }
+}
+
+
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+
+    <h1>화승알앤에이 기업 분석 보고서</h1>
+
+    <p class="subtitle"></p>
+
+    <p class="subtitle"></p>
+
+</header>
+
+
+
+
+                <div id="home" class="home-section">
+    <h2>📋 보고서 목차</h2>
+    <div class="button-grid">
+        <div class="nav-button" onclick="showSection('company')">
+            <h3>기업 개요</h3>
+            <p>기업 기본 정보 및 개요</p>
+        </div>
+        <div class="nav-button" onclick="showSection('financial')">
+            <h3>재무 정보</h3>
+            <p>매출, 영업이익, 재무 현황</p>
+        </div>
+        <div class="nav-button" onclick="showSection('employee')">
+            <h3>인력 현황</h3>
+            <p>직원 수 및 조직 정보</p>
+        </div>
+        <div class="nav-button" onclick="showSection('ownership')">
+            <h3>지배구조</h3>
+            <p>주주, 임원, 지배구조 정보</p>
+        </div>
+        <div class="nav-button" onclick="showSection('dividend')">
+            <h3>배당 정보</h3>
+            <p>배당금 및 배당 정책</p>
+        </div>
+        <div class="nav-button" onclick="showSection('disclosures')">
+            <h3>공시 정보</h3>
+            <p>최근 공시 내역</p>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+<div id="company" class="content-section">
+    <h2>기업 개요 및 사업 분석</h2>
+    
+    
+        <div class="highlight">
+            <h3>🏢 기업 개요</h3>
+            <p><strong>화승알앤에이</strong>은(는) 자동차 부품 제조 전문 기업입니다.</p>
+        </div>
+        
+        <h3>📋 기업 기본 정보</h3>
+        <div class="stat-card">
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">화승알앤에이</div>
+                    <div class="stat-label">기업명</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">378850</div>
+                    <div class="stat-label">종목코드</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Y</div>
+                    <div class="stat-label">법인구분</div>
+                </div>
+            </div>
+        </div>
+        
+    
+    
+        <div class="highlight">
+            <h3>📖 기업 이해를 위한 핵심 정보</h3>
+            <p>화승알앤에이는 <strong>자동차 부품 제조 전문 기업</strong>으로, 차량용 고무부품을 주력으로 생산하는 기업입니다.</p>
+        </div>
+        
+        <h3>💼 주요 사업 분야</h3>
+        <div class="stat-card">
+            <h4>주력 사업</h4>
+            <ul>
+                <li><strong>자동차 부품 제조업</strong>: 차량용 고무부품 및 자동차 내·외장재 제조</li>
+                <li><strong>고무부품 제조</strong>: 자동차에 사용되는 다양한 고무 부품 생산</li>
+                <li><strong>자동차 내·외장재</strong>: 차량 내부 및 외부 장식 부품 제조</li>
+            </ul>
+            
+            <h4>주요 제품</h4>
+            <ul>
+        <li>차량용 고무부품 (Rubber Components)</li><li>자동차 내·외장재 (Interior/Exterior Parts)</li><li>자동차 부품 (Auto Parts)</li>
+            </ul>
+        </div>
+        
+        <h3>🏭 사업 구조 및 배경</h3>
+        <div class="highlight">
+            <h4>설립 배경</h4>
+            <p>2021년 화승코퍼레이션에서 차량용 고무부품 제조부문이 분사하여 설립된 전문 기업</p>
+            <p>화승코퍼레이션의 사업 분할을 통해 차량용 고무부품 제조에 특화된 전문 기업으로 출발했습니다.</p>
+            
+            <h4>사업 특징</h4>
+            <ul>
+        <li>자동차 부품 제조에 특화된 전문 기업</li><li>고무부품 제조 기술 보유</li><li>주요 완성차 업체와의 안정적인 거래 관계</li><li>경남 지역 자동차 산업 생태계의 일원</li>
+            </ul>
+        </div>
+        
+        <h3>🌍 시장 위치 및 경쟁력</h3>
+        <div class="stat-card">
+            <h4>시장 위치</h4>
+            <p>자동차 부품 제조업체, 현대차그룹 벤더사</p>
+            
+            <h4>지역 기반</h4>
+            <p>경상남도 지역 기업 (자동차 산업 클러스터)</p>
+            
+            <h4>주요 고객사</h4>
+            <ul>
+                <li>현대차그룹 계열사 (주요 벤더사)</li>
+                <li>국내 완성차 업체</li>
+                <li>자동차 부품 유통업체</li>
+            </ul>
+            
+            <h4>경쟁력 요소</h4>
+            <ul>
+                <li><strong>전문 기술력</strong>: 고무부품 제조 분야의 전문성</li>
+                <li><strong>안정적 거래관계</strong>: 주요 완성차 업체와의 장기 협력</li>
+                <li><strong>지역 클러스터</strong>: 경남 자동차 산업 생태계 내 위치</li>
+                <li><strong>품질 경쟁력</strong>: 자동차 부품 품질 기준 충족</li>
+            </ul>
+        </div>
+        
+        <h3>📈 사업 전망</h3>
+        <div class="highlight">
+            <h4>산업 환경</h4>
+            <ul>
+                <li>자동차 산업의 전동화(EV) 전환 가속</li>
+                <li>자동차 부품 시장의 지속적 성장</li>
+                <li>고품질 부품에 대한 수요 증가</li>
+            </ul>
+            
+            <h4>기회 요인</h4>
+            <ul>
+                <li>전기차 시장 확대로 인한 부품 수요 증가</li>
+                <li>자동차 내·외장재 시장 성장</li>
+                <li>주요 고객사와의 안정적 거래 관계</li>
+            </ul>
+        </div>
+        
+    
+    
+        <h3>💰 재무 현황 요약</h3>
+        <div class="stat-card">
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">7025.6억원</div>
+                    <div class="stat-label">매출액 (2024년)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">244.5억원</div>
+                    <div class="stat-label">영업이익 (2024년)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4593.9억원</div>
+                    <div class="stat-label">총자산 (2024년)</div>
+                </div>
+            </div>
+        </div>
+        
+    
+    <h3>📰 최근 주요 공시</h3>
+    <div class="stat-card">
+        <p>최근 공시 정보는 하단의 "공시 정보" 섹션에서 상세히 확인할 수 있습니다.</p>
+        <p>주요 공시: 28건 (최근 20건 표시)</p>
+    </div>
+    
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="financial" class="content-section">
+    <h2>재무 정보</h2>
+    
+            <div class="highlight">
+                <h3>📊 재무 분석 요약</h3>
+                <p>DART API 데이터를 기반으로 한 전문적인 재무 분석 보고서입니다.</p>
+            </div>
+            
+            <div class="highlight"><h3>재무 분석 인사이트</h3><ul><li>⚠️ 영업이익률 4.43%로 개선의 여지가 있습니다.</li><li>📊 매출 성장률 3.9%로 안정적인 성장을 유지하고 있습니다.</li><li>❌ 부채비율 212.3%로 부채 관리가 필요합니다.</li><li>❌ 유동비율 82.7%로 단기 유동성 부족이 우려됩니다.</li><li>✅ ROE 21.55%로 자기자본 대비 수익성이 우수합니다.</li></ul></div>
+            
+            <h3>손익계산서 요약</h3><table><thead><tr><th>항목</th><th>2024년</th><th>2023년</th></tr></thead><tbody><tr><td><strong>매출액</strong></td><td>7071.3억원</td><td>6806.5억원</td></tr><tr><td><strong>영업이익</strong></td><td>313.5억원</td><td>317.8억원</td></tr><tr><td><strong>당기순이익</strong></td><td>324.2억원</td><td>242.1억원</td></tr></tbody></table>
+            <h3>재무상태표 요약</h3><table><thead><tr><th>항목</th><th>2024년</th><th>2023년</th></tr></thead><tbody><tr><td><strong>자산총계</strong></td><td>4698.7억원</td><td>4307.7억원</td></tr><tr><td><strong>부채총계</strong></td><td>3193.9억원</td><td>3182.6억원</td></tr><tr><td><strong>자본총계</strong></td><td>1504.8억원</td><td>1125.2억원</td></tr></tbody></table>
+            <h3>재무 비율 분석</h3><table><thead><tr><th>비율</th><th>2024년</th><th>2023년</th></tr></thead><tbody><tr><td><strong>영업이익률</strong></td><td>4.43%</td><td>4.67%</td></tr><tr><td><strong>순이익률</strong></td><td>4.59%</td><td>3.56%</td></tr><tr><td><strong>ROA (자산수익률)</strong></td><td>6.90%</td><td>5.62%</td></tr><tr><td><strong>ROE (자기자본수익률)</strong></td><td>21.55%</td><td>21.52%</td></tr><tr><td colspan="3"><strong>안정성 비율</strong></td></tr><tr><td><strong>부채비율</strong></td><td>212.25%</td><td>282.85%</td></tr><tr><td><strong>자기자본비율</strong></td><td>32.03%</td><td>26.12%</td></tr><tr><td><strong>유동비율</strong></td><td>82.7%</td><td>74.6%</td></tr><tr><td colspan="3"><strong>활동성 비율</strong></td></tr><tr><td><strong>총자산회전율</strong></td><td>1.50회</td><td>1.58회</td></tr></tbody></table>
+            <h3>성장률 분석</h3><table><thead><tr><th>항목</th><th>2024년</th></tr></thead><tbody><tr><td><strong>매출 성장률</strong></td><td>+3.9%</td><td>+0.0%</td></tr><tr><td><strong>영업이익 성장률</strong></td><td>-1.4%</td><td>+0.0%</td></tr><tr><td><strong>순이익 성장률</strong></td><td>+33.9%</td><td>+0.0%</td></tr></tbody></table>
+            
+            <div class="chart-container">
+                <h3>재무 추이</h3>
+                <canvas id="financial_chart"></canvas>
+            </div>
+            <script>
+            (function() {
+                const ctx = document.getElementById('financial_chart');
+                if (ctx && window.Chart) {
+                    const chartData = {"labels": ["2024", "2023"], "revenue": [7071.30551871, 6806.51664943], "operating_profit": [313.46348764, 317.81405221], "net_income": [324.23078526, 242.09219464]};
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: chartData.labels,
+                            datasets: [
+                                {
+                                    label: '매출액 (억원)',
+                                    data: chartData.revenue,
+                                    backgroundColor: 'rgba(123, 100, 255, 0.6)',
+                                    borderColor: 'rgba(123, 100, 255, 1)',
+                                    borderWidth: 2
+                                },
+                                {
+                                    label: '영업이익 (억원)',
+                                    data: chartData.operating_profit,
+                                    backgroundColor: 'rgba(18, 184, 134, 0.6)',
+                                    borderColor: 'rgba(18, 184, 134, 1)',
+                                    borderWidth: 2
+                                },
+                                {
+                                    label: '당기순이익 (억원)',
+                                    data: chartData.net_income,
+                                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 2
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: true },
+                                title: { display: true, text: '재무 추이' }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return value.toFixed(1) + '억원';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            })();
+            </script>
+            
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="employee" class="content-section">
+    <h2>인력 현황</h2>
+    
+    <div class="stat-card">
+        <h3>직원 현황</h3>
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">619명</div>
+                <div class="stat-label">직원 수</div>
+            </div>
+            <div class="stat-item"><div class="stat-value">12.64년</div><div class="stat-label">평균 근속연수</div></div>
+            <div class="stat-item"><div class="stat-value">2025년 3월 31일</div><div class="stat-label">기준일</div></div>
+            <div class="stat-item"><div class="stat-value">2025년</div><div class="stat-label">사업연도</div></div>
+        </div>
+    </div>
+    
+    <div class="highlight">
+        <h3>인력 정보 상세</h3>
+        <table>
+            <thead>
+                <tr><th>항목</th><th>내용</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>상시근로자수</strong></td><td>619명</td></tr>
+                <tr><td><strong>정규직</strong></td><td>567명</td></tr>
+                <tr><td><strong>계약직</strong></td><td>52명</td></tr>
+                <tr><td><strong>평균근속연수</strong></td><td>12.64년</td></tr>
+                <tr><td><strong>기준일</strong></td><td>2025년 3월 31일</td></tr>
+                <tr><td><strong>사업연도</strong></td><td>2025년</td></tr>
+            </tbody>
+        </table>
+    </div>
+            
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="ownership" class="content-section">
+    <h2>지배구조</h2>
+    
+    <div class="highlight">
+        <h2>지배구조 분석</h2>
+        <p>주요주주, 임원, 주주 현황을 통한 지배구조 분석 정보입니다.</p>
+    </div>
+    
+    <h3>주요주주 현황</h3><table><thead><tr><th>보고자</th><th>보유주식수</th><th>보유비율(%)</th><th>공시일</th><th>사유</th></tr></thead><tbody><tr><td>현지호</td><td>10,630,298</td><td>55.97%</td><td>2024-10-08</td><td>보유주식 등에 관한 계약변경</td></tr><tr><td>현지호</td><td>10,630,298</td><td>55.97%</td><td>2025-02-12</td><td>주식교환계약 체결</td></tr><tr><td>현지호</td><td>0</td><td>0.00%</td><td>2025-03-11</td><td>- 주식교환계약의 거래종결에 따른 주식의 보유형태 변경(보유에서 소유로 변경)
+- 대표보고...</td></tr><tr><td>화승코퍼레이션</td><td>10,630,298</td><td>55.97%</td><td>2025-03-11</td><td>- 대표보고자 변동에 따른 신규보고
+  (현지호 → (주)화승코퍼레이션)</td></tr><tr><td>화승코퍼레이션</td><td>10,630,298</td><td>55.97%</td><td>2025-03-21</td><td>-주식담보계약 해제</td></tr></tbody></table>
+    <h3>임원 현황 (2024년 기준)</h3><table><thead><tr><th>이름</th><th>관계</th><th>보유주식수</th><th>보유비율(%)</th><th>기준일</th></tr></thead><tbody><tr><td>현지호</td><td>최대주주본인</td><td>4,170,110</td><td>21.96%</td><td>2024-12-31</td></tr><tr><td>현승훈</td><td>최대주주의부</td><td>2,560,893</td><td>13.48%</td><td>2024-12-31</td></tr><tr><td>(주)화승코퍼레이션</td><td>계열회사</td><td>2,141,216</td><td>11.27%</td><td>2024-12-31</td></tr><tr><td>(주)화승인더스트리</td><td>계열회사</td><td>1,758,079</td><td>9.26%</td><td>2024-12-31</td></tr></tbody></table>
+    <h3>주주 현황 (2024년 기준)</h3><table><thead><tr><th>구분</th><th>발행주식수</th><th>상장주식수</th><th>보유주식수</th><th>유통주식수</th><th>기준일</th></tr></thead><tbody><tr><td>보통주</td><td>200,000,000</td><td>18,993,623</td><td>18,993,623</td><td>18,990,786</td><td>2024-12-31</td></tr></tbody></table>
+            
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="dividend" class="content-section">
+    <h2>배당 정보</h2>
+    <h3>배당 정보 (2024년 기준)</h3><table><thead><tr><th>항목</th><th>당기</th><th>전기</th><th>전전기</th></tr></thead><tbody><tr><td><strong>주당액면가액(원)</strong></td><td>500</td><td>500</td><td>500</td></tr><tr><td><strong>(연결)당기순이익(백만원)</strong></td><td>32,423</td><td>24,209</td><td>12,685</td></tr><tr><td><strong>(별도)당기순이익(백만원)</strong></td><td>32,423</td><td>24,209</td><td>12,685</td></tr><tr><td><strong>(연결)주당순이익(원)</strong></td><td>1,707</td><td>1,275</td><td>668</td></tr><tr><td><strong>현금배당금총액(백만원)</strong></td><td>1,424</td><td>950</td><td>950</td></tr><tr><td><strong>주식배당금총액(백만원)</strong></td><td>-</td><td>-</td><td>-</td></tr><tr><td><strong>(연결)현금배당성향(%)</strong></td><td>4.40</td><td>3.90</td><td>7.50</td></tr><tr><td><strong>현금배당수익률(%)</strong></td><td>2.40</td><td>1.30</td><td>1.40</td></tr><tr><td><strong>현금배당수익률(%)</strong></td><td>-</td><td>-</td><td>-</td></tr><tr><td><strong>주식배당수익률(%)</strong></td><td>-</td><td>-</td><td>-</td></tr><tr><td><strong>주식배당수익률(%)</strong></td><td>-</td><td>-</td><td>-</td></tr><tr><td><strong>주당 현금배당금(원)</strong></td><td>75</td><td>50</td><td>50</td></tr><tr><td><strong>주당 현금배당금(원)</strong></td><td>-</td><td>-</td><td>-</td></tr><tr><td><strong>주당 주식배당(주)</strong></td><td>-</td><td>-</td><td>-</td></tr><tr><td><strong>주당 주식배당(주)</strong></td><td>-</td><td>-</td><td>-</td></tr></tbody></table>
+    <div class="stat-card" style="margin-top: 20px;">
+        <h3>배당 주요 지표</h3>
+        <ul>
+            <li><strong>주당액면가액(원):</strong> 500</li><li><strong>(연결)주당순이익(원):</strong> 1,707</li><li><strong>현금배당금총액(백만원):</strong> 1,424</li><li><strong>주식배당금총액(백만원):</strong> -</li><li><strong>(연결)현금배당성향(%):</strong> 4.40</li><li><strong>현금배당수익률(%):</strong> 2.40</li><li><strong>현금배당수익률(%):</strong> -</li><li><strong>주식배당수익률(%):</strong> -</li><li><strong>주식배당수익률(%):</strong> -</li><li><strong>주당 현금배당금(원):</strong> 75</li><li><strong>주당 현금배당금(원):</strong> -</li><li><strong>주당 주식배당(주):</strong> -</li><li><strong>주당 주식배당(주):</strong> -</li>
+        </ul>
+    </div>
+                        
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="disclosures" class="content-section">
+    <h2>공시 정보</h2>
+    <table><thead><tr><th>공시일</th><th>공시제목</th><th>링크</th></tr></thead><tbody><tr><td>20251114</td><td>분기보고서 (2025.09)</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20251114001578" target="_blank">보기</a></td></tr><tr><td>20250814</td><td>반기보고서 (2025.06)</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250814002729" target="_blank">보기</a></td></tr><tr><td>20250630</td><td>지속가능경영보고서등관련사항(자율공시)              </td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250630800407" target="_blank">보기</a></td></tr><tr><td>20250620</td><td>타인에대한채무보증결정              </td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250620800358" target="_blank">보기</a></td></tr><tr><td>20250515</td><td>분기보고서 (2025.03)</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250515001171" target="_blank">보기</a></td></tr><tr><td>20250428</td><td>타인에대한채무보증결정              </td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250428800560" target="_blank">보기</a></td></tr><tr><td>20250331</td><td>사외이사의선임ㆍ해임또는중도퇴임에관한신고</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250331003419" target="_blank">보기</a></td></tr><tr><td>20250331</td><td>정기주주총회결과              </td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250331802611" target="_blank">보기</a></td></tr><tr><td>20250321</td><td>사업보고서 (2024.12)</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250321001314" target="_blank">보기</a></td></tr><tr><td>20250321</td><td>주식등의대량보유상황보고서(일반)</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250321000832" target="_blank">보기</a></td></tr><tr><td>20250314</td><td>의결권대리행사권유참고서류</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250314001255" target="_blank">보기</a></td></tr><tr><td>20250314</td><td>[기재정정]주주총회소집공고</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250314001241" target="_blank">보기</a></td></tr><tr><td>20250314</td><td>주주총회소집공고</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250314001018" target="_blank">보기</a></td></tr><tr><td>20250314</td><td>주주총회소집결의              </td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250314800991" target="_blank">보기</a></td></tr><tr><td>20250314</td><td>현금ㆍ현물배당결정              </td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250314800982" target="_blank">보기</a></td></tr><tr><td>20250314</td><td>감사보고서제출              </td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250314800969" target="_blank">보기</a></td></tr><tr><td>20250311</td><td>임원ㆍ주요주주특정증권등소유상황보고서</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250311000156" target="_blank">보기</a></td></tr><tr><td>20250311</td><td>임원ㆍ주요주주특정증권등소유상황보고서</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250311000153" target="_blank">보기</a></td></tr><tr><td>20250311</td><td>주식등의대량보유상황보고서(일반)</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250311000148" target="_blank">보기</a></td></tr><tr><td>20250311</td><td>주식등의대량보유상황보고서(일반)</td><td><a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20250311000141" target="_blank">보기</a></td></tr></tbody></table>
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+    <script>
+
+        // Market Report Generator - JavaScript Functions
+
+
+
+function showSection(sectionId) {
+
+    const targetSection = document.getElementById(sectionId);
+
+    if (!targetSection) {
+
+        console.error(`Section ${sectionId} not found`);
+
+        alert(`해당 섹션(${sectionId})은 아직 준비 중입니다.`);
+
+        return;
+
+    }
+
+
+
+    document.querySelectorAll(".content-section").forEach(section => {
+
+        section.classList.remove("active");
+
+    });
+
+    document.getElementById("home").style.display = "none";
+
+    targetSection.classList.add("active");
+
+    window.scrollTo(0, 0);
+
+}
+
+
+
+function showHome() {
+
+    document.querySelectorAll(".content-section").forEach(section => {
+
+        section.classList.remove("active");
+
+    });
+
+    document.getElementById("home").style.display = "block";
+
+    window.scrollTo(0, 0);
+
+}
+
+
+
+// Initialize charts when document is loaded
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Chart.js defaults for consistent visuals
+    if (window.Chart) {
+        Chart.defaults.font.family = "'Noto Sans KR','Segoe UI',Tahoma,Geneva,Verdana,sans-serif";
+        Chart.defaults.color = '#495057';
+        Chart.defaults.plugins.legend.labels.boxWidth = 12;
+        Chart.defaults.elements.line.tension = 0.25;
+        Chart.defaults.datasets.line.borderWidth = 2;
+        Chart.defaults.animation.duration = 600;
+    }
+
+    // Auto-initialize all charts
+    initializeCharts();
+
+});
+
+
+
+function initializeCharts() {
+
+    // This function will be called to initialize all Chart.js charts
+
+    // Individual chart configurations will be inserted by the generator
+
+}
+
+
+
+// Chart creation helper function
+
+function createChart(canvasId, config) {
+
+    const ctx = document.getElementById(canvasId);
+
+    if (ctx) {
+
+        return new Chart(ctx, config);
+
+    }
+
+    return null;
+
+}
+
+
+
+// Utility function to format numbers
+
+function formatNumber(num, decimals = 0) {
+
+    return num.toLocaleString('ko-KR', {
+
+        minimumFractionDigits: decimals,
+
+        maximumFractionDigits: decimals
+
+    });
+
+}
+
+
+
+// Utility function to format currency
+
+function formatCurrency(amount, currency = 'USD') {
+
+    const symbols = {
+
+        'USD': '$',
+
+        'KRW': '₩',
+
+        'EUR': '€',
+
+        'JPY': '¥'
+
+    };
+
+
+
+    const symbol = symbols[currency] || currency;
+
+
+
+    if (amount >= 1000000000) {
+
+        return symbol + (amount / 1000000000).toFixed(2) + 'B';
+
+    } else if (amount >= 1000000) {
+
+        return symbol + (amount / 1000000).toFixed(2) + 'M';
+
+    } else if (amount >= 1000) {
+
+        return symbol + (amount / 1000).toFixed(2) + 'K';
+
+    }
+
+    return symbol + amount.toFixed(2);
+
+}
+
+
+
+// === GENERATED CHART SCRIPTS START ===
+
+
+(function() {
+    const ctx = document.getElementById('auto_ev');
+    if (ctx) {
+        new Chart(ctx, {"type": "line", "data": {"labels": ["2024", "2025", "2026", "2027", "2028", "2029", "2030"], "datasets": [{"label": "EV 침투율(%)", "data": [14, 16, 19, 22, 25, 28, 30], "borderColor": "#e8a5a5", "backgroundColor": "rgba(232,165,165,0.2)", "borderWidth": 2}]}, "options": {"responsive": true, "plugins": {"legend": {"display": true}}}});
+    }
+})();
+
+
+(function() {
+    const ctx = document.getElementById('auto_mix');
+    if (ctx) {
+        new Chart(ctx, {"type": "bar", "data": {"labels": ["EV", "HEV/PHEV", "ICE"], "datasets": [{"label": "2024", "data": [14, 25, 61], "backgroundColor": "#e8a5a5"}, {"label": "2030", "data": [30, 28, 42], "backgroundColor": "#c89595"}]}, "options": {"responsive": true, "plugins": {"legend": {"display": true}}}});
+    }
+})();
+
+
+(function() {
+    const ctx = document.getElementById('auto_kr');
+    if (ctx) {
+        new Chart(ctx, {"type": "line", "data": {"labels": ["2024", "2025", "2026", "2027", "2028"], "datasets": [{"label": "완성차 수출(지수)", "data": [100, 104, 108, 111, 115], "borderColor": "#a5c5d5", "backgroundColor": "rgba(165,197,213,0.2)", "borderWidth": 2}, {"label": "부품 매출(지수)", "data": [100, 102, 106, 110, 114], "borderColor": "#d8a5a5", "backgroundColor": "rgba(216,165,165,0.2)", "borderWidth": 2}]}, "options": {"responsive": true, "plugins": {"legend": {"display": true}}}});
+    }
+})();
+
+
+(function() {
+    const ctx = document.getElementById('auto_regions');
+    if (ctx) {
+        new Chart(ctx, {"type": "line", "data": {"labels": ["2024", "2026", "2028", "2030"], "datasets": [{"label": "북미(%)", "data": [12, 17, 23, 28], "borderColor": "#e8a5a5", "backgroundColor": "rgba(232,165,165,0.2)", "borderWidth": 2}, {"label": "유럽(%)", "data": [18, 25, 33, 40], "borderColor": "#a5c5d5", "backgroundColor": "rgba(165,197,213,0.2)", "borderWidth": 2}, {"label": "중국(%)", "data": [30, 36, 42, 48], "borderColor": "#c89595", "backgroundColor": "rgba(200,149,149,0.2)", "borderWidth": 2}]}, "options": {"responsive": true, "plugins": {"legend": {"display": true}}}});
+    }
+})();
+
+
+(function() {
+    const ctx = document.getElementById('auto_oems');
+    if (ctx) {
+        new Chart(ctx, {"type": "bar", "data": {"labels": ["BYD", "Tesla", "Hyundai·Kia", "VW", "Toyota"], "datasets": [{"label": "전동화 지수(예시)", "data": [85, 80, 72, 65, 60], "backgroundColor": "#f0b6b6"}]}, "options": {"responsive": true, "plugins": {"legend": {"display": true}}}});
+    }
+})();
+
+
+(function() {
+    const ctx = document.getElementById('auto_supply_lead');
+    if (ctx) {
+        new Chart(ctx, {"type": "bar", "data": {"labels": ["Upstream", "Cell/Module", "Tier1", "OEM"], "datasets": [{"label": "리드타임(주)", "data": [16, 12, 10, 8], "backgroundColor": "#e8c5c5"}]}, "options": {"responsive": true}});
+    }
+})();
+
+
+(function() {
+    const ctx = document.getElementById('auto_fin');
+    if (ctx) {
+        new Chart(ctx, {"type": "bar", "data": {"labels": ["Year1", "Year2", "Year3"], "datasets": [{"label": "매출(억)", "data": [50, 120, 220], "backgroundColor": "#e8a5a5"}, {"label": "영업이익(억)", "data": [5, 18, 45], "backgroundColor": "#c89595"}]}, "options": {"responsive": true, "plugins": {"legend": {"display": true}}}});
+    }
+})();
+
+// === GENERATED CHART SCRIPTS END ===
+
+
+
+    </script>
+
+
+        <script>
+        // 자동 업데이트 기능
+        (function() {
+            const API_BASE = window.location.origin;
+            let lastUpdateTime = null;
+            let updateCheckInterval = null;
+            
+            // 업데이트 상태 표시 요소 생성
+            function createUpdateIndicator() {
+                const indicator = document.createElement('div');
+                indicator.id = 'update-indicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--surface);
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    box-shadow: var(--shadow);
+                    border: 1px solid var(--border);
+                    z-index: 10000;
+                    font-size: 0.9em;
+                    display: none;
+                `;
+                document.body.appendChild(indicator);
+                return indicator;
+            }
+            
+            function showUpdateIndicator(message, type = 'info') {
+                const indicator = document.getElementById('update-indicator') || createUpdateIndicator();
+                indicator.style.display = 'block';
+                indicator.textContent = message;
+                indicator.style.borderLeft = `4px solid ${type === 'success' ? '#12b886' : type === 'error' ? '#ff6b6b' : '#7b64ff'}`;
+                
+                if (type === 'success') {
+                    setTimeout(() => {
+                        indicator.style.display = 'none';
+                    }, 3000);
+                }
+            }
+            
+            // 상태 확인
+            async function checkStatus() {
+                try {
+                    const response = await fetch(API_BASE + '/api/status');
+                    const status = await response.json();
+                    
+                    if (lastUpdateTime && status.last_updated && status.last_updated !== lastUpdateTime) {
+                        // 업데이트 감지
+                        showUpdateIndicator('새로운 데이터가 있습니다. 페이지를 새로고침합니다...', 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else if (!lastUpdateTime && status.last_updated) {
+                        lastUpdateTime = status.last_updated;
+                    }
+                } catch (error) {
+                    // 로컬 서버가 실행 중이 아닐 때는 조용히 실패
+                    console.log('로컬 서버에 연결할 수 없습니다. 자동 업데이트를 사용하려면 local_server.py를 실행하세요.');
+                }
+            }
+            
+            // 수동 업데이트 버튼
+            function createUpdateButton() {
+                const button = document.createElement('button');
+                button.textContent = '🔄 업데이트';
+                button.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: var(--primary-500);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 0.9em;
+                    font-weight: 500;
+                    box-shadow: var(--shadow);
+                    z-index: 10000;
+                    transition: all 0.3s;
+                `;
+                button.onmouseover = () => button.style.background = 'var(--primary-600)';
+                button.onmouseout = () => button.style.background = 'var(--primary-500)';
+                
+                button.onclick = async () => {
+                    button.disabled = true;
+                    button.textContent = '업데이트 중...';
+                    showUpdateIndicator('데이터를 업데이트하는 중...', 'info');
+                    
+                    try {
+                        const response = await fetch(API_BASE + '/api/update', {
+                            method: 'POST'
+                        });
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            showUpdateIndicator('업데이트 완료! 페이지를 새로고침합니다...', 'success');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            showUpdateIndicator('업데이트 실패: ' + result.message, 'error');
+                            button.disabled = false;
+                            button.textContent = '🔄 업데이트';
+                        }
+                    } catch (error) {
+                        showUpdateIndicator('서버에 연결할 수 없습니다.', 'error');
+                        button.disabled = false;
+                        button.textContent = '🔄 업데이트';
+                    }
+                };
+                
+                document.body.appendChild(button);
+            }
+            
+            // 초기화
+            if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+                // 웹 서버를 통해 접근하는 경우
+                createUpdateButton();
+                checkStatus(); // 초기 확인
+                updateCheckInterval = setInterval(checkStatus, 60000); // 1분마다 확인
+            }
+        })();
+        </script>
+        
+</body>
+
+</html>
+
+

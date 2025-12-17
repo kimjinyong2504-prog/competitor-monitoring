@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooper Standard 2024 분석 보고서</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles from automotive.html */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #fbfbfc;
+            --surface: #ffffff;
+            --text: #2f2f33;
+            --muted: #666a73;
+            --border: #e9ecf1;
+            --primary-50: #f7f5ff;
+            --primary-100: #efeaff;
+            --primary-200: #ded5ff;
+            --primary-500: #7b64ff;
+            --primary-600: #6a54f0;
+            --shadow: 0 8px 30px rgba(17, 17, 26, 0.05);
+        }
+        body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+        
+        header {
+            background: linear-gradient(180deg, var(--surface) 0%, #f7f8fb 100%);
+            padding: 56px 40px; text-align: center; border-radius: 20px;
+            box-shadow: var(--shadow); margin-bottom: 36px; border: 1px solid var(--border);
+        }
+        h1 { font-size: 2.4em; margin-bottom: 8px; font-weight: 700; letter-spacing: -0.02em; }
+        .subtitle { color: var(--muted); font-size: 1.05em; font-weight: 400; }
+
+        .home-section {
+            background: var(--surface); padding: 36px; border-radius: 16px;
+            box-shadow: var(--shadow); margin-bottom: 28px; border: 1px solid var(--border);
+        }
+        .button-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px; margin-top: 40px;
+        }
+        .nav-button {
+            background: var(--surface); border: 1px solid var(--border); padding: 22px;
+            border-radius: 12px; cursor: pointer; text-align: left;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(17, 17, 26, 0.06); border-color: var(--primary-200); }
+        .nav-button h3 { margin-bottom: 6px; font-size: 1.15em; }
+        .nav-button p { color: var(--muted); font-size: 0.95em; }
+
+        .content-section {
+            display: none; background: var(--surface); padding: 36px;
+            border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 28px;
+            border: 1px solid var(--border);
+        }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-size: 1.8em; margin-bottom: 22px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-100); }
+        h3 { font-size: 1.25em; margin-top: 28px; margin-bottom: 14px; }
+        h4 { color: var(--muted); font-size: 1.05em; margin-top: 22px; margin-bottom: 10px; }
+
+        .back-button {
+            background: linear-gradient(180deg, var(--primary-500), var(--primary-600));
+            color: #fff; border: none; padding: 12px 22px; border-radius: 10px;
+            cursor: pointer; font-size: 0.95em; margin-top: 28px; font-weight: 600;
+        }
+        .back-button:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(123, 100, 255, 0.28); }
+
+        .stat-card {
+            background: linear-gradient(180deg, var(--surface), #fafbff);
+            padding: 20px; border-radius: 12px; margin: 18px 0; border: 1px solid var(--border);
+        }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 25px 0; }
+        .stat-item { background: var(--surface); padding: 16px; border-radius: 10px; text-align: center; border: 1px solid var(--border); }
+        .stat-value { font-size: 1.6em; font-weight: 700; color: var(--primary-600); margin-bottom: 6px; }
+        .stat-label { color: var(--muted); font-size: 0.9em; }
+
+        .chart-container {
+            background: var(--surface); padding: 20px; border-radius: 12px;
+            margin: 24px 0; box-shadow: var(--shadow); border: 1px solid var(--border);
+            height: 400px;
+        }
+
+        table {
+            width: 100%; border-collapse: separate; border-spacing: 0; margin: 22px 0;
+            background: var(--surface); border-radius: 12px; overflow: hidden;
+            box-shadow: var(--shadow); border: 1px solid var(--border);
+        }
+        th { background: linear-gradient(180deg, var(--primary-50), var(--primary-100)); padding: 14px 16px; text-align: left; font-weight: 600; }
+        td { padding: 14px 16px; border-top: 1px solid var(--border); }
+        tr:hover { background: #fbfbff; }
+
+        .highlight {
+            background: linear-gradient(180deg, #fffefb, #fffdfa); padding: 18px;
+            border-radius: 12px; margin: 18px 0; border: 1px solid #f2ead6;
+        }
+        ul { margin-left: 25px; margin-top: 15px; margin-bottom: 15px; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Cooper Standard 2024 분석 보고서</h1>
+        <p class="subtitle">전략적 전환, 재무 건전성 및 미래 성장 동력 심층 분석</p>
+    </header>
+
+    <div id="home" class="home-section">
+        <h2>📋 보고서 목차</h2>
+        <div class="button-grid">
+            <div class="nav-button" onclick="showSection('exec')">
+                <h3>요약 (Executive Summary)</h3>
+                <p>전략적 위치 및 핵심 지표</p>
+            </div>
+            <div class="nav-button" onclick="showSection('overview')">
+                <h3>기업 및 고객 개요</h3>
+                <p>글로벌 네트워크 및 고객 포트폴리오</p>
+            </div>
+            <div class="nav-button" onclick="showSection('finance')">
+                <h3>재무 성과 분석</h3>
+                <p>매출, 영업이익, EBITDA</p>
+            </div>
+            <div class="nav-button" onclick="showSection('segments')">
+                <h3>사업 부문별 성과</h3>
+                <p>실링 vs 유체 취급 시스템</p>
+            </div>
+            <div class="nav-button" onclick="showSection('tech')">
+                <h3>기술 혁신 전략</h3>
+                <p>Fortrex™, FlexiCore™, AI</p>
+            </div>
+            <div class="nav-button" onclick="showSection('risk')">
+                <h3>리스크 요인</h3>
+                <p>재무, 운영, 전략 리스크</p>
+            </div>
+            <div class="nav-button" onclick="showSection('outlook')">
+                <h3>결론 및 전망</h3>
+                <p>미래 성장 요인</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="exec" class="content-section">
+        <h2>요약 (Executive Summary)</h2>
+        <p>2024년은 전동화 전환 가속과 거시경제 불확실성이 공존한 시기였으며, 쿠퍼 스탠다드는 조직 개편과 재무 구조 최적화에 주력했습니다.</p>
+        
+        <div class="stat-card">
+            <h3>2024 핵심 성과 지표</h3>
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-value">$2.73B</div><div class="stat-label">연결 매출액</div></div>
+                <div class="stat-item"><div class="stat-value">+51.7%</div><div class="stat-label">영업이익 증가율</div></div>
+                <div class="stat-item"><div class="stat-value">$180.7M</div><div class="stat-label">조정 EBITDA</div></div>
+                <div class="stat-item"><div class="stat-value">124개</div><div class="stat-label">글로벌 네트워크</div></div>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <h4>핵심 인사이트</h4>
+            <ul>
+                <li><strong>수익성 개선:</strong> 매출 감소에도 불구하고 린 제조 및 비용 절감으로 매출총이익률 11.1% 달성.</li>
+                <li><strong>구조 개편:</strong> '실링'과 '유체 취급' 중심의 글로벌 제품 라인 조직으로 전환하여 효율성 제고.</li>
+                <li><strong>재무 리스크 완화:</strong> 미국 내 연금 의무 종료(De-risking)를 통해 부채 변동성 축소.</li>
+            </ul>
+        </div>
+        <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+    </div>
+
+    <div id="overview" class="content-section">
+        <h2>기업 및 고객 개요</h2>
+        <p>쿠퍼 스탠다드는 전 세계 20개국에 124개 거점을 보유하고 있으며, 약 22,000명의 인력이 근무 중입니다. 2004년 쿠퍼 타이어에서 분사된 이후 M&A와 구조조정을 통해 성장해왔습니다.</p>
+
+        <h3>고객 포트폴리오 (2024년 매출 비중)</h3>
+        <p>전체 매출의 86%가 OEM 고객으로부터 발생하며, '디트로이트 빅3'에 대한 의존도가 높으나 중국 OEM 및 전기차 업체로 다변화를 추진 중입니다.</p>
+        
+        <div class="chart-container">
+            <canvas id="chart_customers"></canvas>
+        </div>
+        <ul>
+            <li><strong>Ford:</strong> 27% (최대 고객사)</li>
+            <li><strong>GM:</strong> 17%</li>
+            <li><strong>Stellantis:</strong> 14%</li>
+            <li><strong>기타:</strong> VW, Toyota, Hyundai, BYD, Rivian 등</li>
+        </ul>
+        <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+    </div>
+
+    <div id="finance" class="content-section">
+        <h2>재무 성과 상세 분석</h2>
+        <p>매출 감소 속에서도 강도 높은 비용 절감으로 이익 지표가 개선되었습니다.</p>
+
+        <table>
+            <thead><tr><th>지표</th><th>2023년</th><th>2024년</th><th>변동률</th></tr></thead>
+            <tbody>
+                <tr><td>매출액 (Sales)</td><td>$2,815.9M</td><td>$2,730.9M</td><td>-3.0%</td></tr>
+                <tr><td>매출총이익 (Gross Profit)</td><td>$290.8M</td><td>$302.9M</td><td>+4.2%</td></tr>
+                <tr><td>영업이익 (Op Income)</td><td>$46.0M</td><td>$69.8M</td><td>+51.7%</td></tr>
+                <tr><td>조정 EBITDA</td><td>$167.1M</td><td>$180.7M</td><td>+8.1%</td></tr>
+            </tbody>
+        </table>
+
+        <div class="chart-container">
+            <canvas id="chart_financials"></canvas>
+        </div>
+
+        <div class="highlight">
+            <h4>주요 변동 요인</h4>
+            <ul>
+                <li><strong>매출 감소:</strong> 물량/믹스(-$31.8M), 환율(-$20.6M), 사업 매각(-$32.5M) 영향.</li>
+                <li><strong>이익 개선:</strong> SG&A 절감 및 자산 매각 이익이 구조조정 비용 증가를 상쇄.</li>
+                <li><strong>부채 현황:</strong> 총 부채 약 $1.1B 수준이며, PIK 옵션 대신 현금 이자 지급을 선택하여 원금 증가 방지.</li>
+            </ul>
+        </div>
+        <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+    </div>
+
+    <div id="segments" class="content-section">
+        <h2>사업 부문별 성과</h2>
+        
+        <h3>1. 실링 시스템 (Sealing Systems)</h3>
+        
+        <p>차량 내부 소음 차단 및 보호 역할을 하며 전사 매출의 52%를 차지하는 'Cash Cow'입니다.</p>
+        <ul>
+            <li><strong>매출:</strong> $1,420M (환율 및 보전금 감소로 하락).</li>
+            <li><strong>조정 EBITDA:</strong> $126.5M (마진율 8.9%로 개선).</li>
+            <li><strong>성과 요인:</strong> 제조 효율성 개선이 인플레이션 비용을 압도.</li>
+        </ul>
+
+        <h3>2. 유체 취급 시스템 (Fluid Handling Systems)</h3>
+        
+        <p>전기차 열 관리의 핵심 부문으로 전사 매출의 45%를 차지합니다.</p>
+        <ul>
+            <li><strong>매출:</strong> $1,236.8M.</li>
+            <li><strong>조정 EBITDA:</strong> $77.7M (마진율 6.3%).</li>
+            <li><strong>전망:</strong> EV 열 관리 시스템 복잡성 증가로 인한 평균판매단가(ASP) 상승 기대.</li>
+        </ul>
+
+        <div class="chart-container">
+            <h4>2024 매출 비중</h4>
+            <canvas id="chart_segments"></canvas>
+        </div>
+        <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+    </div>
+
+    <div id="tech" class="content-section">
+        <h2>기술 혁신 및 전략</h2>
+        <p>단순 부품 제조를 넘어 '소재 과학 기업'으로 진화하고 있으며, R&D에 $82.8M(매출의 3.0%)를 투자했습니다.</p>
+
+        <div class="highlight">
+            <h4>핵심 기술 포트폴리오</h4>
+            <ul>
+                <li><strong>포트렉스(Fortrex™):</strong> 기존 고무 대비 30% 경량화, 나이키(Nike) 등 타 산업 라이선싱 확장.</li>
+                <li><strong>플렉시코어(FlexiCore™):</strong> 금속 캐리어를 플라스틱으로 대체하여 경량화 및 재활용 용이성 확보.</li>
+                <li><strong>AI 공정 제어(Liveline Technologies):</strong> 실시간 변동성 감지로 스크랩 감소 및 품질 향상.</li>
+            </ul>
+        </div>
+        <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+    </div>
+
+    <div id="risk" class="content-section">
+        <h2>리스크 요인 (Risk Factors)</h2>
+        
+        <table>
+            <thead><tr><th>유형</th><th>주요 리스크</th><th>대응 현황</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>운영</td>
+                    <td>원자재 변동성 및 공급망 붕괴</td>
+                    <td>지수 연동형 계약 확대</td>
+                </tr>
+                <tr>
+                    <td>재무</td>
+                    <td>고부채($1.1B) 및 이자 부담</td>
+                    <td>현금 이자 지급으로 부채 증액 방지</td>
+                </tr>
+                <tr>
+                    <td>전략</td>
+                    <td>고객 집중도(Big 3 58%)</td>
+                    <td>중국 OEM 및 신규 EV 업체 확장</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+    </div>
+
+    <div id="outlook" class="content-section">
+        <h2>결론 및 전망</h2>
+        <p>2024년은 매출 정체 속에서도 5,000만 달러의 비용 절감을 통해 수익성 턴어라운드의 발판을 마련한 해였습니다.</p>
+
+        <h3>향후 성장 핵심 요소</h3>
+        <ol>
+            <li><strong>EV 열 관리 시장:</strong> 튜브 및 커넥터 고사양화에 따른 점유율 확대.</li>
+            <li><strong>소재 기술 라이선싱:</strong> 포트렉스 등의 비자동차 부문 수익원 다각화.</li>
+            <li><strong>부채 관리:</strong> 2027년 만기 도래 부채의 선제적 관리 및 리파이낸싱.</li>
+        </ol>
+        
+        <p class="subtitle" style="margin-top: 20px;">재무 구조 개선과 혁신 활동이 지속된다면 중장기적 기업 가치 재평가가 가능할 것으로 전망됩니다.</p>
+        <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+    </div>
+
+</div>
+
+<script>
+    function showSection(sectionId) {
+        const targetSection = document.getElementById(sectionId);
+        if (!targetSection) return;
+        document.querySelectorAll(".content-section").forEach(section => section.classList.remove("active"));
+        document.getElementById("home").style.display = "none";
+        targetSection.classList.add("active");
+        window.scrollTo(0, 0);
+    }
+
+    function showHome() {
+        document.querySelectorAll(".content-section").forEach(section => section.classList.remove("active"));
+        document.getElementById("home").style.display = "block";
+        window.scrollTo(0, 0);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.Chart) {
+            Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+            Chart.defaults.color = '#495057';
+            Chart.defaults.responsive = true;
+            Chart.defaults.maintainAspectRatio = false;
+        }
+
+        // 1. Customer Mix Chart
+        const ctxCust = document.getElementById('chart_customers');
+        if (ctxCust) {
+            new Chart(ctxCust, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ford', 'GM', 'Stellantis', 'VW', 'Others'],
+                    datasets: [{
+                        data: [27, 17, 14, 5, 37],
+                        backgroundColor: ['#6a54f0', '#7b64ff', '#a08dff', '#c4b6ff', '#e9ecf1']
+                    }]
+                },
+                options: { plugins: { title: { display: true, text: '2024 고객사별 매출 비중 (%)' } } }
+            });
+        }
+
+        // 2. Financial Performance Chart
+        const ctxFin = document.getElementById('chart_financials');
+        if (ctxFin) {
+            new Chart(ctxFin, {
+                type: 'bar',
+                data: {
+                    labels: ['매출액 (Sales)', '매출원가 (COGS)', '조정 EBITDA'],
+                    datasets: [
+                        { label: '2023', data: [2815.9, 2525.1, 167.1], backgroundColor: '#c4b6ff' },
+                        { label: '2024', data: [2730.9, 2428.0, 180.7], backgroundColor: '#6a54f0' }
+                    ]
+                },
+                options: {
+                    plugins: { title: { display: true, text: '2023 vs 2024 주요 재무 지표 ($ Millions)' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        // 3. Segment Mix Chart
+        const ctxSeg = document.getElementById('chart_segments');
+        if (ctxSeg) {
+            new Chart(ctxSeg, {
+                type: 'pie',
+                data: {
+                    labels: ['실링 시스템', '유체 취급 시스템', '기타'],
+                    datasets: [{
+                        data: [52, 45, 3],
+                        backgroundColor: ['#6a54f0', '#12b886', '#e9ecf1']
+                    }]
+                },
+                options: { plugins: { title: { display: true, text: '사업 부문별 매출 비중 (%)' } } }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

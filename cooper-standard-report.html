@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+
+    <title>쿠퍼 스탠다드 홀딩스 2024년 종합 분석 보고서</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* Market Report Generator - Base Styles */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+
+:root {
+    --bg: #fbfbfc;
+    --surface: #ffffff;
+    --text: #2f2f33;
+    --muted: #666a73;
+    --border: #e9ecf1;
+    --primary-50: #f7f5ff;
+    --primary-100: #efeaff;
+    --primary-200: #ded5ff;
+    --primary-300: #c4b6ff;
+    --primary-400: #a08dff;
+    --primary-500: #7b64ff;
+    --primary-600: #6a54f0;
+    --accent: #12b886;
+    --shadow: 0 8px 30px rgba(17, 17, 26, 0.05);
+}
+
+body {
+    font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+}
+
+
+
+.container {
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 40px 20px;
+
+}
+
+
+
+header {
+    background: linear-gradient(180deg, var(--surface) 0%, #f7f8fb 100%);
+    padding: 56px 40px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 36px;
+    border: 1px solid var(--border);
+}
+
+
+
+h1 {
+    color: var(--text);
+    font-size: 2.4em;
+    margin-bottom: 8px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+
+
+.subtitle {
+    color: var(--muted);
+    font-size: 1.05em;
+    font-weight: 400;
+}
+
+
+
+.home-section {
+    background: var(--surface);
+    padding: 36px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+}
+
+
+
+.button-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 25px;
+
+    margin-top: 40px;
+
+}
+
+
+
+.nav-button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    text-align: left;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(123, 100, 255, 0.2);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+
+
+.nav-button:hover,
+.nav-button:active {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(17, 17, 26, 0.06);
+    border-color: var(--primary-200);
+}
+
+.nav-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(17, 17, 26, 0.08);
+}
+
+
+
+.nav-button h3 {
+    color: var(--text);
+    margin-bottom: 6px;
+    font-size: 1.15em;
+}
+
+
+
+.nav-button p {
+    color: var(--muted);
+    font-size: 0.95em;
+}
+
+
+
+.content-section {
+    display: none;
+    background: var(--surface);
+    padding: 36px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+}
+
+
+
+.content-section.active {
+
+    display: block;
+
+    animation: fadeIn 0.5s ease;
+
+}
+
+
+
+@keyframes fadeIn {
+
+    from { opacity: 0; transform: translateY(20px); }
+
+    to { opacity: 1; transform: translateY(0); }
+
+}
+
+
+
+h2 {
+    color: var(--text);
+    font-size: 1.8em;
+    margin-bottom: 22px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-100);
+}
+
+
+
+h3 {
+    color: var(--text);
+    font-size: 1.25em;
+    margin-top: 28px;
+    margin-bottom: 14px;
+}
+
+
+
+h4 {
+    color: var(--muted);
+    font-size: 1.05em;
+    margin-top: 22px;
+    margin-bottom: 10px;
+}
+
+
+
+.back-button {
+    background: linear-gradient(180deg, var(--primary-500), var(--primary-600));
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    margin-top: 28px;
+    margin-bottom: 0;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 24px rgba(123, 100, 255, 0.25);
+    font-weight: 600;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+
+
+.back-button:hover,
+.back-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(123, 100, 255, 0.28);
+}
+
+.back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 16px rgba(123, 100, 255, 0.3);
+}
+
+
+
+.stat-card {
+    background: linear-gradient(180deg, var(--surface), #fafbff);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 18px 0;
+    border: 1px solid var(--border);
+}
+
+
+
+.stat-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 20px;
+
+    margin: 25px 0;
+
+}
+
+
+
+.stat-item {
+    background: var(--surface);
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+
+
+.stat-value {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: var(--primary-600);
+    margin-bottom: 6px;
+}
+
+
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.9em;
+}
+
+
+
+.chart-container {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 24px 0;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 22px 0;
+    background: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+
+
+th {
+    background: linear-gradient(180deg, var(--primary-50), var(--primary-100));
+    color: var(--text);
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+}
+
+
+
+td {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+}
+
+
+
+tr:hover {
+    background: #fbfbff;
+}
+
+
+
+.highlight {
+    background: linear-gradient(180deg, #fffefb, #fffdfa);
+    padding: 18px;
+    border-radius: 12px;
+    margin: 18px 0;
+    border: 1px solid #f2ead6;
+}
+
+
+
+.swot-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+
+    margin: 25px 0;
+
+}
+
+
+
+.swot-item {
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    border: 2px solid;
+
+}
+
+
+
+.strength {
+
+    background: linear-gradient(135deg, #e8f5e8 0%, #dceedc 100%);
+
+    border-color: #a5d5a5;
+
+}
+
+
+
+.weakness {
+
+    background: linear-gradient(135deg, #ffe8e8 0%, #ffdcdc 100%);
+
+    border-color: #f5a5a5;
+
+}
+
+
+
+.opportunity {
+
+    background: linear-gradient(135deg, #e8f0f5 0%, #dce8ee 100%);
+
+    border-color: #a5c5d5;
+
+}
+
+
+
+.threat {
+
+    background: linear-gradient(135deg, #f5e8f0 0%, #eedce8 100%);
+
+    border-color: #d5a5c5;
+
+}
+
+
+
+ul, ol {
+
+    margin-left: 25px;
+
+    margin-top: 15px;
+
+    margin-bottom: 15px;
+
+}
+
+
+
+li {
+
+    margin-bottom: 10px;
+
+    line-height: 1.7;
+
+}
+
+
+
+.competitor-card {
+
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    margin: 20px 0;
+
+    border: 2px solid #f5d5d5;
+
+}
+
+
+
+.region-section {
+
+    background: linear-gradient(135deg, #e8f5fa 0%, #dceef5 100%);
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    margin: 25px 0;
+
+    border-left: 5px solid #a5c5d5;
+
+}
+
+
+
+strong {
+    color: var(--primary-600);
+}
+
+/* Utilities */
+.muted { color: var(--muted); }
+.pill { display:inline-block; padding:6px 10px; border-radius:999px; font-size:12px; background:var(--primary-50); color:var(--primary-600); border:1px solid var(--primary-100); }
+
+/* Mobile-friendly responsive styles */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 15px 10px;
+    }
+
+    header {
+        padding: 30px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 1.6em;
+        line-height: 1.3;
+    }
+
+    .subtitle {
+        font-size: 0.9em;
+        margin-top: 8px;
+    }
+
+    .home-section {
+        padding: 20px 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    .button-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    .nav-button {
+        padding: 18px 16px;
+        border-radius: 10px;
+    }
+
+    .nav-button h3 {
+        font-size: 1.05em;
+        margin-bottom: 5px;
+    }
+
+    .nav-button p {
+        font-size: 0.85em;
+    }
+
+    .content-section {
+        padding: 20px 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-size: 1.4em;
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+    }
+
+    h3 {
+        font-size: 1.1em;
+        margin-top: 20px;
+        margin-bottom: 12px;
+    }
+
+    h4 {
+        font-size: 0.95em;
+        margin-top: 18px;
+        margin-bottom: 8px;
+    }
+
+    .stat-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 18px 0;
+    }
+
+    .stat-item {
+        padding: 14px;
+    }
+
+    .stat-value {
+        font-size: 1.4em;
+    }
+
+    .stat-label {
+        font-size: 0.85em;
+    }
+
+    .stat-card {
+        padding: 16px;
+        margin: 15px 0;
+    }
+
+    .chart-container {
+        padding: 15px;
+        margin: 18px 0;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 18px 0;
+        width: 100%;
+    }
+
+    table {
+        min-width: 600px;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 10px 12px;
+        font-size: 0.85em;
+    }
+
+    .highlight {
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    .swot-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .swot-item {
+        padding: 20px;
+    }
+
+    ul, ol {
+        margin-left: 20px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+
+    li {
+        margin-bottom: 8px;
+        font-size: 0.9em;
+    }
+
+    .back-button {
+        padding: 14px 20px;
+        font-size: 0.9em;
+        margin-top: 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .competitor-card {
+        padding: 20px;
+        margin: 15px 0;
+    }
+
+    .region-section {
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    p {
+        font-size: 0.9em;
+        line-height: 1.6;
+    }
+}
+
+/* 작은 모바일 (480px 이하) */
+@media screen and (max-width: 480px) {
+    header {
+        padding: 20px 15px;
+    }
+
+    h1 {
+        font-size: 1.4em;
+    }
+
+    .subtitle {
+        font-size: 0.85em;
+    }
+
+    .nav-button {
+        padding: 16px 14px;
+    }
+
+    .content-section {
+        padding: 15px 12px;
+    }
+
+    h2 {
+        font-size: 1.3em;
+    }
+
+    h3 {
+        font-size: 1.05em;
+    }
+
+    th, td {
+        padding: 8px 10px;
+        font-size: 0.8em;
+    }
+
+    .stat-value {
+        font-size: 1.3em;
+    }
+}
+
+/* Print styles: show all sections */
+@media print {
+    body { background: #fff; }
+    .home-section { display: none !important; }
+    .content-section { display: block !important; box-shadow: none; border: none; padding: 0; }
+    header { box-shadow: none; border: none; }
+}
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+
+    <h1>쿠퍼 스탠다드 홀딩스 2024년 종합 분석 보고서</h1>
+
+    <p class="subtitle">Cooper-Standard Holdings Inc. Annual Analysis</p>
+
+    <p class="subtitle">전략적 전환, 재무 건전성 및 미래 성장 동력에 대한 심층 고찰</p>
+
+</header>
+
+
+
+        <div id="home" class="home-section">
+
+    <h2>📋 보고서 목차</h2>
+
+    <div class="button-grid">
+
+        
+        <div class="nav-button" onclick="showSection('intro')">
+            <h3>서론</h3>
+            <p>자동차 부품 산업의 전환기 속 쿠퍼 스탠다드의 전략적 위치</p>
+        </div>
+
+        <div class="nav-button" onclick="showSection('overview')">
+            <h3>기업 개요 및 사업 구조</h3>
+            <p>역사적 배경, 조직 개편, 고객 포트폴리오</p>
+        </div>
+
+        <div class="nav-button" onclick="showSection('financial')">
+            <h3>재무 성과 분석</h3>
+            <p>손익계산서, 대차대조표, 유동성 분석</p>
+        </div>
+
+        <div class="nav-button" onclick="showSection('segments')">
+            <h3>부문별 성과</h3>
+            <p>실링 시스템, 유체 취급 시스템</p>
+        </div>
+
+        <div class="nav-button" onclick="showSection('innovation')">
+            <h3>기술 혁신 및 미래 성장 전략</h3>
+            <p>혁신 기술 포트폴리오, 디지털 전환</p>
+        </div>
+
+        <div class="nav-button" onclick="showSection('risk')">
+            <h3>리스크 요인 및 관리</h3>
+            <p>운영, 재무, 전략적 리스크</p>
+        </div>
+
+        <div class="nav-button" onclick="showSection('esg')">
+            <h3>ESG 및 지속가능성</h3>
+            <p>환경, 사회, 지배구조</p>
+        </div>
+
+        <div class="nav-button" onclick="showSection('conclusion')">
+            <h3>결론 및 전망</h3>
+            <p>핵심 요약 및 향후 전망</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+        
+<div id="intro" class="content-section">
+    <h2>서론: 자동차 부품 산업의 전환기 속 쿠퍼 스탠다드의 전략적 위치</h2>
+    
+    <div class="highlight">
+        <h4>2024년 산업 환경</h4>
+        <p>2024년은 글로벌 자동차 산업에 있어 전동화(Electrification)로의 패러다임 전환이 가속화되는 동시에, 거시경제적 불확실성과 지정학적 긴장이 지속된 복합적인 시기였다. 이러한 격동의 환경 속에서 글로벌 선도 부품 공급업체인 쿠퍼 스탠다드 홀딩스는 조직 구조의 근본적인 개편과 재무 구조의 최적화를 통해 미래 성장을 위한 기반을 다지는 데 주력하였다.</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>기업 개요</h3>
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">124개</div>
+                <div class="stat-label">글로벌 네트워크 (20개국)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">75개</div>
+                <div class="stat-label">제조 시설</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">49개</div>
+                <div class="stat-label">디자인/엔지니어링/행정 거점</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">22,000명</div>
+                <div class="stat-label">인적 자원 (정규직 및 임시직)</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>사업 모델</h3>
+    <p>쿠퍼 스탠다드는 실링 시스템(Sealing Systems)과 유체 취급 시스템(Fluid Handling Systems) 분야에서 세계적인 경쟁력을 보유한 기업이다. 동사의 비즈니스 모델은 원가 경쟁력 확보와 기술 혁신이라는 두 가지 핵심 축을 중심으로 전개되고 있다.</p>
+
+    <div class="highlight">
+        <h4>2024년 주요 변화</h4>
+        <ul>
+            <li><strong>조직 개편:</strong> 2024년 1월 1일부로 글로벌 제품 라인 중심의 조직 개편 단행</li>
+            <li><strong>재무 최적화:</strong> 매출 감소에도 불구하고 수익성 개선 달성</li>
+            <li><strong>포트폴리오 관리:</strong> 적극적인 사업 매각을 통한 자원 재배분</li>
+            <li><strong>기술 혁신:</strong> 소재 과학에 기반한 고부가가치 제품 개발 전략 추진</li>
+        </ul>
+    </div>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="overview" class="content-section">
+    <h2>기업 개요 및 사업 구조의 진화</h2>
+
+    <h3>2.1 역사적 배경과 성장 경로</h3>
+    <p>쿠퍼 스탠다드의 기원은 2004년 쿠퍼 타이어 앤 러버 컴퍼니(Cooper Tire & Rubber Company)의 자동차 부품 사업부를 인수하면서 시작되었다. 이후 동사는 유기적 성장과 전략적 인수합병(M&A)을 병행하며 고객 기반을 다변화하고 글로벌 입지를 확장해 왔다.</p>
+
+    <div class="highlight">
+        <h4>주요 인수합병 이력</h4>
+        <ul>
+            <li><strong>2018년:</strong> 로렌 매뉴팩처링(Lauren Manufacturing)과 로렌 플라스틱(Lauren Plastics) 인수 - 산업 및 특수 그룹(ISG) 사업 확장</li>
+            <li><strong>2023년:</strong> 유럽 기술 고무 제품 사업부 및 아시아 태평양 지역 조인트 벤처 지분 매각 - 핵심 역량 집중 전략</li>
+        </ul>
+    </div>
+
+    <h3>2.2 2024년 조직 개편: 제품 중심의 효율성 제고</h3>
+    <p>2024년 회계연도의 가장 큰 변화 중 하나는 경영 보고 구조의 재편이다. 기존의 지역 중심 관리 체계에서 벗어나, '실링 시스템'과 '유체 취급 시스템'이라는 두 개의 글로벌 제품 라인 중심 세그먼트로 전환하였다.</p>
+
+    <div class="stat-card">
+        <h3>사업 부문</h3>
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">실링 시스템</div>
+                <div class="stat-label">차량 내부 보호 및 외관 심미성 제품</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">유체 취급 시스템</div>
+                <div class="stat-label">연료/브레이크 전달 및 열 관리 시스템</div>
+            </div>
+        </div>
+    </div>
+
+    <h4>실링 시스템 (Sealing Systems)</h4>
+    <ul>
+        <li>차량 내부를 소음, 먼지, 기상 조건으로부터 보호하고 외관의 심미성을 높이는 제품군</li>
+        <li>주력 제품: 동적/정적 씰, 캡슐화된 유리, 스테인리스 트림</li>
+        <li>세계 최대의 생산 능력 보유</li>
+    </ul>
+
+    <h4>유체 취급 시스템 (Fluid Handling Systems)</h4>
+    <ul>
+        <li>연료 및 브레이크 전달 시스템과 유체 이송 시스템을 포괄</li>
+        <li>내연기관 차량뿐만 아니라 전기차(EV) 및 하이브리드 차량의 열 관리(Thermal Management)에 필수</li>
+        <li>연료/브레이크 전달 분야 세계 2위, 유체 이송 분야 세계 3위</li>
+    </ul>
+
+    <h3>2.3 고객 포트폴리오 및 시장 지위</h3>
+    <p>동사의 매출 구조는 글로벌 주요 완성차 업체(OEM)들에 고도로 집중되어 있다. 2024년 전체 매출의 약 86%가 OEM 고객으로부터 발생하였으며, 나머지 14%는 1, 2차 공급업체 및 비자동차 부문 고객으로 구성된다.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>주요 고객사</th>
+                <th>2024년 매출 비중</th>
+                <th>비고</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ford Motor Company</td>
+                <td>27%</td>
+                <td>최대 고객사</td>
+            </tr>
+            <tr>
+                <td>General Motors (GM)</td>
+                <td>17%</td>
+                <td>주요 북미 고객</td>
+            </tr>
+            <tr>
+                <td>Stellantis</td>
+                <td>14%</td>
+                <td>주요 유럽/북미 고객</td>
+            </tr>
+            <tr>
+                <td>Volkswagen Group</td>
+                <td>5%</td>
+                <td>유럽 시장 핵심</td>
+            </tr>
+            <tr>
+                <td>Renault-Nissan</td>
+                <td>4%</td>
+                <td>글로벌 연합</td>
+            </tr>
+            <tr>
+                <td>Mercedes-Benz</td>
+                <td>4%</td>
+                <td>프리미엄 세그먼트</td>
+            </tr>
+            <tr>
+                <td>기타 (BMW, Toyota, Hyundai, BYD 등)</td>
+                <td>29%</td>
+                <td>고객 다변화 진행 중</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="highlight">
+        <h4>고객 집중도 분석</h4>
+        <p>포드, GM, 스텔란티스 등 이른바 '디트로이트 빅3'에 대한 매출 의존도가 58%에 달해 특정 고객사의 생산 물량 변동에 민감한 구조를 가지고 있다. 그러나 최근 BYD, 지리(Geely), 체리(Chery)와 같은 중국 OEM 및 리비안(Rivian)과 같은 신생 전기차 업체들과의 거래를 확대하며 포트폴리오 다변화를 적극적으로 추진하고 있다.</p>
+    </div>
+
+    <p>동사의 제품은 전 세계적으로 430개 이상의 차종(Nameplates)에 탑재되고 있어 광범위한 시장 침투율을 보여준다.</p>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="financial" class="content-section">
+    <h2>2024년 재무 성과 상세 분석: 역풍 속의 내실 다지기</h2>
+    
+    <div class="highlight">
+        <h4>핵심 요약</h4>
+        <p>2024년 쿠퍼 스탠다드의 재무 성과는 '매출 감소 속 수익성 개선'으로 요약될 수 있다. 글로벌 자동차 생산량의 둔화와 환율 변동성, 그리고 사업 매각의 영향으로 외형은 축소되었으나, 강도 높은 비용 절감 노력과 운영 효율화가 이익 지표의 개선을 견인하였다.</p>
+    </div>
+
+    <h3>3.1 손익계산서 분석 (Income Statement Analysis)</h3>
+
+    <h4>3.1.1 매출액 (Net Sales)</h4>
+    <p>2024년 연결 매출액은 27억 3,089만 달러를 기록, 전년(28억 1,588만 달러) 대비 3.0%(약 8,499만 달러) 감소하였다.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>매출 감소 요인</th>
+                <th>금액 (백만 달러)</th>
+                <th>설명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>물량 및 믹스(Volume/Mix)</td>
+                <td>-31.8</td>
+                <td>주요 고객사들의 생산 일정 조정 및 일부 플랫폼의 단종, 가격 협상 조정</td>
+            </tr>
+            <tr>
+                <td>환율 효과(Foreign Exchange)</td>
+                <td>-20.6</td>
+                <td>브라질 헤알화, 중국 위안화 등의 약세</td>
+            </tr>
+            <tr>
+                <td>사업 매각(Divestitures)</td>
+                <td>-32.5</td>
+                <td>2023년 단행된 유럽 고무 사업 및 아시아 조인트 벤처 매각</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>3.1.2 매출총이익 (Gross Profit) 및 비용 구조</h4>
+    <p>매출 감소라는 비우호적 환경에서도 매출총이익은 전년 대비 4.2% 증가한 3억 292만 달러를 달성하였다. 매출총이익률(Gross Margin)은 2023년 10.3%에서 2024년 11.1%로 0.8%포인트 상승하였다.</p>
+
+    <div class="stat-card">
+        <h3>수익성 개선 요인</h3>
+        <ul>
+            <li>린(Lean) 제조 이니셔티브와 구매 비용 절감 노력</li>
+            <li>제조 및 구매 비용 절감 효과가 인건비 및 간접비 인플레이션 압력을 상쇄</li>
+            <li>원자재 가격의 안정화</li>
+            <li>매출원가(Cost of Products Sold)는 전년 대비 3.8% 감소하며 매출 감소폭(3.0%)보다 더 크게 줄어듦</li>
+        </ul>
+    </div>
+
+    <h4>3.1.3 영업이익 (Operating Income)</h4>
+    <p>2024년 영업이익은 6,982만 달러로, 전년(4,603만 달러) 대비 무려 51.7% 급증하였다.</p>
+
+    <div class="stat-card">
+        <h3>영업이익 개선 요인</h3>
+        <ul>
+            <li><strong>판매 및 일반관리비(SG&A) 절감:</strong> 구조조정을 통한 인력 효율화 등으로 SG&A 비용이 전년 대비 819만 달러 감소 (7.7% → 7.6% 매출 비중 축소)</li>
+            <li><strong>자산 매각 이익:</strong> 캐나다 툴링 사업 매각(200만 달러) 및 유휴 부동산 매각(330만 달러)</li>
+            <li><strong>구조조정 비용 증가:</strong> 2024년 2분기에 시작된 비용 최적화 프로그램으로 인해 구조조정 비용은 전년 대비 558만 달러 증가한 2,360만 달러 (향후 지속적인 비용 절감을 위한 선제적 투자)</li>
+        </ul>
+    </div>
+
+    <h4>3.1.4 순손실 (Net Loss) 및 조정 EBITDA</h4>
+    <p>순손실은 7,813만 달러로, 전년도 2억 332만 달러의 대규모 손실에서 대폭 축소되었다.</p>
+
+    <div class="highlight">
+        <h4>순손실 축소 요인</h4>
+        <ul>
+            <li>영업이익 개선</li>
+            <li>2023년에 발생했던 8,188만 달러 규모의 부채 재융자 손실이 제거된 기저효과</li>
+            <li>2,335만 달러의 법인세 혜택(브라질, 폴란드 등에서의 평가충당금 환입 포함)</li>
+        </ul>
+    </div>
+
+    <p>동사의 영업 현금 창출력을 나타내는 핵심 지표인 <strong>조정 EBITDA(Adjusted EBITDA)</strong>는 1억 8,069만 달러를 기록, 전년 대비 8.1% 증가하였다. 조정 EBITDA 마진율은 6.6%로 전년(5.9%) 대비 개선되었으며, 이는 동사가 목표로 하는 '두 자리 수 EBITDA 마진'을 향한 회복세가 지속되고 있음을 시사한다.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>주요 재무 지표</th>
+                <th>2024년</th>
+                <th>2023년</th>
+                <th>2022년</th>
+                <th>'23-'24 변동률</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>매출액 (Sales)</td>
+                <td>$2,730.9M</td>
+                <td>$2,815.9M</td>
+                <td>$2,525.4M</td>
+                <td>-3.0%</td>
+            </tr>
+            <tr>
+                <td>매출원가 (COGS)</td>
+                <td>$2,428.0M</td>
+                <td>$2,525.1M</td>
+                <td>$2,395.6M</td>
+                <td>-3.8%</td>
+            </tr>
+            <tr>
+                <td>매출총이익 (Gross Profit)</td>
+                <td>$302.9M</td>
+                <td>$290.8M</td>
+                <td>$129.8M</td>
+                <td>+4.2%</td>
+            </tr>
+            <tr>
+                <td>영업이익 (Operating Income)</td>
+                <td>$69.8M</td>
+                <td>$46.0M</td>
+                <td>$(105.0)M</td>
+                <td>+51.7%</td>
+            </tr>
+            <tr>
+                <td>순이익(손실) (Net Income/Loss)</td>
+                <td>$(78.1)M</td>
+                <td>$(203.3)M</td>
+                <td>$(217.8)M</td>
+                <td>적자 축소</td>
+            </tr>
+            <tr>
+                <td>조정 EBITDA</td>
+                <td>$180.7M</td>
+                <td>$167.1M</td>
+                <td>$37.9M</td>
+                <td>+8.1%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="chart-container" style="position: relative;">
+        <h4>주요 재무 지표 추이</h4>
+        <div style="position: relative; height: 450px; width: 100%;">
+            <canvas id="financial_trend"></canvas>
+        </div>
+    </div>
+
+    <h3>3.2 대차대조표 및 유동성 분석 (Balance Sheet & Liquidity)</h3>
+
+    <h4>3.2.1 부채 구조 및 관리</h4>
+    <p>2024년 말 기준 동사의 총 부채는 약 11억 달러(1,100.3 million)로, 여전히 높은 수준을 유지하고 있다.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>부채 종류</th>
+                <th>금리</th>
+                <th>만기</th>
+                <th>특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>선순위 담보부 사채 (First Lien Notes)</td>
+                <td>13.50%</td>
+                <td>2027년</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>제3순위 담보부 사채 (Third Lien Notes)</td>
+                <td>5.625%</td>
+                <td>2027년</td>
+                <td>PIK 옵션 있으나 현금 이자 지급 선택</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="highlight">
+        <h4>부채 관리 전략</h4>
+        <p>제3순위 사채의 경우 현금 이자 지급 대신 채권 원금을 증액하는 PIK(Payment-in-Kind) 옵션이 있으나, 동사는 2024년 6월과 12월 이자를 현금으로 지급하는 방식을 선택하여 부채 원금의 급격한 증가를 방지하였다. 이는 유동성 상황에 대한 경영진의 자신감을 반영하는 것으로 해석된다.</p>
+    </div>
+
+    <h4>3.2.2 연금 의무의 축소 (De-risking)</h4>
+    <p>재무 건전성 강화의 일환으로 동사는 미국 내 확정급여형(DB) 연금 제도를 종료(Termination)하는 절차를 완료하였다. 2024년 4월, 약 1억 3,700만 달러 규모의 연금 의무와 관련 자산을 보험사로 이전함으로써 대차대조표상의 부채 변동성을 획기적으로 줄였다.</p>
+
+    <h4>3.2.3 현금흐름</h4>
+    <ul>
+        <li><strong>영업활동 현금흐름:</strong> 7,640만 달러 유입 (전년 1억 1,730만 달러 대비 감소, 운전자본 변동에 기인)</li>
+        <li><strong>투자활동 현금흐름:</strong> 4,510만 달러 유출 (자본적 지출 관리 엄격)</li>
+        <li><strong>2025년 자본적 지출 예상:</strong> 4,500만~5,500만 달러 수준 (현금 보존 기조 유지)</li>
+    </ul>
+
+    <div class="chart-container" style="position: relative;">
+        <h4>현금흐름 추이</h4>
+        <div style="position: relative; height: 450px; width: 100%;">
+            <canvas id="cashflow_chart"></canvas>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="segments" class="content-section">
+    <h2>부문별 성과 심층 분석</h2>
+
+    <h3>4.1 실링 시스템 (Sealing Systems)</h3>
+    <div class="stat-card">
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">$1,420.0M</div>
+                <div class="stat-label">매출 (전사 매출의 52%)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">$126.5M</div>
+                <div class="stat-label">조정 EBITDA</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">8.9%</div>
+                <div class="stat-label">조정 EBITDA 마진율</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight">
+        <h4>분석</h4>
+        <p>실링 부문은 동사의 '캐시 카우(Cash Cow)' 역할을 수행하고 있다. 매출은 고객사 보전금 감소와 환율 영향(브라질 헤알, 중국 위안 등)으로 전년 대비 약 2,450만 달러 감소하였으나, 조정 EBITDA는 오히려 1,230만 달러 증가하였다.</p>
+        <ul>
+            <li>제조 효율성 개선(4,290만 달러 효과)이 인플레이션 비용 상승(1,400만 달러 효과)을 압도</li>
+            <li>고부가가치 제품인 플러시실(FlushSeal™)과 경량화 솔루션인 플렉시코어(FlexiCore™)의 확대 적용이 수익성 방어에 기여</li>
+        </ul>
+    </div>
+
+    <h3>4.2 유체 취급 시스템 (Fluid Handling Systems)</h3>
+    <div class="stat-card">
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">$1,236.8M</div>
+                <div class="stat-label">매출 (전사 매출의 45%)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">$77.7M</div>
+                <div class="stat-label">조정 EBITDA</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">6.3%</div>
+                <div class="stat-label">조정 EBITDA 마진율</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight">
+        <h4>분석</h4>
+        <p>유체 취급 부문은 전기차 시장 성장의 직접적인 수혜를 입을 수 있는 전략적 요충지이다. 매출은 물량 감소와 멕시코 페소화 등의 환율 영향으로 2,810만 달러 감소하였으나, 조정 EBITDA는 290만 달러 증가하였다.</p>
+        <ul>
+            <li>제조 효율성 개선(3,760만 달러 효과)과 원자재 가격 하락(440만 달러 효과)이 주요 수익성 개선 요인</li>
+            <li>전기차 열 관리 시스템의 복잡성 증가는 튜브 및 커넥터의 고사양화를 요구하므로, 향후 이 부문의 평균판매단가(ASP) 상승 잠재력이 높음</li>
+        </ul>
+    </div>
+
+    <div class="chart-container" style="position: relative;">
+        <h4>부문별 매출 및 EBITDA 비교</h4>
+        <div style="position: relative; height: 450px; width: 100%;">
+            <canvas id="segment_comparison"></canvas>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="innovation" class="content-section">
+    <h2>기술 혁신 및 미래 성장 전략</h2>
+
+    <div class="highlight">
+        <h4>R&D 투자</h4>
+        <p>쿠퍼 스탠다드의 미래는 단순한 부품 제조를 넘어 '소재 과학 기업'으로의 진화에 달려 있다. 2024년 R&D 투자액은 8,280만 달러(매출의 3.0%)로, 어려운 재무 환경 속에서도 미래 기술에 대한 투자를 지속하고 있다.</p>
+    </div>
+
+    <h3>5.1 혁신 기술 포트폴리오</h3>
+    <p>동사의 기술 전략은 '경량화', '성능 향상', '지속가능성'이라는 세 가지 키워드로 요약된다.</p>
+
+    <div class="stat-card">
+        <h3>주요 혁신 기술</h3>
+        
+        <h4>포트렉스(Fortrex™) 화학 플랫폼</h4>
+        <ul>
+            <li>기존 EPDM 고무나 TPV 대비 무게를 30% 이상 줄이면서도 내후성과 탄성이 뛰어난 혁신 소재</li>
+            <li>나이키(NIKE)에 라이선싱하여 신발 소재로 적용 범위를 확장 - 자동차 부품사의 기술이 타 산업으로 스필오버(Spillover)된 성공적인 사례</li>
+        </ul>
+
+        <h4>플렉시코어(FlexiCore™)</h4>
+        <ul>
+            <li>차체 씰링 내부의 금속 캐리어를 열가소성 플라스틱으로 대체하여 무게를 줄이고 재활용을 용이하게 한 기술</li>
+            <li>전기차의 주행거리 연장 요구에 부합하는 핵심 솔루션</li>
+        </ul>
+
+        <h4>이코플로우(eCoFlow™) 및 플라스틱 쿨런트 허브(Plastic Coolant Hub)</h4>
+        <ul>
+            <li>전기차 열 관리를 위한 통합 모듈 솔루션</li>
+            <li>부품 수를 줄이고 공간 효율성을 극대화</li>
+        </ul>
+
+        <h4>전기차 전용 솔루션</h4>
+        <ul>
+            <li><strong>PlastiCool® 2000 다층 튜브:</strong> 전기차 배터리 및 구동 시스템의 냉각 효율 향상</li>
+            <li><strong>Ergo-Lock™ 커넥터:</strong> 전기차 열 관리 시스템에 특화</li>
+        </ul>
+    </div>
+
+    <h3>5.2 디지털 전환과 AI (Liveline Technologies)</h3>
+    <p>동사는 자회사인 라이브라인 테크놀로지스(Liveline Technologies)를 통해 제조 공정의 디지털 혁신을 주도하고 있다.</p>
+
+    <div class="stat-card">
+        <h3>디지털 혁신 기술</h3>
+        <ul>
+            <li><strong>AI 기반 공정 제어 시스템:</strong> 압출 공정의 변동성을 실시간으로 감지하고 제어하여 스크랩(폐기물)을 줄이고 품질을 향상</li>
+            <li><strong>포뮬링크(Formulink):</strong> AI 도구를 통해 소재 배합 개발 시간 단축</li>
+            <li><strong>가상 검증(Virtual Validation) 툴:</strong> 물리적 테스트 없이 제품 성능을 예측함으로써 개발 비용 절감</li>
+        </ul>
+    </div>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="risk" class="content-section">
+    <h2>리스크 요인 및 관리 (Risk Factors)</h2>
+
+    <h3>6.1 운영 및 공급망 리스크</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>리스크</th>
+                <th>설명</th>
+                <th>대응 방안</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>원자재 가격 변동성</td>
+                <td>합성 고무, 카본 블랙, 레진 등의 가격 변동은 수익성에 직접적인 타격</td>
+                <td>지수 연동형 계약(Index-based agreements)을 확대하여 리스크를 전가</td>
+            </tr>
+            <tr>
+                <td>공급망 붕괴</td>
+                <td>지정학적 갈등이나 자연재해로 인한 공급망 중단</td>
+                <td>적시 생산(JIT) 시스템에 의존하는 자동차 산업에 치명적</td>
+            </tr>
+            <tr>
+                <td>노사 관계</td>
+                <td>주요 생산 거점에서의 노동쟁의나 임금 인상 압력</td>
+                <td>생산 차질과 비용 상승을 유발할 수 있음</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>6.2 재무적 리스크</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>리스크</th>
+                <th>현황</th>
+                <th>영향</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>고부채 및 이자 부담</td>
+                <td>11억 달러에 달하는 부채, 높은 이자 비용(2024년 순이자비용 1억 1,560만 달러)</td>
+                <td>현금흐름을 압박하고 신규 투자를 제약하는 요인, 2027년 만기 도래하는 대규모 채권의 차환(Refinancing) 리스크 상존</td>
+            </tr>
+            <tr>
+                <td>연금 의무</td>
+                <td>미국 내 연금 제도는 종료되었으나, 해외 사업장의 연금 의무(약 8,110만 달러 과소적립 상태)가 남아 있음</td>
+                <td>현금 유출 요인이 될 수 있음</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>6.3 전략적 및 시장 리스크</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>리스크</th>
+                <th>설명</th>
+                <th>영향</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>전기차 전환의 불확실성</td>
+                <td>전기차 수요 둔화(Chasm)나 OEM들의 전략 수정</td>
+                <td>동사의 전기차 부품 매출 성장을 지연시킬 수 있음</td>
+            </tr>
+            <tr>
+                <td>고객 집중도</td>
+                <td>상위 3개 고객사(Ford, GM, Stellantis)에 대한 매출 의존도가 56%로 매우 높음</td>
+                <td>특정 고객의 시장 점유율 하락은 동사의 실적에 즉각적인 영향을 미침</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="swot-grid">
+        <div class="swot-item strength">
+            <h4>강점 (Strengths)</h4>
+            <ul>
+                <li>세계 최대 실링 시스템 생산 능력</li>
+                <li>글로벌 네트워크 (20개국, 124개 거점)</li>
+                <li>소재 과학 기반 혁신 기술 (포트렉스, 플렉시코어 등)</li>
+                <li>전기차 열 관리 시스템 기술 보유</li>
+            </ul>
+        </div>
+        <div class="swot-item weakness">
+            <h4>약점 (Weaknesses)</h4>
+            <ul>
+                <li>높은 부채 비율 (11억 달러)</li>
+                <li>고객 집중도 높음 (상위 3개 고객사 56%)</li>
+                <li>순손실 지속 (2024년 7,813만 달러)</li>
+            </ul>
+        </div>
+        <div class="swot-item opportunity">
+            <h4>기회 (Opportunities)</h4>
+            <ul>
+                <li>전기차 시장 성장에 따른 열 관리 시스템 수요 증가</li>
+                <li>포트렉스 기술의 비자동차 부문 확장 (나이키 사례)</li>
+                <li>고객 포트폴리오 다변화 (BYD, 리비안 등 신규 고객)</li>
+                <li>경량화 및 지속가능성 요구 증가</li>
+            </ul>
+        </div>
+        <div class="swot-item threat">
+            <h4>위협 (Threats)</h4>
+            <ul>
+                <li>전기차 수요 둔화 가능성</li>
+                <li>원자재 가격 변동성</li>
+                <li>공급망 붕괴 리스크</li>
+                <li>2027년 부채 만기 및 차환 리스크</li>
+            </ul>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="esg" class="content-section">
+    <h2>ESG 및 지속가능성 (Corporate Responsibility)</h2>
+
+    <p>동사는 '글로벌 지속가능성 위원회'를 중심으로 ESG 경영을 내재화하고 있다.</p>
+
+    <h3>환경적 측면 (Environmental)</h3>
+    <div class="stat-card">
+        <ul>
+            <li><strong>친환경 소재 기술:</strong> 포트렉스, 플렉시코어와 같은 친환경 소재 기술을 통해 제품의 탄소 발자국을 줄임</li>
+            <li><strong>AI 공정 제어:</strong> 제조 과정의 에너지 효율을 높임</li>
+            <li><strong>경량화 솔루션:</strong> 차량의 연비 개선 및 배출량 감소에 기여</li>
+        </ul>
+    </div>
+
+    <h3>사회적 측면 (Social)</h3>
+    <div class="stat-card">
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">0.30</div>
+                <div class="stat-label">총 사고율 (Total Incident Rate) - 세계적 수준</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">40%</div>
+                <div class="stat-label">여성 인력 비중</div>
+            </div>
+        </div>
+        <p>동사는 안전 기록을 달성하였으며, 여성 인력 비중 40%를 유지하며 다양성을 존중하는 문화를 구축하고 있다.</p>
+    </div>
+
+    <h3>지배구조 (Governance)</h3>
+    <div class="highlight">
+        <h4>ESG 거버넌스</h4>
+        <ul>
+            <li>글로벌 지속가능성 위원회 운영</li>
+            <li>ESG 경영 내재화</li>
+            <li>투명한 재무 공시 및 리스크 관리</li>
+        </ul>
+    </div>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+<div id="conclusion" class="content-section">
+    <h2>결론 및 전망</h2>
+
+    <div class="highlight">
+        <h4>2024년 성과 요약</h4>
+        <p>2024년 쿠퍼 스탠다드는 매출 정체라는 도전적인 환경 속에서도 획기적인 운영 효율성 개선을 통해 수익성 턴어라운드의 발판을 마련하였다. 5,000만 달러에 달하는 연간 비용 절감 성과와 구조조정을 통한 체질 개선은 동사의 강력한 실행력을 입증한다.</p>
+    </div>
+
+    <h3>향후 성장 궤적 결정 요소</h3>
+    <div class="stat-card">
+        <h4>1. 전기차 및 하이브리드 차량용 열 관리 시스템 시장에서의 점유율 확대 속도</h4>
+        <p>전기차 시장 성장에 따른 열 관리 시스템 수요 증가는 동사의 유체 취급 시스템 부문에 직접적인 기회를 제공한다.</p>
+
+        <h4>2. 포트렉스 등 독자 소재 기술의 비자동차 부문 라이선싱 확대를 통한 수익원 다각화 성공 여부</h4>
+        <p>나이키와의 라이선싱 사례를 바탕으로 다른 산업으로의 기술 확장이 성공할 경우 새로운 성장 동력이 될 수 있다.</p>
+
+        <h4>3. 2027년 만기 도래 부채에 대한 선제적이고 안정적인 관리 능력</h4>
+        <p>11억 달러에 달하는 부채의 차환(Refinancing)은 동사의 재무 건전성과 미래 투자 여력을 결정하는 핵심 변수이다.</p>
+    </div>
+
+    <h3>전략적 평가</h3>
+    <div class="highlight">
+        <h4>핵심 결론</h4>
+        <p>쿠퍼 스탠다드는 단순 부품 제조사에서 소재 및 엔지니어링 솔루션 기업으로 성공적으로 진화하고 있으며, 현재 진행 중인 재무 구조 개선과 혁신 활동이 계획대로 이행된다면 중장기적인 기업 가치 재평가(Re-rating)가 가능할 것으로 전망된다.</p>
+        <p>다만, 높은 부채 비율과 전방 산업의 변동성은 투자자 입장에서 지속적으로 모니터링해야 할 핵심 변수이다.</p>
+    </div>
+
+    <div class="chart-container" style="position: relative;">
+        <h4>향후 전망 시나리오</h4>
+        <div style="position: relative; height: 450px; width: 100%;">
+            <canvas id="outlook_chart"></canvas>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <h3>투자 포인트</h3>
+        <ul>
+            <li><strong>긍정적 요인:</strong> 수익성 개선 추세, 전기차 시장 성장 수혜, 혁신 기술 포트폴리오, ESG 경영 내재화</li>
+            <li><strong>주의 요인:</strong> 높은 부채 비율, 고객 집중도, 부채 차환 리스크, 원자재 가격 변동성</li>
+        </ul>
+    </div>
+
+    <button class="back-button" onclick="showHome()">← 목차로 돌아가기</button>
+</div>
+
+
+
+    </div>
+
+
+
+    <script>
+
+        // Market Report Generator - JavaScript Functions
+
+
+
+function showSection(sectionId) {
+
+    const targetSection = document.getElementById(sectionId);
+
+    if (!targetSection) {
+
+        console.error(`Section ${sectionId} not found`);
+
+        alert(`해당 섹션(${sectionId})은 아직 준비 중입니다.`);
+
+        return;
+
+    }
+
+
+
+    document.querySelectorAll(".content-section").forEach(section => {
+
+        section.classList.remove("active");
+
+    });
+
+    document.getElementById("home").style.display = "none";
+
+    targetSection.classList.add("active");
+
+    window.scrollTo(0, 0);
+
+}
+
+
+
+function showHome() {
+
+    document.querySelectorAll(".content-section").forEach(section => {
+
+        section.classList.remove("active");
+
+    });
+
+    document.getElementById("home").style.display = "block";
+
+    window.scrollTo(0, 0);
+
+}
+
+
+
+// Initialize charts when document is loaded
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Chart.js defaults for consistent visuals
+    if (window.Chart) {
+        Chart.defaults.font.family = "'Noto Sans KR','Segoe UI',Tahoma,Geneva,Verdana,sans-serif";
+        Chart.defaults.color = '#495057';
+        Chart.defaults.plugins.legend.labels.boxWidth = 12;
+        Chart.defaults.elements.line.tension = 0.25;
+        Chart.defaults.datasets.line.borderWidth = 2;
+        Chart.defaults.animation.duration = 600;
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
+    }
+
+    // Auto-initialize all charts
+    initializeCharts();
+
+    // 모바일 터치 이벤트 지원
+    setupMobileTouchEvents();
+
+});
+
+// 모바일 터치 이벤트 설정
+function setupMobileTouchEvents() {
+    // 네비게이션 버튼에 터치 이벤트 추가
+    document.querySelectorAll('.nav-button').forEach(button => {
+        const sectionId = button.getAttribute('onclick');
+        if (sectionId) {
+            const match = sectionId.match(/showSection\('([^']+)'\)/);
+            if (match) {
+                const id = match[1];
+                // 터치 이벤트 추가
+                button.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    showSection(id);
+                }, { passive: false });
+                // 클릭 이벤트도 유지 (데스크톱용)
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showSection(id);
+                });
+            }
+        }
+    });
+
+    // 뒤로가기 버튼에 터치 이벤트 추가
+    document.querySelectorAll('.back-button').forEach(button => {
+        button.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            showHome();
+        }, { passive: false });
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHome();
+        });
+    });
+}
+
+
+
+function initializeCharts() {
+
+    // Financial Trend Chart
+    const financialCtx = document.getElementById('financial_trend');
+    if (financialCtx) {
+        new Chart(financialCtx, {
+            type: 'line',
+            data: {
+                labels: ['2022', '2023', '2024'],
+                datasets: [
+                    {
+                        label: '매출액 (억 달러)',
+                        data: [25.25, 28.16, 27.31],
+                        borderColor: '#7b64ff',
+                        backgroundColor: 'rgba(123, 100, 255, 0.2)',
+                        borderWidth: 2,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '조정 EBITDA (억 달러)',
+                        data: [0.38, 1.67, 1.81],
+                        borderColor: '#12b886',
+                        backgroundColor: 'rgba(18, 184, 134, 0.2)',
+                        borderWidth: 2,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2.5,
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 10,
+                        left: 10,
+                        right: 10
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: '매출액 (억 달러)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: '조정 EBITDA (억 달러)'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    // Cashflow Chart
+    const cashflowCtx = document.getElementById('cashflow_chart');
+    if (cashflowCtx) {
+        new Chart(cashflowCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2023', '2024'],
+                datasets: [
+                    {
+                        label: '영업활동 현금흐름 (백만 달러)',
+                        data: [117.3, 76.4],
+                        backgroundColor: '#12b886'
+                    },
+                    {
+                        label: '투자활동 현금흐름 (백만 달러)',
+                        data: [-45.1, -45.1],
+                        backgroundColor: '#e8a5a5'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 10,
+                        left: 10,
+                        right: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    // Segment Comparison Chart
+    const segmentCtx = document.getElementById('segment_comparison');
+    if (segmentCtx) {
+        new Chart(segmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['실링 시스템', '유체 취급 시스템'],
+                datasets: [
+                    {
+                        label: '매출 (백만 달러)',
+                        data: [1420.0, 1236.8],
+                        backgroundColor: '#7b64ff',
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '조정 EBITDA (백만 달러)',
+                        data: [126.5, 77.7],
+                        backgroundColor: '#12b886',
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2.2,
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 10,
+                        left: 10,
+                        right: 10
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: '매출 (백만 달러)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: '조정 EBITDA (백만 달러)'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    // Outlook Chart
+    const outlookCtx = document.getElementById('outlook_chart');
+    if (outlookCtx) {
+        new Chart(outlookCtx, {
+            type: 'line',
+            data: {
+                labels: ['2024', '2025', '2026', '2027', '2028'],
+                datasets: [
+                    {
+                        label: '매출액 전망 (억 달러)',
+                        data: [27.31, 28.5, 30.0, 31.5, 33.0],
+                        borderColor: '#7b64ff',
+                        backgroundColor: 'rgba(123, 100, 255, 0.2)',
+                        borderWidth: 2,
+                        borderDash: []
+                    },
+                    {
+                        label: '조정 EBITDA 전망 (억 달러)',
+                        data: [1.81, 2.1, 2.4, 2.7, 3.0],
+                        borderColor: '#12b886',
+                        backgroundColor: 'rgba(18, 184, 134, 0.2)',
+                        borderWidth: 2,
+                        borderDash: []
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2.5,
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 10,
+                        left: 10,
+                        right: 10
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: '금액 (억 달러)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+}
+
+    </script>
+
+</body>
+
+</html>
+

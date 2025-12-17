@@ -78,7 +78,13 @@ def backup_to_github():
             '251215_yuil/data.json',
             '251215_yuil/deleted_articles.json',
             '251215_aia/data.json',
-            '251215_aia/deleted_articles.json'
+            '251215_aia/deleted_articles.json',
+            '251215_cooper/data.json',
+            '251215_cooper/deleted_articles.json',
+            '251215_saargummi/data.json',
+            '251215_saargummi/deleted_articles.json',
+            '251215_hutchinson/data.json',
+            '251215_hutchinson/deleted_articles.json'
         ]
         
         # 존재하는 파일만 추가
@@ -330,7 +336,13 @@ def load_from_github():
                 '251215_yuil/data.json',
                 '251215_yuil/deleted_articles.json',
                 '251215_aia/data.json',
-                '251215_aia/deleted_articles.json'
+                '251215_aia/deleted_articles.json',
+                '251215_cooper/data.json',
+                '251215_cooper/deleted_articles.json',
+                '251215_saargummi/data.json',
+                '251215_saargummi/deleted_articles.json',
+                '251215_hutchinson/data.json',
+                '251215_hutchinson/deleted_articles.json'
             ]
             restored = [f for f in data_files if os.path.exists(f)]
             if restored:

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .game-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .range-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        .input-section {
+            margin: 30px 0;
+        }
+
+        .guess-input {
+            padding: 15px 20px;
+            font-size: 1.5em;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: center;
+            width: 200px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .guess-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .guess-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message-area {
+            min-height: 100px;
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .message {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 10px 0;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message.success {
+            color: #4ade80;
+            font-size: 2em;
+            animation: bounce 0.5s;
+        }
+
+        .message.high {
+            color: #f87171;
+        }
+
+        .message.low {
+            color: #60a5fa;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 5px;
+            min-width: 120px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .best-record {
+            color: #ffd700;
+        }
+
+        .guess-history {
+            margin-top: 20px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .guess-item {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .guess-item.high {
+            background: rgba(248, 113, 113, 0.3);
+        }
+
+        .guess-item.low {
+            background: rgba(96, 165, 250, 0.3);
+        }
+
+        .difficulty-buttons {
+            margin: 20px 0;
+        }
+
+        .difficulty-btn {
+            padding: 10px 20px;
+            font-size: 0.9em;
+            margin: 5px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎯 숫자 맞추기 게임</h1>
+        <div class="subtitle">정확한 숫자를 찾아보세요!</div>
+
+        <div class="difficulty-buttons">
+            <button class="difficulty-btn active" onclick="setDifficulty('easy')">쉬움 (1-50)</button>
+            <button class="difficulty-btn" onclick="setDifficulty('medium')">보통 (1-100)</button>
+            <button class="difficulty-btn" onclick="setDifficulty('hard')">어려움 (1-200)</button>
+        </div>
+
+        <div class="range-info" id="rangeInfo">
+            1부터 50까지의 숫자 중 하나를 맞춰보세요!
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">시도 횟수</div>
+                <div class="stat-value" id="attempts">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">최고 기록</div>
+                <div class="stat-value best-record" id="bestRecord">-</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">현재 난이도</div>
+                <div class="stat-value" id="currentDifficulty">쉬움</div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <input 
+                type="number" 
+                id="guessInput" 
+                class="guess-input" 
+                placeholder="숫자 입력"
+                min="1"
+                max="50"
+                autofocus
+            >
+            <br>
+            <button onclick="makeGuess()" id="guessButton">추측하기</button>
+            <button onclick="newGame()" id="newGameButton">새 게임</button>
+        </div>
+
+        <div class="message-area">
+            <div class="message" id="message">숫자를 입력하고 추측하기를 클릭하세요!</div>
+        </div>
+
+        <div class="guess-history" id="guessHistory">
+            <div style="opacity: 0.7; margin-bottom: 10px;">추측 기록:</div>
+            <div id="historyList"></div>
+        </div>
+
+        <div class="instructions">
+            <p><strong>게임 방법:</strong></p>
+            <p>1부터 선택한 범위까지의 숫자 중 하나를 맞추세요!</p>
+            <p>너무 크면 "높습니다", 너무 작으면 "낮습니다" 힌트를 드립니다.</p>
+            <p>최소한의 시도로 맞추는 것이 목표입니다! 🏆</p>
+        </div>
+    </div>
+
+    <script>
+        let targetNumber = 0;
+        let attempts = 0;
+        let maxNumber = 50;
+        let difficulty = 'easy';
+        let bestRecords = {
+            easy: localStorage.getItem('bestRecordEasy') ? parseInt(localStorage.getItem('bestRecordEasy')) : null,
+            medium: localStorage.getItem('bestRecordMedium') ? parseInt(localStorage.getItem('bestRecordMedium')) : null,
+            hard: localStorage.getItem('bestRecordHard') ? parseInt(localStorage.getItem('bestRecordHard')) : null
+        };
+        let guessHistory = [];
+
+        const guessInput = document.getElementById('guessInput');
+        const message = document.getElementById('message');
+        const attemptsDisplay = document.getElementById('attempts');
+        const bestRecordDisplay = document.getElementById('bestRecord');
+        const rangeInfo = document.getElementById('rangeInfo');
+        const guessButton = document.getElementById('guessButton');
+        const historyList = document.getElementById('historyList');
+        const currentDifficultyDisplay = document.getElementById('currentDifficulty');
+
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (level === 'easy') {
+                maxNumber = 50;
+                currentDifficultyDisplay.textContent = '쉬움';
+                rangeInfo.textContent = '1부터 50까지의 숫자 중 하나를 맞춰보세요!';
+            } else if (level === 'medium') {
+                maxNumber = 100;
+                currentDifficultyDisplay.textContent = '보통';
+                rangeInfo.textContent = '1부터 100까지의 숫자 중 하나를 맞춰보세요!';
+            } else {
+                maxNumber = 200;
+                currentDifficultyDisplay.textContent = '어려움';
+                rangeInfo.textContent = '1부터 200까지의 숫자 중 하나를 맞춰보세요!';
+            }
+
+            guessInput.max = maxNumber;
+            newGame();
+        }
+
+        function newGame() {
+            targetNumber = Math.floor(Math.random() * maxNumber) + 1;
+            attempts = 0;
+            guessHistory = [];
+            attemptsDisplay.textContent = '0';
+            message.textContent = '새 게임이 시작되었습니다! 숫자를 입력하세요!';
+            message.className = 'message';
+            guessInput.value = '';
+            guessInput.disabled = false;
+            guessButton.disabled = false;
+            historyList.innerHTML = '';
+            
+            // 최고 기록 표시
+            updateBestRecord();
+            
+            guessInput.focus();
+        }
+
+        function updateBestRecord() {
+            const best = bestRecords[difficulty];
+            if (best) {
+                bestRecordDisplay.textContent = best + '회';
+            } else {
+                bestRecordDisplay.textContent = '-';
+            }
+        }
+
+        function makeGuess() {
+            const guess = parseInt(guessInput.value);
+
+            if (isNaN(guess) || guess < 1 || guess > maxNumber) {
+                message.textContent = `1부터 ${maxNumber}까지의 숫자를 입력하세요!`;
+                message.className = 'message';
+                return;
+            }
+
+            attempts++;
+            attemptsDisplay.textContent = attempts;
+            guessHistory.push(guess);
+
+            // 히스토리 추가
+            const historyItem = document.createElement('span');
+            historyItem.className = 'guess-item';
+            historyItem.textContent = guess;
+
+            if (guess === targetNumber) {
+                message.textContent = `🎉 정답입니다! ${attempts}번 만에 맞추셨습니다!`;
+                message.className = 'message success';
+                guessInput.disabled = true;
+                guessButton.disabled = true;
+
+                // 최고 기록 업데이트
+                if (!bestRecords[difficulty] || attempts < bestRecords[difficulty]) {
+                    bestRecords[difficulty] = attempts;
+                    localStorage.setItem('bestRecordEasy', bestRecords.easy || '');
+                    localStorage.setItem('bestRecordMedium', bestRecords.medium || '');
+                    localStorage.setItem('bestRecordHard', bestRecords.hard || '');
+                    updateBestRecord();
+                }
+
+                historyItem.className = 'guess-item success';
+                historyItem.textContent = guess + ' ✓';
+            } else if (guess > targetNumber) {
+                message.textContent = `너무 높습니다! 다시 시도하세요.`;
+                message.className = 'message high';
+                historyItem.className = 'guess-item high';
+            } else {
+                message.textContent = `너무 낮습니다! 다시 시도하세요.`;
+                message.className = 'message low';
+                historyItem.className = 'guess-item low';
+            }
+
+            historyList.appendChild(historyItem);
+            guessInput.value = '';
+            guessInput.focus();
+        }
+
+        // Enter 키로도 추측 가능
+        guessInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !guessButton.disabled) {
+                makeGuess();
+            }
+        });
+
+        // 게임 시작
+        newGame();
+    </script>
+</body>
+</html>
+
+
+
+
+
+

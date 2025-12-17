@@ -1,0 +1,124 @@
+{
+  "company_name": "화승알앤에이",
+  "company_info": {
+    "corp_name": "003240.KQ,0P0000AH4D,437",
+    "stock_code": "003240",
+    "ceo_nm": "",
+    "est_dt": "",
+    "adres": "",
+    "corp_cls": "K"
+  },
+  "financial_data": {
+    "2024": [
+      {
+        "account_nm": "매출액",
+        "thstrm_amount": "2121863335310"
+      },
+      {
+        "account_nm": "영업이익",
+        "thstrm_amount": "-27104631360"
+      },
+      {
+        "account_nm": "당기순이익",
+        "thstrm_amount": "214531185570"
+      },
+      {
+        "account_nm": "자산총계",
+        "thstrm_amount": "4722277800710"
+      }
+    ],
+    "2023": [
+      {
+        "account_nm": "매출액",
+        "thstrm_amount": "2265489918200"
+      },
+      {
+        "account_nm": "영업이익",
+        "thstrm_amount": "-100407075100"
+      },
+      {
+        "account_nm": "당기순이익",
+        "thstrm_amount": "-18502423160"
+      },
+      {
+        "account_nm": "자산총계",
+        "thstrm_amount": "4738292443380"
+      }
+    ],
+    "2022": [
+      {
+        "account_nm": "매출액",
+        "thstrm_amount": "2606596306670"
+      },
+      {
+        "account_nm": "영업이익",
+        "thstrm_amount": "-103690194740"
+      },
+      {
+        "account_nm": "당기순이익",
+        "thstrm_amount": "256658275000"
+      },
+      {
+        "account_nm": "자산총계",
+        "thstrm_amount": "4820743827580"
+      }
+    ],
+    "2021": [
+      {
+        "account_nm": "매출액",
+        "thstrm_amount": "2591846249990"
+      },
+      {
+        "account_nm": "영업이익",
+        "thstrm_amount": "343490062510"
+      },
+      {
+        "account_nm": "당기순이익",
+        "thstrm_amount": "316363878890"
+      },
+      {
+        "account_nm": "자산총계",
+        "thstrm_amount": "4922461632300"
+      }
+    ],
+    "2020": []
+  },
+  "employee_info": {},
+  "recent_disclosures": [],
+  "news_articles": [],
+  "finance_info": {},
+  "update_history": [
+    {
+      "timestamp": "2025-12-15 13:26:16",
+      "type": "manual_update"
+    },
+    {
+      "timestamp": "2025-12-15 13:26:16",
+      "type": "manual_update"
+    },
+    {
+      "timestamp": "2025-12-15 13:29:30",
+      "type": "manual_update"
+    },
+    {
+      "timestamp": "2025-12-15 13:29:30",
+      "type": "manual_update"
+    },
+    {
+      "timestamp": "2025-12-15 13:29:30",
+      "type": "full_update"
+    }
+  ],
+  "created_at": "2025-12-15 13:26:16",
+  "last_updated": "2025-12-15 13:29:30",
+  "stock_info": {
+    "current_price": 0,
+    "market_cap": 0,
+    "pe_ratio": 0,
+    "pb_ratio": 0,
+    "dividend_yield": 0,
+    "52_week_high": 1292000.0,
+    "52_week_low": 590000.0,
+    "currency": "KRW"
+  }
+}

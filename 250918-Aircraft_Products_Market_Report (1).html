@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>항공기용 제품 시장 보고서 2025 - 확장판</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .header .date {
+            font-size: 1em;
+            color: #95a5a6;
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .key-insights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .insight-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .insight-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .market-segments {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .segment-card {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .company-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .company-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .company-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .company-btn.active {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+
+        .company-detail {
+            display: none;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            border-left: 5px solid #667eea;
+            animation: slideIn 0.5s ease;
+        }
+
+        .company-detail.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .company-detail h3 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .country-flag {
+            margin-left: 10px;
+            font-size: 1.5em;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-card h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .financial-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .financial-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .financial-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .growth-indicator {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .growth-positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .growth-negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .strengths-weaknesses {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .strengths, .weaknesses {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .strengths {
+            background: linear-gradient(135deg, #d1f2eb, #a3e4d7);
+        }
+
+        .weaknesses {
+            background: linear-gradient(135deg, #fadbd8, #f1948a);
+        }
+
+        .forecast-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .forecast-card {
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .methodology {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid #dee2e6;
+        }
+
+        .methodology h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .methodology p {
+            color: #6c757d;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .component-card {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .company-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .strengths-weaknesses {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .competitive-matrix {
+            margin-top: 30px;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .matrix-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .matrix-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .rating-excellent { background: #d1f2eb; color: #155724; }
+        .rating-good { background: #d4edda; color: #155724; }
+        .rating-average { background: #fff3cd; color: #856404; }
+        .rating-poor { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 되돌아가기 버튼 -->
+        <button class="back-to-top" onclick="scrollToTop()" title="맨 위로">↑</button>
+
+        <!-- 헤더 -->
+        <div class="header" id="header">
+            <h1>🛩️ 항공기용 제품 시장 보고서</h1>
+            <div class="subtitle">Comprehensive Analysis of Aircraft Sealing Products & Lavatory Systems Market</div>
+            <div class="date">2025년 9월 | 확장된 시장 조사 및 경쟁사 분석</div>
+        </div>
+
+        <!-- 네비게이션 -->
+        <div class="navigation" id="navigation">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showSection('executive-summary')">📊 임원 요약</button>
+                <button class="nav-btn" onclick="showSection('market-overview')">🌍 시장 개요</button>
+                <button class="nav-btn" onclick="showSection('components-analysis')">🔧 부품별 분석</button>
+                <button class="nav-btn" onclick="showSection('companies-analysis')">🔧 부품 제조사</button>
+                <button class="nav-btn" onclick="showSection('customers-analysis')">✈️ 고객사</button>
+                <button class="nav-btn" onclick="showSection('competitive-landscape')">⚔️ 경쟁 구조</button>
+                <button class="nav-btn" onclick="showSection('market-forecast')">🔮 시장 전망</button>
+            </div>
+        </div>
+
+        <!-- 임원 요약 섹션 -->
+        <div class="section active" id="executive-summary">
+            <h2>📊 Executive Summary</h2>
+            <p style="font-size: 1.1em; margin-bottom: 25px; color: #5a6c7d;">
+                항공기용 고무 씰링 제품 및 화장실 모듈/워터탱크 시장은 팬데믹 회복과 함께 강력한 성장세를 보이고 있습니다. 
+                주요 글로벌 기업들이 시장을 주도하고 있으며, 기술 혁신과 지속가능성이 핵심 차별화 요소로 부상하고 있습니다.
+            </p>
+            
+            <div class="key-insights">
+                <div class="insight-card">
+                    <h3>Total Market Size</h3>
+                    <div class="value">$35B+</div>
+                    <p>2024년 전체 시장 규모<br>(씰링+화장실+워터시스템)</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Growth Rate</h3>
+                    <div class="value">6.8%</div>
+                    <p>연평균 성장률 (CAGR)<br>2025-2030</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Key Players</h3>
+                    <div class="value">9+</div>
+                    <p>주요 글로벌 제조사<br>상세 분석 완료</p>
+                </div>
+                <div class="insight-card">
+                    <h3>Regional Leaders</h3>
+                    <div class="value">USA</div>
+                    <p>북미가 최대 시장<br>유럽, 아시아 성장</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 시장 개요 섹션 -->
+        <div class="section" id="market-overview">
+            <h2>🌍 시장 개요 및 주요 동향</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1em;">
+                항공기용 제품 시장은 다양한 세그먼트로 구성되어 있으며, 각각 고유한 성장 동력과 기술적 요구사항을 가지고 있습니다.
+            </p>
+            
+            <div class="market-segments">
+                <div class="segment-card">
+                    <h3>🔧 Aircraft Seals</h3>
+                    <p><strong>$2.5-6.5B</strong></p>
+                    <p>2030-2034 목표</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">
+                        엔진, 유압, 연료 시스템 씰
+                    </p>
+                </div>
+                <div class="segment-card">
+                    <h3>🚽 Lavatory Systems</h3>
+                    <p><strong>$574M-1.1B</strong></p>
+                    <p>2030-2034 목표</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">
+                        모듈, 자동화 시스템
+                    </p>
+                </div>
+                <div class="segment-card">
+                    <h3>💧 Water & Waste</h3>
+                    <p><strong>$34.25B</strong></p>
+                    <p>2030년 목표</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">
+                        급수/배수 통합 시스템
+                    </p>
+                </div>
+                <div class="segment-card">
+                    <h3>🔥 Specialized Seals</h3>
+                    <p><strong>High Growth</strong></p>
+                    <p>신규 기술 분야</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">
+                        화재방지, 압력, 도어 씰
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 부품별 분석 섹션 -->
+        <div class="section" id="components-analysis">
+            <h2>🔧 항공기 부품별 시장 분석</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1em;">
+                항공기용 씰링 제품은 용도에 따라 다양한 카테고리로 분류되며, 각각 특수한 기술적 요구사항과 시장 특성을 가지고 있습니다.
+            </p>
+            
+            <div class="components-grid">
+                <div class="component-card">
+                    <h3>🚀 Engine Seals</h3>
+                    <p><strong>고온/고압 환경</strong></p>
+                    <p>$800M+ 시장 규모</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>터빈 씰</li>
+                        <li>연소실 씰</li>
+                        <li>베어링 씰</li>
+                    </ul>
+                </div>
+                
+                <div class="component-card">
+                    <h3>⛽ Fuel System Seals</h3>
+                    <p><strong>화학 저항성</strong></p>
+                    <p>$450M+ 시장 규모</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>연료탱크 씰</li>
+                        <li>연료라인 씰</li>
+                        <li>펌프 씰</li>
+                    </ul>
+                </div>
+                
+                <div class="component-card">
+                    <h3>🔧 Hydraulic Seals</h3>
+                    <p><strong>고압 유체 제어</strong></p>
+                    <p>$600M+ 시장 규모</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>액추에이터 씰</li>
+                        <li>밸브 씰</li>
+                        <li>실린더 씰</li>
+                    </ul>
+                </div>
+                
+                <div class="component-card">
+                    <h3>🛬 Landing Gear Seals</h3>
+                    <p><strong>내구성/신뢰성</strong></p>
+                    <p>$350M+ 시장 규모</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>쇼크 업소버 씰</li>
+                        <li>브레이크 씰</li>
+                        <li>휠 씰</li>
+                    </ul>
+                </div>
+                
+                <div class="component-card">
+                    <h3>🏠 Cabin Pressure Seals</h3>
+                    <p><strong>압력 밀폐성</strong></p>
+                    <p>$280M+ 시장 규모</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>윈도우 씰</li>
+                        <li>도어 씰</li>
+                        <li>해치 씰</li>
+                    </ul>
+                </div>
+                
+                <div class="component-card">
+                    <h3>🔥 Fire Seals</h3>
+                    <p><strong>안전성 최우선</strong></p>
+                    <p>$150M+ 시장 규모</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>방화벽 씰</li>
+                        <li>엔진 나셀 씰</li>
+                        <li>비상구 씰</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 부품 제조사 분석 섹션 -->
+        <div class="section" id="companies-analysis">
+            <h2>🔧 주요 부품 제조사 분석</h2>
+            <p style="margin-bottom: 25px; font-size: 1.1em;">
+                글로벌 항공기용 제품 시장의 주요 기업들을 선택하여 상세한 정보를 확인하세요.
+            </p>
+            
+            <div class="company-buttons">
+                <button class="company-btn" data-company="kirkhill">
+                    🇺🇸 Kirkhill Inc.
+                    <br><small>미국 | Sealing Specialist</small>
+                </button>
+                <button class="company-btn" data-company="hutchinson">
+                    🇫🇷 Hutchinson SA
+                    <br><small>프랑스 | Multi-material Leader</small>
+                </button>
+                <button class="company-btn" data-company="jpr">
+                    🇫🇷 JPR Systems
+                    <br><small>프랑스 | Aerospace Sealing</small>
+                </button>
+                <button class="company-btn" data-company="yokohama">
+                    🇯🇵 Yokohama Rubber
+                    <br><small>일본 | Lavatory Systems</small>
+                </button>
+                <button class="company-btn" data-company="parker">
+                    🇺🇸 Parker Hannifin
+                    <br><small>미국 | Motion Control Leader</small>
+                </button>
+                <button class="company-btn" data-company="eaton">
+                    🇺🇸 Eaton Corporation
+                    <br><small>미국 | Power Management</small>
+                </button>
+                <button class="company-btn" data-company="safran">
+                    🇫🇷 Safran Group
+                    <br><small>프랑스 | Aerospace Leader</small>
+                </button>
+                <button class="company-btn" data-company="collins">
+                    🇺🇸 Collins Aerospace
+                    <br><small>미국 | RTX Systems</small>
+                </button>
+                <button class="company-btn" data-company="senior">
+                    🇬🇧 Senior Aerospace
+                    <br><small>영국 | Aerostructures</small>
+                </button>
+                <button class="company-btn" data-company="trelleborg">
+                    🇸🇪 Trelleborg
+                    <br><small>스웨덴 | Sealing Solutions</small>
+                </button>
+            </div>
+
+            <!-- Kirkhill 상세 정보 -->
+            <div class="company-detail" id="kirkhill-detail">
+                <h3>🇺🇸 Kirkhill Inc. <span class="country-flag">🦅</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>설립연도:</strong> 1919년 (106년 역사)</p>
+                        <p><strong>본사:</strong> Brea, California, USA</p>
+                        <p><strong>직원수:</strong> 166-750명</p>
+                        <p><strong>주요 사업:</strong> 고성능 엘라스토머 제품</p>
+                        <p><strong>특화 분야:</strong> 항공우주 및 국방용 씰링 제품</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 제품 포트폴리오</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>항공우주용 고성능 씰</li>
+                            <li>국방용 씰링 솔루션</li>
+                            <li>몰드 및 압출 엘라스토머 제품</li>
+                            <li>정밀 엔지니어링 고무 제품</li>
+                            <li>도어 및 윈도우 씰</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적 (추정)</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (USD)</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2023</td>
+                                <td>$94-151M</td>
+                                <td><span class="growth-indicator growth-positive">+5.2%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2022</td>
+                                <td>$89-143M</td>
+                                <td><span class="growth-indicator growth-positive">+3.8%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2021</td>
+                                <td>$86-138M</td>
+                                <td><span class="growth-indicator growth-positive">+7.1%</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 시장 포지션</h4>
+                        <p><strong>강점:</strong> 100+ 년의 풍부한 경험, 항공우주 산업 특화, 고품질 제품</p>
+                        <p><strong>기회:</strong> 항공 여행 회복, 신규 항공기 프로그램, MRO 시장 확대</p>
+                        <p><strong>과제:</strong> 글로벌 확장, 규모 경제 달성, 대기업과의 경쟁</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hutchinson 상세 정보 -->
+            <div class="company-detail" id="hutchinson-detail">
+                <h3>🇫🇷 Hutchinson SA <span class="country-flag">🥖</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>설립연도:</strong> 1853년 (171년 역사)</p>
+                        <p><strong>본사:</strong> Paris, France</p>
+                        <p><strong>직원수:</strong> 40,000+ 명 (25개국)</p>
+                        <p><strong>주요 사업:</strong> 멀티머티리얼 솔루션</p>
+                        <p><strong>시장 지위:</strong> 글로벌 고무 시장 3위</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 항공우주 사업부</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Sealing Systems:</strong> 정적/동적 씰</li>
+                            <li><strong>Fluid Management:</strong> 유체 전달 시스템</li>
+                            <li><strong>Vibration Control:</strong> 진동 제어 솔루션</li>
+                            <li><strong>Thermal Systems:</strong> 열 관리 시스템</li>
+                            <li><strong>Precision Components:</strong> 정밀 부품</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (EUR)</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2023</td>
+                                <td>€4.8B</td>
+                                <td><span class="growth-indicator growth-positive">+8.5%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2022</td>
+                                <td>€4.42B</td>
+                                <td><span class="growth-indicator growth-positive">+12.3%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2021</td>
+                                <td>€3.94B</td>
+                                <td><span class="growth-indicator growth-positive">+15.7%</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🏆 경쟁 우위</h4>
+                        <p><strong>인증:</strong> Airbus "Best Performer" 인증</p>
+                        <p><strong>글로벌 리치:</strong> 25개국 40,000+ 직원</p>
+                        <p><strong>R&D 투자:</strong> 지속적인 기술 혁신</p>
+                        <p><strong>통합 솔루션:</strong> 원스톱 서비스 제공</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JPR 상세 정보 -->
+            <div class="company-detail" id="jpr-detail">
+                <h3>🇫🇷 JPR Systems <span class="country-flag">✈️</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>소속:</strong> Hutchinson 그룹 계열</p>
+                        <p><strong>본사:</strong> France</p>
+                        <p><strong>전문 분야:</strong> 항공우주 씰링 시스템</p>
+                        <p><strong>설립 목적:</strong> 항공기 특화 씰링 솔루션</p>
+                        <p><strong>시장 포지션:</strong> 프리미엄 씰링 브랜드</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 핵심 제품</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Aerodynamic Seals:</strong> 공기역학적 씰</li>
+                            <li><strong>Fire Seals:</strong> 화재방지 씰</li>
+                            <li><strong>Engine Seals:</strong> 엔진용 씰</li>
+                            <li><strong>Nacelle Seals:</strong> 나셀 씰링</li>
+                            <li><strong>Door Seals:</strong> 도어 씰링 시스템</li>
+                            <li><strong>Interior Seals:</strong> 실내 씰링</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 사업 규모 (추정)</h4>
+                        <p><strong>매출 기여도:</strong> Hutchinson 항공우주 부문의 주요 브랜드</p>
+                        <p><strong>시장 점유율:</strong> 유럽 항공기 씰링 시장 상위권</p>
+                        <p><strong>성장률:</strong> 항공 산업 회복과 함께 견고한 성장</p>
+                        <p><strong>주요 고객:</strong> Airbus, Boeing, 주요 엔진 제조사</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 기술적 특장점</h4>
+                        <p><strong>시뮬레이션:</strong> CAD 소프트웨어 기반 설계</p>
+                        <p><strong>몰딩 기술:</strong> 고정밀 몰드 부품 생산</p>
+                        <p><strong>전자기 차폐:</strong> EMI 차폐 솔루션</p>
+                        <p><strong>맞춤형 설계:</strong> 고객 요구사항 맞춤 제작</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yokohama 상세 정보 -->
+            <div class="company-detail" id="yokohama-detail">
+                <h3>🇯🇵 Yokohama Rubber Co. <span class="country-flag">🗾</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>설립연도:</strong> 1917년 (108년 역사)</p>
+                        <p><strong>본사:</strong> Hiratsuka, Japan</p>
+                        <p><strong>직원수:</strong> 28,000+ 명</p>
+                        <p><strong>주요 사업:</strong> 타이어 및 다양한 고무 제품</p>
+                        <p><strong>항공우주 자회사:</strong> Yokohama Aerospace America (YAA)</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 항공우주 제품군</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Lavatory Modules:</strong> 항공기 화장실 통합 시스템</li>
+                            <li><strong>Water Tanks:</strong> 급수 저장 시스템</li>
+                            <li><strong>Prepreg Materials:</strong> 복합재료 프리프레그</li>
+                            <li><strong>Composite Components:</strong> 구조용 복합재 부품</li>
+                            <li><strong>Rubber Components:</strong> 항공기용 고무 부품</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (JPY)</th>
+                                <th>매출 (USD)</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2023</td>
+                                <td>¥985.33B</td>
+                                <td>$7.33B</td>
+                                <td><span class="growth-indicator growth-positive">+6.8%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2022</td>
+                                <td>¥922.4B</td>
+                                <td>$6.86B</td>
+                                <td><span class="growth-indicator growth-positive">+8.2%</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 항공우주 전략</h4>
+                        <p><strong>전문성:</strong> 복합재료 기술의 항공기 적용</p>
+                        <p><strong>차별화:</strong> 화장실 모듈 통합 솔루션</p>
+                        <p><strong>품질:</strong> 일본식 품질 관리 시스템</p>
+                        <p><strong>확장:</strong> 미국 YAA를 통한 현지화 전략</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parker Hannifin 상세 정보 -->
+            <div class="company-detail" id="parker-detail">
+                <h3>🇺🇸 Parker Hannifin Corporation <span class="country-flag">🦅</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>설립연도:</strong> 1917년</p>
+                        <p><strong>본사:</strong> Cleveland, Ohio, USA</p>
+                        <p><strong>글로벌 리더:</strong> 모션 및 제어 기술</p>
+                        <p><strong>주요 인수:</strong> Meggitt PLC (2022년, £6.3B)</p>
+                        <p><strong>시장 지위:</strong> 항공우주 씰링 시장 선도기업</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 항공우주 포트폴리오</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Engine Systems:</strong> 엔진 씰링 및 제어</li>
+                            <li><strong>Hydraulic Systems:</strong> 유압 시스템 및 부품</li>
+                            <li><strong>Fuel Systems:</strong> 연료 관리 시스템</li>
+                            <li><strong>Sealing Solutions:</strong> 고성능 씰링 제품</li>
+                            <li><strong>Meggitt Products:</strong> 항공우주 전자/센서</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (USD)</th>
+                                <th>항공우주 비중</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2024</td>
+                                <td>$19.90B</td>
+                                <td>~20% (~$4B)</td>
+                                <td><span class="growth-indicator growth-positive">+0.4%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2023</td>
+                                <td>$19.82B</td>
+                                <td>~20% (~$4B)</td>
+                                <td><span class="growth-indicator growth-positive">+4.2%</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🏆 경쟁 우위</h4>
+                        <p><strong>통합 포트폴리오:</strong> Meggitt 인수로 역량 강화</p>
+                        <p><strong>글로벌 네트워크:</strong> 전 세계 제조 및 서비스</p>
+                        <p><strong>기술 리더십:</strong> 모션 제어 기술 최고 수준</p>
+                        <p><strong>시장 점유율:</strong> 항공우주 씰링 시장 상위권</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eaton 상세 정보 -->
+            <div class="company-detail" id="eaton-detail">
+                <h3>🇺🇸 Eaton Corporation <span class="country-flag">⚡</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>본사:</strong> Dublin, Ireland (미국 기원)</p>
+                        <p><strong>주요 사업:</strong> 파워 매니지먼트</p>
+                        <p><strong>항공우주 전문성:</strong> 연료, 유압, 공압 시스템</p>
+                        <p><strong>시장 지위:</strong> 지능형 전력 관리 리더</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 항공우주 제품</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Fuel Systems:</strong> 연료 관리 및 전달</li>
+                            <li><strong>Hydraulic Systems:</strong> 유압 구동 시스템</li>
+                            <li><strong>Pneumatic Systems:</strong> 공압 제어 시스템</li>
+                            <li><strong>Engine Controls:</strong> 엔진 제어 시스템</li>
+                            <li><strong>Sealing Solutions:</strong> 전용 씰링 제품</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (USD)</th>
+                                <th>항공우주 매출</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2024</td>
+                                <td>$24.9B</td>
+                                <td>$803M+ (Q1)</td>
+                                <td><span class="growth-indicator growth-positive">+12%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2023</td>
+                                <td>$23.2B</td>
+                                <td>항공우주 기록적 성장</td>
+                                <td><span class="growth-indicator growth-positive">+8.5%</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 시장 전략</h4>
+                        <p><strong>전기화:</strong> 항공기 전기화 트렌드 선도</p>
+                        <p><strong>지속가능성:</strong> 친환경 솔루션 개발</p>
+                        <p><strong>디지털화:</strong> 스마트 전력 관리 시스템</p>
+                        <p><strong>글로벌 확장:</strong> 신흥 시장 진출 확대</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Safran 상세 정보 -->
+            <div class="company-detail" id="safran-detail">
+                <h3>🇫🇷 Safran Group <span class="country-flag">🇫🇷</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>본사:</strong> Paris, France</p>
+                        <p><strong>직원수:</strong> 92,000+ 명</p>
+                        <p><strong>전문 분야:</strong> 항공우주, 국방, 우주</p>
+                        <p><strong>주요 파트너:</strong> GE Aerospace (LEAP 엔진)</p>
+                        <p><strong>상장:</strong> Euronext, CAC 40</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 핵심 사업부</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Aerospace Propulsion:</strong> 항공기 엔진</li>
+                            <li><strong>Aircraft Equipment:</strong> 항공기 장비</li>
+                            <li><strong>Defense & Space:</strong> 국방 우주</li>
+                            <li><strong>Aircraft Interiors:</strong> 항공기 인테리어</li>
+                            <li><strong>Sealing Systems:</strong> 엔진 씰링 솔루션</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (EUR)</th>
+                                <th>영업이익률</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2024</td>
+                                <td>€27.31B</td>
+                                <td>15.1%</td>
+                                <td><span class="growth-indicator growth-positive">+18.1%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2023</td>
+                                <td>€23.1B</td>
+                                <td>13.6%</td>
+                                <td><span class="growth-indicator growth-positive">+17%</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🚀 혁신 리더십</h4>
+                        <p><strong>LEAP 엔진:</strong> 차세대 항공기 엔진 기술</p>
+                        <p><strong>지속가능성:</strong> 저탄소 항공 기술 개발</p>
+                        <p><strong>디지털화:</strong> 스마트 제조 및 서비스</p>
+                        <p><strong>R&D 투자:</strong> 지속적인 기술 혁신</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collins Aerospace 상세 정보 -->
+            <div class="company-detail" id="collins-detail">
+                <h3>🇺🇸 Collins Aerospace (RTX) <span class="country-flag">🛩️</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>모회사:</strong> RTX Corporation</p>
+                        <p><strong>형성:</strong> UTC Aerospace + Rockwell Collins 합병</p>
+                        <p><strong>전문 분야:</strong> 항공기 시스템 및 서비스</p>
+                        <p><strong>글로벌 리더:</strong> 항공우주 시스템 통합</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 핵심 제품군</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Avionics:</strong> 항공 전자 시스템</li>
+                            <li><strong>Cabin Systems:</strong> 객실 시스템</li>
+                            <li><strong>Mission Systems:</strong> 임무 시스템</li>
+                            <li><strong>Mechanical Systems:</strong> 기계적 시스템</li>
+                            <li><strong>Sealing Solutions:</strong> 항공기 씰링</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (USD)</th>
+                                <th>RTX 기여도</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2024</td>
+                                <td>$28.28B</td>
+                                <td>34.05%</td>
+                                <td><span class="growth-indicator growth-positive">+6%</span></td>
+                            </tr>
+                            <tr>
+                                <td>2023</td>
+                                <td>$26.7B</td>
+                                <td>33.8%</td>
+                                <td><span class="growth-indicator growth-positive">+14%</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 전략적 포지션</h4>
+                        <p><strong>통합 솔루션:</strong> 원스톱 항공기 시스템</p>
+                        <p><strong>애프터마켓:</strong> 강력한 서비스 수익 모델</p>
+                        <p><strong>혁신:</strong> 차세대 항공기 기술 개발</p>
+                        <p><strong>글로벌 네트워크:</strong> 전 세계 고객 지원</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Senior Aerospace 상세 정보 -->
+            <div class="company-detail" id="senior-detail">
+                <h3>🇬🇧 Senior Aerospace <span class="country-flag">🇬🇧</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>본사:</strong> Rickmansworth, UK</p>
+                        <p><strong>전문 분야:</strong> 고온 항공우주 부품</p>
+                        <p><strong>핵심 역량:</strong> 에어로스트럭처 및 엔진 부품</p>
+                        <p><strong>시장 포지션:</strong> 틈새 시장 전문 기업</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 주요 제품</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Engine Ducting:</strong> 엔진 덕트 시스템</li>
+                            <li><strong>Structural Parts:</strong> 구조용 부품</li>
+                            <li><strong>Hydraulic Components:</strong> 유압 부품</li>
+                            <li><strong>Sensors:</strong> 센서 및 제어 장치</li>
+                            <li><strong>Sealing Systems:</strong> 특수 씰링 솔루션</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 현황</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>부문</th>
+                                <th>2024 매출</th>
+                                <th>비중</th>
+                            </tr>
+                            <tr>
+                                <td>Aerostructures</td>
+                                <td>£272.4M ($344M)</td>
+                                <td>28%</td>
+                            </tr>
+                            <tr>
+                                <td>전체 항공우주</td>
+                                <td>£700M+ 추정</td>
+                                <td>72%</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 시장 전략</h4>
+                        <p><strong>특화 전략:</strong> 고부가가치 틈새 시장 집중</p>
+                        <p><strong>기술 우위:</strong> 고온 환경 특수 부품</p>
+                        <p><strong>구조조정:</strong> Aerostructures 사업 매각 검토</p>
+                        <p><strong>성장 동력:</strong> 엔진 부품 및 센서 사업</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trelleborg 상세 정보 -->
+            <div class="company-detail" id="trelleborg-detail">
+                <h3>🇸🇪 Trelleborg Sealing Solutions <span class="country-flag">🇸🇪</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 기업 개요</h4>
+                        <p><strong>본사:</strong> Trelleborg, Sweden</p>
+                        <p><strong>설립:</strong> 1905년 (120년 역사)</p>
+                        <p><strong>전문 분야:</strong> 폴리머 기술 및 씰링</p>
+                        <p><strong>항공우주 경험:</strong> 60년 이상</p>
+                        <p><strong>글로벌 리더:</strong> 씰링 솔루션 분야</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 항공우주 포트폴리오</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Engine Seals:</strong> 항공기 엔진 씰</li>
+                            <li><strong>Precision Seals:</strong> 정밀 씰링 부품</li>
+                            <li><strong>Bearings:</strong> 특수 베어링</li>
+                            <li><strong>Custom Components:</strong> 맞춤형 폴리머 부품</li>
+                            <li><strong>Anti-vibration:</strong> 진동 방지 솔루션</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 재무 실적</h4>
+                        <table class="financial-table">
+                            <tr>
+                                <th>연도</th>
+                                <th>매출 (SEK)</th>
+                                <th>매출 (USD)</th>
+                                <th>성장률</th>
+                            </tr>
+                            <tr>
+                                <td>2024</td>
+                                <td>34.17B SEK</td>
+                                <td>~$3.2B</td>
+                                <td><span class="growth-indicator growth-positive">+5.8%</span></td>
+                            </tr>
+                            <tr>
+                                <td>항공우주 인수</td>
+                                <td>150M SEK</td>
+                                <td>~$14M</td>
+                                <td>신규 투자</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🚀 혁신 및 성장</h4>
+                        <p><strong>연구개발:</strong> 첨단 폴리머 소재 개발</p>
+                        <p><strong>지속가능성:</strong> 친환경 씰링 솔루션</p>
+                        <p><strong>확장 전략:</strong> 항공우주 부문 인수 확대</p>
+                        <p><strong>기술 리더십:</strong> 120년 폴리머 엔지니어링 경험</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 고객사 분석 섹션 -->
+        <div class="section" id="customers-analysis">
+            <h2>✈️ 주요 고객사 분석</h2>
+            <p style="margin-bottom: 25px; font-size: 1.1em;">
+                항공기 제조사(OEM)와 항공사들의 부품 구매 패턴, MRO 지출 규모, 그리고 주요 공급업체 관계를 분석합니다.
+            </p>
+
+            <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #00b894, #00cec9); color: white; border-radius: 15px;">
+                <h3 style="margin-bottom: 15px; text-align: center;">📊 글로벌 MRO 시장 현황</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                    <div>
+                        <h4 style="font-size: 2em; margin-bottom: 5px;">$104B</h4>
+                        <p>2024년 글로벌 MRO 시장</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 2em; margin-bottom: 5px;">$124B</h4>
+                        <p>2034년 예상 시장 규모</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 2em; margin-bottom: 5px;">$39B</h4>
+                        <p>북미 MRO 시장 규모</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 2em; margin-bottom: 5px;">21.8%</h4>
+                        <p>북미 글로벌 비중</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="company-buttons">
+                <button class="company-btn" data-company="boeing-customer">
+                    🇺🇸 Boeing
+                    <br><small>OEM | 제조사</small>
+                </button>
+                <button class="company-btn" data-company="airbus-customer">
+                    🇪🇺 Airbus
+                    <br><small>OEM | 제조사</small>
+                </button>
+                <button class="company-btn" data-company="delta-customer">
+                    🇺🇸 Delta Air Lines
+                    <br><small>992대 항공기</small>
+                </button>
+                <button class="company-btn" data-company="united-customer">
+                    🇺🇸 United Airlines
+                    <br><small>986대 항공기</small>
+                </button>
+                <button class="company-btn" data-company="american-customer">
+                    🇺🇸 American Airlines
+                    <br><small>주요 미국 항공사</small>
+                </button>
+                <button class="company-btn" data-company="koreanair-customer">
+                    🇰🇷 Korean Air
+                    <br><small>대한항공</small>
+                </button>
+                <button class="company-btn" data-company="emirates-customer">
+                    🇦🇪 Emirates
+                    <br><small>$37.4B 매출</small>
+                </button>
+                <button class="company-btn" data-company="lufthansa-customer">
+                    🇩🇪 Lufthansa Group
+                    <br><small>MRO 서비스 제공</small>
+                </button>
+                <button class="company-btn" data-company="singapore-customer">
+                    🇸🇬 Singapore Airlines
+                    <br><small>아시아 허브</small>
+                </button>
+                <button class="company-btn" data-company="southwest-customer">
+                    🇺🇸 Southwest Airlines
+                    <br><small>저비용 항공사</small>
+                </button>
+            </div>
+
+            <!-- Boeing Customer 상세 정보 -->
+            <div class="company-detail" id="boeing-customer-detail">
+                <h3>🇺🇸 Boeing Corporation <span class="country-flag">🛫</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 OEM 구매 현황</h4>
+                        <p><strong>역할:</strong> 항공기 제조사 (OEM)</p>
+                        <p><strong>주요 구매 부품:</strong> 모든 항공기 시스템 부품</p>
+                        <p><strong>공급업체 관리:</strong> Supplier of the Year Awards</p>
+                        <p><strong>최근 인수:</strong> Spirit AeroSystems 재인수 (2024)</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 주요 구매 카테고리</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Engine Seals:</strong> 엔진 씰링 시스템</li>
+                            <li><strong>Hydraulic Systems:</strong> 유압 시스템 부품</li>
+                            <li><strong>Fuel Systems:</strong> 연료 시스템 씰</li>
+                            <li><strong>Landing Gear:</strong> 랜딩기어 씰</li>
+                            <li><strong>Cabin Systems:</strong> 객실 씰링 부품</li>
+                            <li><strong>Lavatory Modules:</strong> 화장실 통합 시스템</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🤝 주요 공급업체 관계</h4>
+                        <p><strong>Tier 1 Suppliers:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Parker Hannifin (씰링 시스템)</li>
+                            <li>Safran (엔진 관련)</li>
+                            <li>Collins Aerospace (통합 시스템)</li>
+                            <li>Eaton (유압/전력 시스템)</li>
+                            <li>Yokohama (화장실 모듈)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>📊 구매 규모 및 트렌드</h4>
+                        <p><strong>연간 구매 규모:</strong> 수십억 달러 (전체 부품)</p>
+                        <p><strong>씰링 부품 비중:</strong> 전체 부품 비용의 3-5%</p>
+                        <p><strong>성장 동력:</strong> 737 MAX, 787 생산 증가</p>
+                        <p><strong>조달 전략:</strong> 장기 파트너십, 품질 우선</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Airbus Customer 상세 정보 -->
+            <div class="company-detail" id="airbus-customer-detail">
+                <h3>🇪🇺 Airbus SE <span class="country-flag">🇪🇺</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 OEM 구매 현황</h4>
+                        <p><strong>외부 조달 규모:</strong> €53 billion (2023년)</p>
+                        <p><strong>공급업체 수:</strong> 1,000+ (미국 내)</p>
+                        <p><strong>글로벌 네트워크:</strong> 전 세계 공급망 운영</p>
+                        <p><strong>조달 조직:</strong> 제품/서비스별 전문 조직</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💼 주요 구매 카테고리</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Airframe Seals:</strong> 기체 씰링 시스템</li>
+                            <li><strong>Engine Components:</strong> 엔진 부품</li>
+                            <li><strong>Cabin Systems:</strong> 객실 통합 시스템</li>
+                            <li><strong>Avionics:</strong> 항공 전자 시스템</li>
+                            <li><strong>Interiors:</strong> 내장재 및 화장실</li>
+                            <li><strong>Landing Systems:</strong> 착륙 시스템</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🤝 승인 공급업체</h4>
+                        <p><strong>A320 Program Suppliers:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Hutchinson (씰링 솔루션)</li>
+                            <li>Safran (엔진 파트너)</li>
+                            <li>Collins Aerospace (시스템)</li>
+                            <li>Trelleborg (특수 씰)</li>
+                            <li>JPR (고성능 씰)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>📊 구매 패턴 분석</h4>
+                        <p><strong>씰링 부품 예상:</strong> €1.5-2B (전체 조달의 3-4%)</p>
+                        <p><strong>지역별 조달:</strong> 유럽 중심, 글로벌 확산</p>
+                        <p><strong>혁신 중점:</strong> 지속가능한 소재, 경량화</p>
+                        <p><strong>품질 기준:</strong> 유럽 항공 안전 규정 준수</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delta Customer 상세 정보 -->
+            <div class="company-detail" id="delta-customer-detail">
+                <h3>🇺🇸 Delta Air Lines <span class="country-flag">🔺</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 항공사 개요</h4>
+                        <p><strong>보유 항공기:</strong> 992대 (2025년 8월)</p>
+                        <p><strong>세계 순위:</strong> 3위 (항공기 보유 대수)</p>
+                        <p><strong>주요 기종:</strong> Boeing 737, A320 시리즈, 777</p>
+                        <p><strong>MRO 사업부:</strong> Delta TechOps</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 MRO 지출 현황</h4>
+                        <p><strong>2023년 Q1:</strong> $225M (부품 계약)</p>
+                        <p><strong>연간 MRO 예상:</strong> $1.2-1.5B</p>
+                        <p><strong>계약 건수:</strong> 9건 (Q1 2023)</p>
+                        <p><strong>성장률:</strong> 전년 대비 12-15% 증가</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🔧 주요 구매 부품</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Engine Seals:</strong> $80-100M/년</li>
+                            <li><strong>Hydraulic Components:</strong> $60-80M/년</li>
+                            <li><strong>Landing Gear Parts:</strong> $40-60M/년</li>
+                            <li><strong>Cabin Seals:</strong> $20-30M/년</li>
+                            <li><strong>Lavatory Systems:</strong> $15-25M/년</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🤝 주요 공급업체</h4>
+                        <p><strong>Best Total Solutions Provider (2024)</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Parker Hannifin (유압/씰링)</li>
+                            <li>Collins Aerospace (통합 시스템)</li>
+                            <li>Safran (엔진 부품)</li>
+                            <li>Eaton (전력 관리)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- United Customer 상세 정보 -->
+            <div class="company-detail" id="united-customer-detail">
+                <h3>🇺🇸 United Airlines <span class="country-flag">🌐</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 항공사 개요</h4>
+                        <p><strong>보유 항공기:</strong> 986대 (메인라인)</p>
+                        <p><strong>평균 기령:</strong> 16.3년</p>
+                        <p><strong>주요 기종:</strong> Boeing 737, 777, 787, A320</p>
+                        <p><strong>네트워크:</strong> 글로벌 허브 운영</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 MRO 투자 현황</h4>
+                        <p><strong>연간 MRO 예상:</strong> $1.0-1.3B</p>
+                        <p><strong>부품 교체 주기:</strong> 평균 기령으로 인한 높은 수요</p>
+                        <p><strong>투자 우선순위:</strong> 안전성, 연료 효율성</p>
+                        <p><strong>디지털화:</strong> 예측 정비 시스템 도입</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🔧 주요 구매 부품</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Engine Maintenance:</strong> $350-400M/년</li>
+                            <li><strong>Airframe Components:</strong> $200-250M/년</li>
+                            <li><strong>Sealing Systems:</strong> $60-80M/년</li>
+                            <li><strong>Hydraulic Parts:</strong> $50-70M/년</li>
+                            <li><strong>Interior Refurbishment:</strong> $40-60M/년</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 조달 전략</h4>
+                        <p><strong>장기 계약:</strong> 안정적 공급망 확보</p>
+                        <p><strong>품질 중심:</strong> 항공 안전 최우선</p>
+                        <p><strong>비용 효율성:</strong> 운영비 최적화</p>
+                        <p><strong>혁신 파트너십:</strong> 기술 개발 협력</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- American Airlines Customer 상세 정보 -->
+            <div class="company-detail" id="american-customer-detail">
+                <h3>🇺🇸 American Airlines <span class="country-flag">🦅</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 항공사 개요</h4>
+                        <p><strong>보유 항공기:</strong> 950+ 대</p>
+                        <p><strong>글로벌 순위:</strong> 세계 최대 항공사 중 하나</p>
+                        <p><strong>주요 허브:</strong> 댈러스, 마이애미, 피닉스</p>
+                        <p><strong>인력 증가:</strong> 2024년 500+ 정비 인력 추가</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 MRO 투자</h4>
+                        <p><strong>연간 MRO:</strong> $1.3-1.6B</p>
+                        <p><strong>정비 시설:</strong> 대규모 정비 기지 운영</p>
+                        <p><strong>투자 증가:</strong> 확장되는 항공기 운용</p>
+                        <p><strong>효율성 개선:</strong> 정비 프로세스 최적화</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🔧 부품 구매 패턴</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>엔진 관련:</strong> $400-500M/년</li>
+                            <li><strong>기체 부품:</strong> $250-300M/년</li>
+                            <li><strong>씰링 부품:</strong> $70-90M/년</li>
+                            <li><strong>객실 시설:</strong> $50-70M/년</li>
+                            <li><strong>전자 시스템:</strong> $100-120M/년</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🤝 공급업체 관계</h4>
+                        <p><strong>전략적 파트너십:</strong> 장기 공급 계약</p>
+                        <p><strong>공급업체 다양성:</strong> 소수계층 기업 지원</p>
+                        <p><strong>혁신 중심:</strong> 차세대 기술 도입</p>
+                        <p><strong>비용 관리:</strong> 경쟁적 입찰 프로세스</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Korean Air Customer 상세 정보 -->
+            <div class="company-detail" id="koreanair-customer-detail">
+                <h3>🇰🇷 Korean Air <span class="country-flag">🇰🇷</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 항공사 개요</h4>
+                        <p><strong>보유 항공기:</strong> 170+ 대</p>
+                        <p><strong>주요 기종:</strong> A380, 777, 787, A330</p>
+                        <p><strong>네트워크:</strong> 아시아 허브, 장거리 노선</p>
+                        <p><strong>MRO 사업:</strong> 자체 정비 능력 보유</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🤝 Boeing 파트너십</h4>
+                        <p><strong>예측 MRO:</strong> Boeing과 전략적 협력</p>
+                        <p><strong>차세대 엔진:</strong> LEAP, GEnx 엔진 집중</p>
+                        <p><strong>기술 혁신:</strong> 디지털 정비 시스템</p>
+                        <p><strong>부품 현지화:</strong> 아시아 공급망 구축</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 MRO 지출 규모</h4>
+                        <p><strong>연간 MRO:</strong> $400-500M (추정)</p>
+                        <p><strong>부품 비중:</strong> $120-150M</p>
+                        <p><strong>씰링 부품:</strong> $15-20M/년</p>
+                        <p><strong>성장률:</strong> 아시아 시장 회복으로 증가</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🔧 주요 구매 품목</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>엔진 씰:</strong> LEAP, GEnx 엔진용</li>
+                            <li><strong>유압 부품:</strong> A380, 777 대형기</li>
+                            <li><strong>랜딩기어:</strong> 중정비 부품</li>
+                            <li><strong>객실 부품:</strong> 프리미엄 서비스</li>
+                            <li><strong>화장실 모듈:</strong> 업그레이드 수요</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emirates Customer 상세 정보 -->
+            <div class="company-detail" id="emirates-customer-detail">
+                <h3>🇦🇪 Emirates Airlines <span class="country-flag">🐪</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 항공사 개요</h4>
+                        <p><strong>2024년 매출:</strong> $37.4B (추정)</p>
+                        <p><strong>보유 항공기:</strong> 270+ 대</p>
+                        <p><strong>주요 기종:</strong> A380 (최대 운영사), 777</p>
+                        <p><strong>글로벌 네트워크:</strong> 두바이 허브 중심</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🏗️ 조달 시스템</h4>
+                        <p><strong>Emirates Engineering:</strong> 전문 조달 부문</p>
+                        <p><strong>EPIC 시스템:</strong> 공급업체 등록 플랫폼</p>
+                        <p><strong>글로벌 소싱:</strong> 전 세계 최적 공급업체</p>
+                        <p><strong>품질 기준:</strong> 프리미엄 서비스 요구사항</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 MRO 투자 규모</h4>
+                        <p><strong>연간 MRO:</strong> $1.5-2.0B (추정)</p>
+                        <p><strong>A380 특수성:</strong> 고가 부품 수요</p>
+                        <p><strong>Lufthansa Technik:</strong> MRO 서비스 계약</p>
+                        <p><strong>부품 재고:</strong> 대규모 스페어 파트</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 특별 요구사항</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>A380 부품:</strong> 초대형기 전용 부품</li>
+                            <li><strong>프리미엄 서비스:</strong> 고급 화장실 시설</li>
+                            <li><strong>중동 환경:</strong> 고온/모래 대응</li>
+                            <li><strong>장거리 운항:</strong> 고신뢰성 부품</li>
+                            <li><strong>럭셔리 인테리어:</strong> 맞춤형 솔루션</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lufthansa Customer 상세 정보 -->
+            <div class="company-detail" id="lufthansa-customer-detail">
+                <h3>🇩🇪 Lufthansa Group <span class="country-flag">🇩🇪</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 그룹 개요</h4>
+                        <p><strong>보유 항공기:</strong> 750+ 대 (그룹 전체)</p>
+                        <p><strong>주요 브랜드:</strong> Lufthansa, SWISS, Austrian</p>
+                        <p><strong>MRO 사업:</strong> Lufthansa Technik</p>
+                        <p><strong>글로벌 리더:</strong> MRO 서비스 제공업체</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🔧 Lufthansa Technik</h4>
+                        <p><strong>외부 고객:</strong> Emirates, Oman Air 등</p>
+                        <p><strong>혁신 기술:</strong> AeroSHARK 기술 개발</p>
+                        <p><strong>글로벌 네트워크:</strong> 전 세계 MRO 서비스</p>
+                        <p><strong>디지털화:</strong> 예측 정비 솔루션</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 MRO 시장 참여</h4>
+                        <p><strong>자체 MRO:</strong> $800M-1.2B/년</p>
+                        <p><strong>외부 서비스:</strong> $2-3B 매출</p>
+                        <p><strong>부품 조달:</strong> 대량 구매 시너지</p>
+                        <p><strong>기술 혁신:</strong> R&D 투자 확대</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🌍 글로벌 영향력</h4>
+                        <p><strong>기술 리더십:</strong> 항공기 정비 기술</p>
+                        <p><strong>공급업체 네트워크:</strong> 글로벌 파트너십</p>
+                        <p><strong>지속가능성:</strong> 친환경 솔루션</p>
+                        <p><strong>인증 기관:</strong> EASA, FAA 인증</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Singapore Airlines Customer 상세 정보 -->
+            <div class="company-detail" id="singapore-customer-detail">
+                <h3>🇸🇬 Singapore Airlines <span class="country-flag">🦁</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 항공사 개요</h4>
+                        <p><strong>보유 항공기:</strong> 230+ 대</p>
+                        <p><strong>주요 기종:</strong> A380, 777, A350, 787</p>
+                        <p><strong>네트워크:</strong> 아시아 태평양 허브</p>
+                        <p><strong>서비스 품질:</strong> 세계 최고 수준</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 MRO 투자</h4>
+                        <p><strong>연간 MRO:</strong> $600-800M (추정)</p>
+                        <p><strong>항공기 연령:</strong> 젊은 기단으로 효율적</p>
+                        <p><strong>정비 품질:</strong> 최고 기준 유지</p>
+                        <p><strong>아시아 기지:</strong> 창이 공항 정비 시설</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🔧 부품 조달 특성</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>프리미엄 부품:</strong> 최고 품질 요구</li>
+                            <li><strong>아시아 소싱:</strong> 지역 공급망 활용</li>
+                            <li><strong>혁신 기술:</strong> 차세대 항공기</li>
+                            <li><strong>환경 친화:</strong> 지속가능한 부품</li>
+                            <li><strong>디지털화:</strong> 스마트 정비 시스템</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 전략적 파트너십</h4>
+                        <p><strong>아시아 허브:</strong> 지역 MRO 네트워크</p>
+                        <p><strong>기술 혁신:</strong> 항공기 효율성 개선</p>
+                        <p><strong>품질 우선:</strong> 브랜드 이미지 보호</p>
+                        <p><strong>장기 계약:</strong> 안정적 공급망</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Southwest Airlines Customer 상세 정보 -->
+            <div class="company-detail" id="southwest-customer-detail">
+                <h3>🇺🇸 Southwest Airlines <span class="country-flag">💙</span></h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>📋 항공사 개요</h4>
+                        <p><strong>보유 항공기:</strong> 800+ 대</p>
+                        <p><strong>단일 기종:</strong> Boeing 737 only</p>
+                        <p><strong>비즈니스 모델:</strong> 저비용 항공사</p>
+                        <p><strong>운영 효율성:</strong> 높은 이용률</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>💰 비용 효율적 MRO</h4>
+                        <p><strong>연간 MRO:</strong> $800M-1B</p>
+                        <p><strong>단일 기종 이점:</strong> 부품 표준화</p>
+                        <p><strong>대량 구매:</strong> 스케일 경제 효과</p>
+                        <p><strong>효율성 중심:</strong> 비용 최적화</p>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🔧 737 전용 부품</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>엔진 부품:</strong> CFM56, LEAP-1B</li>
+                            <li><strong>표준화 씰:</strong> 737 시리즈 공통</li>
+                            <li><strong>유압 시스템:</strong> 표준 구성</li>
+                            <li><strong>랜딩기어:</strong> 동일 사양</li>
+                            <li><strong>객실 부품:</strong> 단순한 구성</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>📊 조달 전략</h4>
+                        <p><strong>단일 기종:</strong> 부품 관리 단순화</p>
+                        <p><strong>장기 계약:</strong> 안정적 가격 확보</p>
+                        <p><strong>예측 가능성:</strong> 정비 스케줄 최적화</p>
+                        <p><strong>공급업체 관계:</strong> 전략적 파트너십</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 경쟁 구조 섹션 -->
+        <div class="section" id="competitive-landscape">
+            <h2>⚔️ 경쟁 구조 및 시장 매트릭스</h2>
+            
+            <div class="competitive-matrix">
+                <h3>🏆 주요 기업 경쟁력 매트릭스</h3>
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th>기업</th>
+                            <th>매출 규모</th>
+                            <th>기술력</th>
+                            <th>글로벌 리치</th>
+                            <th>시장 점유율</th>
+                            <th>혁신성</th>
+                            <th>종합 평가</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Parker Hannifin</strong></td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-excellent">A+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Safran</strong></td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">A+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Collins Aerospace</strong></td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-excellent">A+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hutchinson</strong></td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-good">A</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Eaton</strong></td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">A</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Yokohama</strong></td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-good">B+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Trelleborg</strong></td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-good">B+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Senior Aerospace</strong></td>
+                            <td class="rating-poor">미흡</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-poor">미흡</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-average">B</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kirkhill</strong></td>
+                            <td class="rating-poor">미흡</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-poor">미흡</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-average">B-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>JPR</strong></td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-excellent">탁월</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-average">보통</td>
+                            <td class="rating-good">우수</td>
+                            <td class="rating-good">B+</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>📈 시장 세분화 분석</h3>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>🏆 시장 리더 (Tier 1)</h4>
+                        <p><strong>Parker Hannifin, Safran, Collins Aerospace</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>강력한 재무 기반과 글로벌 네트워크</li>
+                            <li>통합 솔루션 제공 능력</li>
+                            <li>지속적인 기술 혁신 투자</li>
+                            <li>주요 OEM과 장기 파트너십</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎯 전문 기업 (Tier 2)</h4>
+                        <p><strong>Hutchinson, Eaton, Trelleborg, JPR</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>특정 분야 기술적 우위</li>
+                            <li>지역별 강력한 시장 지위</li>
+                            <li>틈새 시장 전문성</li>
+                            <li>혁신적 제품 개발 역량</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🌟 틈새 전문가 (Tier 3)</h4>
+                        <p><strong>Yokohama, Senior Aerospace, Kirkhill</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>특화된 제품 라인</li>
+                            <li>국가별/지역별 전문성</li>
+                            <li>고품질 맞춤형 솔루션</li>
+                            <li>장기 고객 관계</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>⚡ 신흥 동향</h4>
+                        <p><strong>M&A 활발, 기술 융합 가속화</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Parker의 Meggitt 인수 효과</li>
+                            <li>디지털화 및 자동화 확산</li>
+                            <li>지속가능성 요구 증대</li>
+                            <li>공급망 지역화 트렌드</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 시장 전망 섹션 -->
+        <div class="section" id="market-forecast">
+            <h2>🔮 시장 전망 및 투자 기회</h2>
+            
+            <div class="forecast-cards">
+                <div class="forecast-card">
+                    <h3>📈 성장 동력</h3>
+                    <ul style="text-align: left; margin: 15px 0;">
+                        <li><strong>항공 여행 회복:</strong> 팬데믹 이후 강력한 수요 회복</li>
+                        <li><strong>신항공기 프로그램:</strong> 787, A350, LEAP 엔진 확산</li>
+                        <li><strong>MRO 시장 확대:</strong> 기존 항공기 유지보수 증가</li>
+                        <li><strong>지역항공 성장:</strong> 아시아, 중동, 아프리카 시장</li>
+                        <li><strong>화물 운송 급증:</strong> e-커머스 및 물류 혁신</li>
+                    </ul>
+                </div>
+                
+                <div class="forecast-card">
+                    <h3>⚡ 기술 혁신</h3>
+                    <ul style="text-align: left; margin: 15px 0;">
+                        <li><strong>지속가능한 소재:</strong> 바이오 기반 폴리머 개발</li>
+                        <li><strong>스마트 씰링:</strong> IoT 센서 통합 씰</li>
+                        <li><strong>자동화 시스템:</strong> 터치리스 화장실 기술</li>
+                        <li><strong>3D 프린팅:</strong> 맞춤형 부품 제조</li>
+                        <li><strong>디지털 트윈:</strong> 예측 유지보수</li>
+                    </ul>
+                </div>
+                
+                <div class="forecast-card">
+                    <h3>🌍 지역별 기회</h3>
+                    <ul style="text-align: left; margin: 15px 0;">
+                        <li><strong>아시아 태평양:</strong> 최고 성장률 지역</li>
+                        <li><strong>중동:</strong> 허브 공항 확장</li>
+                        <li><strong>북미:</strong> 기술 혁신 및 MRO 중심</li>
+                        <li><strong>유럽:</strong> 지속가능성 규제 선도</li>
+                        <li><strong>라틴 아메리카:</strong> 저비용 항공사 확산</li>
+                    </ul>
+                </div>
+                
+                <div class="forecast-card">
+                    <h3>⚠️ 주요 리스크</h3>
+                    <ul style="text-align: left; margin: 15px 0;">
+                        <li><strong>공급망 불안정:</strong> 원자재 조달 차질</li>
+                        <li><strong>인증 지연:</strong> 규제 승인 장기화</li>
+                        <li><strong>인플레이션:</strong> 제조 비용 상승 압력</li>
+                        <li><strong>경기 침체:</strong> 항공 수요 변동성</li>
+                        <li><strong>지정학적 긴장:</strong> 무역 분쟁 영향</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; border-radius: 15px;">
+                <h3 style="margin-bottom: 20px; text-align: center;">💼 투자 권고사항 및 전략적 인사이트</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div>
+                        <h4>🎯 단기 전략 (1-2년)</h4>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li>팬데믹 회복 수혜 기업 주목</li>
+                            <li>MRO 시장 확대 수혜주 투자</li>
+                            <li>공급망 안정성 확보 기업 선별</li>
+                            <li>캐시플로우 개선 기업 우선</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4>🚀 중장기 전략 (3-5년)</h4>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li>기술 혁신 선도 기업 투자</li>
+                            <li>지속가능성 솔루션 개발</li>
+                            <li>신흥 시장 진출 역량</li>
+                            <li>M&A 통한 역량 확장</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <p style="font-size: 1.1em; font-weight: bold; text-align: center;">
+                        🏆 최종 결론: 항공기용 제품 시장은 2025-2030년간 연평균 6-8% 성장이 예상되며, 
+                        기술 혁신과 지속가능성을 겸비한 기업들이 장기적 성공을 달성할 것으로 전망됩니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 방법론 -->
+        <div class="methodology">
+            <h3>📚 보고서 작성 방법론</h3>
+            <p>
+                본 확장 보고서는 <strong>Sequential Thinking MCP</strong>를 통한 체계적 분석과 <strong>Brave Search MCP</strong>를 활용한 
+                실시간 데이터 수집을 기반으로 작성되었습니다. 10개 주요 기업에 대한 심층 분석, 8개 항공기 부품 카테고리별 시장 세분화, 
+                그리고 최신 산업 동향 및 재무 데이터를 종합하여 전문가 수준의 인사이트를 제공합니다. 
+                모든 재무 데이터는 공개된 자료 및 산업 보고서를 바탕으로 한 추정치입니다.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 섹션 전환 함수
+        function showSection(sectionId) {
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 선택된 섹션 표시
+            document.getElementById(sectionId).classList.add('active');
+            
+            // 섹션으로 스크롤
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // 회사 버튼 클릭 이벤트 (제조사 + 고객사)
+        document.querySelectorAll('.company-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const company = this.getAttribute('data-company');
+                
+                // 모든 버튼 비활성화 및 상세정보 숨기기
+                document.querySelectorAll('.company-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.company-detail').forEach(detail => {
+                    detail.classList.remove('active');
+                });
+                
+                // 클릭된 버튼 활성화 및 해당 상세정보 표시
+                this.classList.add('active');
+                const detail = document.getElementById(company + '-detail');
+                if (detail) {
+                    detail.classList.add('active');
+                    
+                    // 부드러운 스크롤
+                    setTimeout(() => {
+                        detail.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 100);
+                }
+            });
+        });
+
+        // 맨 위로 스크롤 함수
+        function scrollToTop() {
+            document.getElementById('header').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // 페이지 로드 시 애니메이션
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // 스크롤 시 요소 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        // 관찰할 요소들 등록
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.insight-card, .segment-card, .detail-card, .forecast-card, .component-card').forEach(el => {
+                el.style.transform = 'translateY(20px)';
+                el.style.opacity = '0';
+                el.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // 네비게이션 버튼 호버 효과
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // 초기 설정: Executive Summary 섹션 활성화
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('executive-summary');
+        });
+    </script>
+</body>
+</html>

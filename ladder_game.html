@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사다리 게임</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .setup-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .names-grid,
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .ladder-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: visible;
+            width: 100%;
+        }
+
+        .ladder-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 500px;
+            position: relative;
+            padding: 20px 50px;
+            width: 100%;
+            overflow: visible;
+        }
+
+        .ladder-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin: 0 40px;
+            min-width: 140px;
+        }
+
+        .name-box,
+        .result-box {
+            width: 140px;
+            padding: 15px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-box {
+            margin-top: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .ladder-line {
+            width: 5px;
+            background: #000;
+            position: relative;
+            flex: 1;
+            min-height: 400px;
+        }
+
+        .rung {
+            position: absolute;
+            height: 5px;
+            background: #000;
+            z-index: 2;
+        }
+
+        .rung.left {
+            left: -100px;
+            width: 100px;
+        }
+
+        .rung.right {
+            right: -100px;
+            width: 100px;
+        }
+
+        .ball {
+            width: 28px;
+            height: 28px;
+            background: #ff0000;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 10;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+            border: 2px solid white;
+        }
+
+        .result-display {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-display.show {
+            display: block;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 사다리 게임 🎲</h1>
+        
+        <div class="setup-section" id="setupSection">
+            <div class="input-group">
+                <label for="playerCount">인원수 설정</label>
+                <input type="number" id="playerCount" min="2" max="20" value="4" onchange="updateInputs()">
+            </div>
+            
+            <div class="input-group">
+                <label>참가자 이름</label>
+                <div class="names-grid" id="namesGrid">
+                    <input type="text" placeholder="참가자 1" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    <input type="text" placeholder="참가자 2" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    <input type="text" placeholder="참가자 3" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    <input type="text" placeholder="참가자 4" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>결과 항목</label>
+                <div class="results-grid" id="resultsGrid">
+                    <input type="text" placeholder="결과 1" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    <input type="text" placeholder="결과 2" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    <input type="text" placeholder="결과 3" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    <input type="text" placeholder="결과 4" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                </div>
+            </div>
+            
+            <button onclick="generateLadder()">사다리 생성하기</button>
+        </div>
+        
+        <div class="ladder-container hidden" id="ladderContainer">
+            <div class="ladder-wrapper" id="ladderWrapper"></div>
+            <button onclick="startGame()">사다리 타기 시작!</button>
+        </div>
+        
+        <div class="result-display" id="resultDisplay">
+            <h2>🎉 결과 발표 🎉</h2>
+            <div id="resultContent"></div>
+            <button class="reset-btn" onclick="resetGame()">다시 시작하기</button>
+        </div>
+    </div>
+
+    <script>
+        let playerCount = 4;
+        let names = [];
+        let results = [];
+        let ladderData = [];
+        let balls = [];
+        let targetMapping = []; // 각 참가자가 도착할 목표 열
+
+        function updateInputs() {
+            try {
+                const playerCountInput = document.getElementById('playerCount');
+                if (!playerCountInput) {
+                    console.error('playerCount 입력 필드를 찾을 수 없습니다.');
+                    return;
+                }
+                
+                playerCount = parseInt(playerCountInput.value) || 2;
+                if (playerCount < 2) playerCount = 2;
+                if (playerCount > 20) playerCount = 20;
+                
+                const namesGrid = document.getElementById('namesGrid');
+                const resultsGrid = document.getElementById('resultsGrid');
+                
+                if (!namesGrid || !resultsGrid) {
+                    console.error('namesGrid 또는 resultsGrid를 찾을 수 없습니다.');
+                    return;
+                }
+                
+                // 기존 입력 필드에서 값 읽기
+                const existingNameInputs = namesGrid.querySelectorAll('input');
+                const existingResultInputs = resultsGrid.querySelectorAll('input');
+                
+                for (let i = 0; i < Math.min(existingNameInputs.length, playerCount); i++) {
+                    names[i] = existingNameInputs[i].value || '';
+                }
+                for (let i = 0; i < Math.min(existingResultInputs.length, playerCount); i++) {
+                    results[i] = existingResultInputs[i].value || '';
+                }
+                
+                // 기존 내용 제거
+                namesGrid.innerHTML = '';
+                resultsGrid.innerHTML = '';
+                
+                // 입력 필드 생성
+                for (let i = 0; i < playerCount; i++) {
+                    // 참가자 이름 입력
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.placeholder = `참가자 ${i + 1}`;
+                    nameInput.value = names[i] || '';
+                    nameInput.oninput = function() {
+                        names[i] = this.value || `참가자 ${i + 1}`;
+                    };
+                    namesGrid.appendChild(nameInput);
+                    
+                    // 결과 입력
+                    const resultInput = document.createElement('input');
+                    resultInput.type = 'text';
+                    resultInput.placeholder = `결과 ${i + 1}`;
+                    resultInput.value = results[i] || '';
+                    resultInput.oninput = function() {
+                        results[i] = this.value || `결과 ${i + 1}`;
+                    };
+                    resultsGrid.appendChild(resultInput);
+                }
+                
+                names = names.slice(0, playerCount);
+                results = results.slice(0, playerCount);
+            } catch (error) {
+                console.error('updateInputs 오류:', error);
+            }
+        }
+
+        function generateLadder() {
+            try {
+                console.log('사다리 생성 시작');
+                
+                const nameInputs = document.querySelectorAll('#namesGrid input');
+                const resultInputs = document.querySelectorAll('#resultsGrid input');
+                
+                console.log('참가자 입력 필드:', nameInputs.length);
+                console.log('결과 입력 필드:', resultInputs.length);
+                
+                if (nameInputs.length === 0 || resultInputs.length === 0) {
+                    alert('입력 필드를 찾을 수 없습니다. 페이지를 새로고침해주세요.');
+                    return;
+                }
+                
+                names = [];
+                results = [];
+                
+                nameInputs.forEach((input, i) => {
+                    names[i] = input.value || `참가자 ${i + 1}`;
+                });
+                
+                resultInputs.forEach((input, i) => {
+                    results[i] = input.value || `결과 ${i + 1}`;
+                });
+                
+                // 인원수 확인
+                playerCount = names.length;
+                if (playerCount < 2) {
+                    alert('최소 2명 이상의 참가자가 필요합니다.');
+                    return;
+                }
+                
+                console.log('참가자:', names);
+                console.log('결과:', results);
+                
+                // 결과를 섞어서 각 참가자에게 할당
+                results = shuffleArray([...results]);
+                
+                // 사다리 생성
+                createLadder();
+                
+                // 화면 전환
+                const setupSection = document.getElementById('setupSection');
+                const ladderContainer = document.getElementById('ladderContainer');
+                
+                if (setupSection && ladderContainer) {
+                    setupSection.classList.add('hidden');
+                    ladderContainer.classList.remove('hidden');
+                    console.log('사다리 생성 완료');
+                } else {
+                    console.error('setupSection 또는 ladderContainer를 찾을 수 없습니다.');
+                }
+            } catch (error) {
+                console.error('사다리 생성 오류:', error);
+                alert('사다리 생성 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function createLadder() {
+            try {
+                console.log('createLadder 시작, playerCount:', playerCount);
+                
+                // NAVER 방식: 사다리를 생성할 때부터 각 참가자가 서로 다른 목적지에 도착하도록 보장
+                let attempts = 0;
+                const maxAttempts = 50;
+                
+                while (attempts < maxAttempts) {
+                const wrapper = document.getElementById('ladderWrapper');
+                wrapper.innerHTML = '';
+                
+                ladderData = [];
+                balls = [];
+                
+                // 각 참가자가 도착할 목표 열 결정 (1:1 매핑)
+                targetMapping = [];
+                const available = [];
+                for (let i = 0; i < playerCount; i++) {
+                    available.push(i);
+                }
+                // 섞기
+                for (let i = 0; i < playerCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * available.length);
+                    targetMapping[i] = available.splice(randomIndex, 1)[0];
+                }
+                
+                // 가로대 위치 생성 (더 많은 가로대)
+                const rungCount = Math.floor(Math.random() * 12) + 10;
+                const rungPositions = [];
+                for (let i = 0; i < rungCount; i++) {
+                    rungPositions.push(0.1 + Math.random() * 0.8);
+                }
+                rungPositions.sort();
+                
+                // 각 열 사이 연결 결정
+                const connections = [];
+                for (let i = 0; i < playerCount - 1; i++) {
+                    connections[i] = [];
+                }
+                
+                // 각 참가자가 목표 열에 도착하도록 가로대 배치
+                for (let startCol = 0; startCol < playerCount; startCol++) {
+                    const targetCol = targetMapping[startCol];
+                    
+                    if (startCol !== targetCol) {
+                        // 목표 열까지 이동 경로 생성
+                        const steps = Math.abs(targetCol - startCol);
+                        const direction = startCol < targetCol ? 'right' : 'left';
+                        
+                        // 각 단계마다 가로대 배치
+                        for (let step = 0; step < steps; step++) {
+                            const colIdx = direction === 'right' ? startCol + step : startCol - 1 - step;
+                            if (colIdx >= 0 && colIdx < playerCount - 1) {
+                                // 각 단계마다 다른 위치에 가로대 배치
+                                const pos = 0.15 + (step + 1) * 0.7 / (steps + 1) + Math.random() * 0.1;
+                                
+                                // 기존 가로대와 겹치지 않도록 확인
+                                const tooClose = connections[colIdx].some(p => Math.abs(p - pos) < 0.1);
+                                if (!tooClose) {
+                                    connections[colIdx].push(pos);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // 추가 랜덤 가로대 (시각적 효과, 하지만 경로를 방해하지 않도록)
+                for (let i = 0; i < playerCount - 1; i++) {
+                    rungPositions.forEach(pos => {
+                        if (Math.random() > 0.8 && !connections[i].includes(pos)) {
+                            connections[i].push(pos);
+                        }
+                    });
+                }
+                
+                // 각 연결 배열 정렬
+                for (let i = 0; i < playerCount - 1; i++) {
+                    connections[i].sort();
+                }
+            
+                // 사다리 구조 생성
+                for (let i = 0; i < playerCount; i++) {
+                    const column = document.createElement('div');
+                    column.className = 'ladder-column';
+                    column.id = `col-${i}`;
+                    
+                    const nameBox = document.createElement('div');
+                    nameBox.className = 'name-box';
+                    nameBox.textContent = names[i];
+                    column.appendChild(nameBox);
+                    
+                    const line = document.createElement('div');
+                    line.className = 'ladder-line';
+                    line.id = `line-${i}`;
+                    
+                    const rungs = [];
+                    
+                    // 왼쪽 가로대
+                    if (i > 0 && connections[i - 1]) {
+                        connections[i - 1].forEach(pos => {
+                            const rung = document.createElement('div');
+                            rung.className = 'rung left';
+                            rung.style.top = `${pos * 100}%`;
+                            line.appendChild(rung);
+                            rungs.push({ pos: pos, dir: 'left' });
+                        });
+                    }
+                    
+                    // 오른쪽 가로대
+                    if (i < playerCount - 1 && connections[i]) {
+                        connections[i].forEach(pos => {
+                            const rung = document.createElement('div');
+                            rung.className = 'rung right';
+                            rung.style.top = `${pos * 100}%`;
+                            line.appendChild(rung);
+                            rungs.push({ pos: pos, dir: 'right' });
+                        });
+                    }
+                    
+                    rungs.sort((a, b) => a.pos - b.pos);
+                    
+                    column.appendChild(line);
+                    
+                    const resultBox = document.createElement('div');
+                    resultBox.className = 'result-box';
+                    resultBox.textContent = results[i];
+                    resultBox.id = `result-${i}`;
+                    column.appendChild(resultBox);
+                    
+                    wrapper.appendChild(column);
+                    
+                    // 공 생성
+                    const ball = document.createElement('div');
+                    ball.className = 'ball';
+                    ball.id = `ball-${i}`;
+                    wrapper.appendChild(ball);
+                    
+                    setTimeout(() => {
+                        const nameBoxRect = nameBox.getBoundingClientRect();
+                        const wrapperRect = wrapper.getBoundingClientRect();
+                        const lineRect = line.getBoundingClientRect();
+                        
+                        ball.style.position = 'absolute';
+                        ball.style.left = (lineRect.left + lineRect.width / 2 - wrapperRect.left - 14) + 'px';
+                        ball.style.top = (nameBoxRect.bottom - wrapperRect.top + 5) + 'px';
+                    }, 50);
+                    
+                    balls.push({
+                        el: ball,
+                        startCol: i,
+                        col: i
+                    });
+                    
+                    ladderData.push({ rungs: rungs });
+                }
+                
+                // 실제 결과 계산 및 검증
+                const actualCols = [];
+                for (let i = 0; i < playerCount; i++) {
+                    actualCols[i] = calcResult(i);
+                }
+                
+                // 중복 확인
+                const usedCols = new Set();
+                let hasDuplicate = false;
+                for (let i = 0; i < playerCount; i++) {
+                    if (usedCols.has(actualCols[i])) {
+                        hasDuplicate = true;
+                        break;
+                    }
+                    usedCols.add(actualCols[i]);
+                }
+                
+                // 중복이 없으면 완료
+                if (!hasDuplicate) {
+                    // 결과 박스를 실제 도착 열에 맞게 재배치
+                    const colToResult = new Array(playerCount);
+                    for (let i = 0; i < playerCount; i++) {
+                        colToResult[actualCols[i]] = results[targetMapping[i]];
+                    }
+                    
+                    for (let i = 0; i < playerCount; i++) {
+                        const resultBox = document.getElementById(`result-${i}`);
+                        if (resultBox && colToResult[i] !== undefined) {
+                            resultBox.textContent = colToResult[i];
+                        }
+                    }
+                    
+                    // 연결선 그리기
+                    setTimeout(() => {
+                        for (let i = 0; i < playerCount - 1; i++) {
+                            if (connections[i] && connections[i].length > 0) {
+                                connections[i].forEach(pos => {
+                                    const leftLine = document.getElementById(`line-${i}`);
+                                    const rightLine = document.getElementById(`line-${i + 1}`);
+                                    if (leftLine && rightLine) {
+                                        const connector = document.createElement('div');
+                                        connector.style.position = 'absolute';
+                                        connector.style.height = '5px';
+                                        connector.style.background = '#000';
+                                        connector.style.zIndex = '1';
+                                        
+                                        const leftRect = leftLine.getBoundingClientRect();
+                                        const rightRect = rightLine.getBoundingClientRect();
+                                        const wrapperRect = wrapper.getBoundingClientRect();
+                                        
+                                        const top = leftRect.top + (leftRect.height * pos) - wrapperRect.top;
+                                        const left = leftRect.right - wrapperRect.left;
+                                        const width = rightRect.left - leftRect.right;
+                                        
+                                        connector.style.top = top + 'px';
+                                        connector.style.left = left + 'px';
+                                        connector.style.width = width + 'px';
+                                        
+                                        wrapper.appendChild(connector);
+                                    }
+                                });
+                            }
+                        }
+                    }, 100);
+                    
+                    console.log('사다리 생성 성공 (시도 횟수:', attempts + 1, ')');
+                    return; // 성공적으로 생성 완료
+                }
+                
+                // 중복이 있으면 다시 시도
+                attempts++;
+                console.log('중복 발견, 재시도... (', attempts, '/', maxAttempts, ')');
+            }
+            
+            // 최대 시도 횟수 초과 시 경고
+            console.warn('사다리 생성 실패: 최대 시도 횟수 초과');
+            alert('사다리 생성에 실패했습니다. 다시 시도해주세요.');
+            } catch (error) {
+                console.error('createLadder 오류:', error);
+                alert('사다리 생성 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        async function startGame() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '진행 중...';
+            
+            // 결과 미리 계산 (사다리 구조에 따라)
+            const actualCols = [];
+            for (let i = 0; i < playerCount; i++) {
+                actualCols[i] = calcResult(i);
+            }
+            
+            // 실제 도착 열에 맞게 결과 박스 재배치
+            // 각 참가자가 도착하는 실제 열에 그 참가자의 목표 결과를 배치
+            rearrangeResultsToActual(actualCols);
+            
+            // 애니메이션은 실제 계산된 경로를 따라감
+            await Promise.all(balls.map((ball, idx) => animateBall(idx, actualCols[idx])));
+            
+            // 결과 표시는 실제 도착 열 기준
+            showResultsByActual(actualCols);
+            
+            btn.disabled = false;
+            btn.textContent = '사다리 타기 시작!';
+        }
+        
+        // 실제 도착 열에 맞게 결과 박스 재배치
+        function rearrangeResultsToActual(actualCols) {
+            // 각 참가자가 도착하는 실제 열에 그 참가자의 목표 결과를 배치
+            // 하지만 각 열에 하나씩만 배치되도록 보장
+            
+            const colToResult = new Array(playerCount).fill(null);
+            const colToPlayers = {}; // 각 열에 도착하는 참가자들
+            
+            // 각 참가자가 도착하는 열 수집
+            for (let i = 0; i < playerCount; i++) {
+                const actualCol = actualCols[i];
+                if (!colToPlayers[actualCol]) {
+                    colToPlayers[actualCol] = [];
+                }
+                colToPlayers[actualCol].push(i);
+            }
+            
+            // 각 열에 결과 배치
+            // 같은 열에 여러 참가자가 도착하면, 첫 번째 참가자의 목표 결과 사용
+            for (let col = 0; col < playerCount; col++) {
+                if (colToPlayers[col] && colToPlayers[col].length > 0) {
+                    const firstPlayer = colToPlayers[col][0];
+                    colToResult[col] = results[targetMapping[firstPlayer]];
+                }
+            }
+            
+            // 사용되지 않은 열 처리
+            const usedResults = new Set();
+            for (let i = 0; i < playerCount; i++) {
+                if (colToResult[i] !== null) {
+                    usedResults.add(colToResult[i]);
+                }
+            }
+            
+            // 사용 가능한 결과 찾기
+            const availableResults = [];
+            for (let i = 0; i < playerCount; i++) {
+                if (!usedResults.has(results[i])) {
+                    availableResults.push(results[i]);
+                }
+            }
+            
+            // 사용되지 않은 열에 남은 결과 배치
+            let availIndex = 0;
+            for (let col = 0; col < playerCount; col++) {
+                if (colToResult[col] === null && availIndex < availableResults.length) {
+                    colToResult[col] = availableResults[availIndex++];
+                }
+            }
+            
+            // 모든 열에 결과가 배치되었는지 확인
+            for (let i = 0; i < playerCount; i++) {
+                if (colToResult[i] === null) {
+                    colToResult[i] = results[i];
+                }
+            }
+            
+            // 결과 박스 업데이트
+            for (let i = 0; i < playerCount; i++) {
+                const resultBox = document.getElementById(`result-${i}`);
+                if (resultBox) {
+                    resultBox.textContent = colToResult[i];
+                }
+            }
+        }
+        
+        // 실제 도착 열 기준으로 결과 표시
+        function showResultsByActual(actualCols) {
+            const display = document.getElementById('resultDisplay');
+            const content = document.getElementById('resultContent');
+            
+            content.innerHTML = '';
+            
+            // 각 참가자가 도착한 실제 열의 결과 박스 내용 표시
+            for (let i = 0; i < playerCount; i++) {
+                const actualCol = actualCols[i];
+                const resultBox = document.getElementById(`result-${actualCol}`);
+                const resultText = resultBox ? resultBox.textContent : results[i];
+                
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.textContent = `${names[i]} → ${resultText}`;
+                content.appendChild(item);
+            }
+            
+            display.classList.add('show');
+        }
+
+        function calcResult(startCol) {
+            let col = startCol;
+            let pos = 0;
+            
+            // 사다리를 타며 이동 시뮬레이션
+            while (pos < 0.99) {
+                // 현재 열에서 만날 수 있는 다음 가로대 찾기
+                const next = ladderData[col].rungs
+                    .filter(r => r.pos > pos)
+                    .sort((a, b) => a.pos - b.pos)[0];
+                
+                if (next) {
+                    pos = next.pos;
+                    // 가로대를 따라 옆 열로 이동
+                    if (next.dir === 'right' && col < playerCount - 1) {
+                        col++;
+                    } else if (next.dir === 'left' && col > 0) {
+                        col--;
+                    }
+                } else {
+                    // 더 이상 가로대가 없으면 현재 열에 머무름
+                    break;
+                }
+            }
+            
+            return col;
+        }
+
+        async function animateBall(idx, finalCol) {
+            const ball = balls[idx];
+            let col = ball.startCol;
+            let pos = 0;
+            
+            const wrapper = document.getElementById('ladderWrapper');
+            const wrapperRect = wrapper.getBoundingClientRect();
+            
+            // 초기 위치를 이름 박스 바로 아래로 설정
+            const nameBox = document.querySelector(`#col-${col} .name-box`);
+            const startLine = document.getElementById(`line-${col}`);
+            
+            if (nameBox && startLine) {
+                const nameBoxRect = nameBox.getBoundingClientRect();
+                const lineRect = startLine.getBoundingClientRect();
+                ball.el.style.position = 'absolute';
+                ball.el.style.left = (lineRect.left + lineRect.width / 2 - wrapperRect.left - 14) + 'px';
+                ball.el.style.top = (nameBoxRect.bottom - wrapperRect.top + 5) + 'px';
+            }
+            
+            // 이동
+            while (pos < 0.99) {
+                const next = ladderData[col].rungs
+                    .filter(r => r.pos > pos)
+                    .sort((a, b) => a.pos - b.pos)[0];
+                
+                if (next) {
+                    const line = document.getElementById(`line-${col}`);
+                    const lineRect = line.getBoundingClientRect();
+                    
+                    await moveDown(ball.el, pos, next.pos, lineRect, wrapperRect);
+                    pos = next.pos;
+                    
+                    if (next.dir === 'right' && col < playerCount - 1) {
+                        await moveRight(ball.el, col, col + 1, pos);
+                        col++;
+                    } else if (next.dir === 'left' && col > 0) {
+                        await moveLeft(ball.el, col, col - 1, pos);
+                        col--;
+                    }
+                } else {
+                    const line = document.getElementById(`line-${col}`);
+                    const lineRect = line.getBoundingClientRect();
+                    await moveDown(ball.el, pos, 1, lineRect, wrapperRect);
+                    break;
+                }
+            }
+            
+            // 결과로 이동
+            const resultBox = document.getElementById(`result-${finalCol}`);
+            const resultRect = resultBox.getBoundingClientRect();
+            ball.el.style.left = (resultRect.left + resultRect.width / 2 - wrapperRect.left - 14) + 'px';
+            ball.el.style.top = (resultRect.top + resultRect.height / 2 - wrapperRect.top - 14) + 'px';
+        }
+
+        function moveDown(el, from, to, lineRect, wrapperRect) {
+            return new Promise(resolve => {
+                const startY = lineRect.top + (lineRect.height * from) - wrapperRect.top - 14;
+                const endY = lineRect.top + (lineRect.height * to) - wrapperRect.top - 14;
+                const dist = Math.abs(endY - startY);
+                const dur = Math.max(200, dist * 1.5);
+                
+                let start = null;
+                function anim(now) {
+                    if (!start) start = now;
+                    const prog = Math.min((now - start) / dur, 1);
+                    el.style.top = (startY + (endY - startY) * prog) + 'px';
+                    if (prog < 1) {
+                        requestAnimationFrame(anim);
+                    } else {
+                        resolve();
+                    }
+                }
+                requestAnimationFrame(anim);
+            });
+        }
+
+        function moveRight(el, fromCol, toCol, pos) {
+            return new Promise(resolve => {
+                const wrapper = document.getElementById('ladderWrapper');
+                const wrapperRect = wrapper.getBoundingClientRect();
+                const fromLine = document.getElementById(`line-${fromCol}`);
+                const toLine = document.getElementById(`line-${toCol}`);
+                const fromRect = fromLine.getBoundingClientRect();
+                const toRect = toLine.getBoundingClientRect();
+                
+                const startX = fromRect.left + fromRect.width / 2 - wrapperRect.left - 14;
+                const endX = toRect.left + toRect.width / 2 - wrapperRect.left - 14;
+                const dist = Math.abs(endX - startX);
+                const dur = Math.max(150, dist * 1.2);
+                
+                let start = null;
+                function anim(now) {
+                    if (!start) start = now;
+                    const prog = Math.min((now - start) / dur, 1);
+                    el.style.left = (startX + (endX - startX) * prog) + 'px';
+                    if (prog < 1) {
+                        requestAnimationFrame(anim);
+                    } else {
+                        resolve();
+                    }
+                }
+                requestAnimationFrame(anim);
+            });
+        }
+
+        function moveLeft(el, fromCol, toCol, pos) {
+            return moveRight(el, fromCol, toCol, pos);
+        }
+
+
+        function resetGame() {
+            document.getElementById('setupSection').classList.remove('hidden');
+            document.getElementById('ladderContainer').classList.add('hidden');
+            document.getElementById('resultDisplay').classList.remove('show');
+            
+            ladderData = [];
+            balls = [];
+            targetMapping = [];
+            updateInputs();
+        }
+
+        // 전역 함수로 등록 (onchange에서 호출 가능하도록)
+        window.updateInputs = updateInputs;
+        window.generateLadder = generateLadder;
+        window.startGame = startGame;
+        window.resetGame = resetGame;
+        
+        // 초기화 함수
+        function init() {
+            const namesGrid = document.getElementById('namesGrid');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            if (namesGrid && resultsGrid) {
+                console.log('초기화 시작');
+                updateInputs();
+                console.log('초기화 완료');
+            } else {
+                console.log('요소를 찾을 수 없음, 재시도...');
+                // 요소가 아직 준비되지 않았으면 잠시 후 다시 시도
+                setTimeout(init, 100);
+            }
+        }
+        
+        // 페이지 로드 완료 후 초기화
+        if (document.readyState === 'complete') {
+            // 이미 로드 완료된 경우
+            setTimeout(init, 0);
+        } else if (document.readyState === 'loading') {
+            // 아직 로딩 중인 경우
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(init, 0);
+            });
+        } else {
+            // interactive 상태
+            setTimeout(init, 0);
+        }
+        
+        // 추가 보장을 위해 load 이벤트에도 등록
+        window.addEventListener('load', function() {
+            setTimeout(init, 0);
+        });
+    </script>
+</body>
+</html>
