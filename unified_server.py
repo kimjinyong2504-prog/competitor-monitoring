@@ -687,7 +687,7 @@ def main():
     crawlers["hutchinson"] = HutchinsonNewsCrawler()
     print("[초기화] 완료\n")
     
-    # 각 업체별 초기 데이터 파일 확인 및 생성
+    # 각 업체별 초기 데이터 파일 확인 (크롤링은 하지 않음)
     companies = {
         "hwasung": ("251215", HwasungNewsCrawler),
         "yuil": ("251215_yuil", YuilNewsCrawler),
@@ -701,53 +701,37 @@ def main():
         data_file = f"{folder}/data.json"
         if not os.path.exists(data_file):
             print(f"[초기화] {company_name} 데이터 파일이 없습니다.")
-            print(f"[초기화] 초기 크롤링은 백그라운드에서 진행됩니다. (서버 시작 우선)")
-            # 초기 크롤링은 백그라운드에서 실행 (서버 시작을 지연시키지 않음)
-            def initial_crawl(company, folder_path, crawler_instance):
-                try:
-                    print(f"[초기 크롤링 시작] {company}")
-                    articles = crawler_instance.crawl_all_news()
-                    crawler_instance.save_to_json(articles, f"{folder_path}/data.json")
-                    print(f"[초기 크롤링 완료] {company}: {len(articles)}개 기사")
-                except Exception as e:
-                    print(f"[초기 크롤링 오류] {company}: {str(e)}")
-            
-            crawler = get_crawler(company_name)
-            crawl_thread = threading.Thread(
-                target=initial_crawl, 
-                args=(company_name, folder, crawler),
-                daemon=True
-            )
-            crawl_thread.start()
-            print(f"[초기화] {company_name} 백그라운드 크롤링 시작됨\n")
+            print(f"[초기화] 새로고침 버튼을 눌러 크롤링을 시작하세요.")
     
+    # 자동 스케줄러 비활성화 (수동 업데이트만 사용)
     # 각 업체별 스케줄러 시작 (1시간 = 3600초)
-    print("[스케줄러 시작] 각 업체별 자동 업데이트 스케줄러를 시작합니다...")
+    # print("[스케줄러 시작] 각 업체별 자동 업데이트 스케줄러를 시작합니다...")
+    # 
+    # # 화승 알엔에이 스케줄러
+    # schedulers["hwasung"] = UnifiedNewsScheduler(crawlers["hwasung"], interval_seconds=3600, company_name="화승 알엔에이")
+    # schedulers["hwasung"].start()
+    # 
+    # # 유일고무 스케줄러
+    # schedulers["yuil"] = UnifiedNewsScheduler(crawlers["yuil"], interval_seconds=3600, company_name="유일고무")
+    # schedulers["yuil"].start()
+    # 
+    # # AIA 스케줄러
+    # schedulers["aia"] = UnifiedNewsScheduler(crawlers["aia"], interval_seconds=3600, company_name="AIA(아이아)")
+    # schedulers["aia"].start()
+    # 
+    # # Cooper Standard 스케줄러
+    # schedulers["cooper"] = UnifiedNewsScheduler(crawlers["cooper"], interval_seconds=3600, company_name="Cooper Standard")
+    # schedulers["cooper"].start()
+    # 
+    # # SaarGummi 스케줄러
+    # schedulers["saargummi"] = UnifiedNewsScheduler(crawlers["saargummi"], interval_seconds=3600, company_name="SaarGummi")
+    # schedulers["saargummi"].start()
+    # 
+    # # Hutchinson 스케줄러
+    # schedulers["hutchinson"] = UnifiedNewsScheduler(crawlers["hutchinson"], interval_seconds=3600, company_name="Hutchinson")
+    # schedulers["hutchinson"].start()
     
-    # 화승 알엔에이 스케줄러
-    schedulers["hwasung"] = UnifiedNewsScheduler(crawlers["hwasung"], interval_seconds=3600, company_name="화승 알엔에이")
-    schedulers["hwasung"].start()
-    
-    # 유일고무 스케줄러
-    schedulers["yuil"] = UnifiedNewsScheduler(crawlers["yuil"], interval_seconds=3600, company_name="유일고무")
-    schedulers["yuil"].start()
-    
-    # AIA 스케줄러
-    schedulers["aia"] = UnifiedNewsScheduler(crawlers["aia"], interval_seconds=3600, company_name="AIA(아이아)")
-    schedulers["aia"].start()
-    
-    # Cooper Standard 스케줄러
-    schedulers["cooper"] = UnifiedNewsScheduler(crawlers["cooper"], interval_seconds=3600, company_name="Cooper Standard")
-    schedulers["cooper"].start()
-    
-    # SaarGummi 스케줄러
-    schedulers["saargummi"] = UnifiedNewsScheduler(crawlers["saargummi"], interval_seconds=3600, company_name="SaarGummi")
-    schedulers["saargummi"].start()
-    
-    # Hutchinson 스케줄러
-    schedulers["hutchinson"] = UnifiedNewsScheduler(crawlers["hutchinson"], interval_seconds=3600, company_name="Hutchinson")
-    schedulers["hutchinson"].start()
-    
+    print("[초기화] 자동 크롤링이 비활성화되었습니다. 새로고침 버튼을 통해 수동으로 업데이트하세요.")
     print()
     
     # 웹 서버 시작 (메인 스레드에서 직접 실행 - Render 헬스체크를 위해)
