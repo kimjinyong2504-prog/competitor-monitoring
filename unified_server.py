@@ -15,6 +15,28 @@ from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 from datetime import datetime, timezone, timedelta
 
+# 로그 파일 설정
+LOG_FILE = Path(__file__).parent / "server.log"
+
+class TeeOutput:
+    """출력을 콘솔과 파일에 동시에 기록"""
+    def __init__(self, file_path):
+        self.terminal = sys.stdout
+        self.log_file = open(file_path, 'a', encoding='utf-8')
+    
+    def write(self, message):
+        self.terminal.write(message)
+        self.log_file.write(message)
+        self.log_file.flush()
+    
+    def flush(self):
+        self.terminal.flush()
+        self.log_file.flush()
+    
+    def close(self):
+        if self.log_file:
+            self.log_file.close()
+
 # 데이터 백업 모듈 import (선택적)
 try:
     from data_backup import backup_to_github, load_from_github
@@ -59,6 +81,33 @@ spec_aia_crawler = importlib.util.spec_from_file_location(
 crawler_aia_module = importlib.util.module_from_spec(spec_aia_crawler)
 spec_aia_crawler.loader.exec_module(crawler_aia_module)
 AIANewsCrawler = crawler_aia_module.AIANewsCrawler
+
+# Cooper Standard
+spec_cooper_crawler = importlib.util.spec_from_file_location(
+    "crawler_cooper", 
+    Path(__file__).parent / "251215_cooper" / "crawler.py"
+)
+crawler_cooper_module = importlib.util.module_from_spec(spec_cooper_crawler)
+spec_cooper_crawler.loader.exec_module(crawler_cooper_module)
+CooperStandardNewsCrawler = crawler_cooper_module.CooperStandardNewsCrawler
+
+# SaarGummi
+spec_saargummi_crawler = importlib.util.spec_from_file_location(
+    "crawler_saargummi", 
+    Path(__file__).parent / "251215_saargummi" / "crawler.py"
+)
+crawler_saargummi_module = importlib.util.module_from_spec(spec_saargummi_crawler)
+spec_saargummi_crawler.loader.exec_module(crawler_saargummi_module)
+SaarGummiNewsCrawler = crawler_saargummi_module.SaarGummiNewsCrawler
+
+# Hutchinson
+spec_hutchinson_crawler = importlib.util.spec_from_file_location(
+    "crawler_hutchinson", 
+    Path(__file__).parent / "251215_hutchinson" / "crawler.py"
+)
+crawler_hutchinson_module = importlib.util.module_from_spec(spec_hutchinson_crawler)
+spec_hutchinson_crawler.loader.exec_module(crawler_hutchinson_module)
+HutchinsonNewsCrawler = crawler_hutchinson_module.HutchinsonNewsCrawler
 
 # 스케줄러는 직접 구현 (import 충돌 방지)
 class UnifiedNewsScheduler:
@@ -178,14 +227,20 @@ os.chdir(BASE_DIR)
 crawlers = {
     "hwasung": None,
     "yuil": None,
-    "aia": None
+    "aia": None,
+    "cooper": None,
+    "saargummi": None,
+    "hutchinson": None
 }
 
 # 각 업체별 스케줄러 인스턴스
 schedulers = {
     "hwasung": None,
     "yuil": None,
-    "aia": None
+    "aia": None,
+    "cooper": None,
+    "saargummi": None,
+    "hutchinson": None
 }
 
 def get_crawler(company: str):
@@ -202,6 +257,18 @@ def get_crawler(company: str):
         if crawlers["aia"] is None:
             crawlers["aia"] = AIANewsCrawler()
         return crawlers["aia"]
+    elif company == "cooper":
+        if crawlers["cooper"] is None:
+            crawlers["cooper"] = CooperStandardNewsCrawler()
+        return crawlers["cooper"]
+    elif company == "saargummi":
+        if crawlers["saargummi"] is None:
+            crawlers["saargummi"] = SaarGummiNewsCrawler()
+        return crawlers["saargummi"]
+    elif company == "hutchinson":
+        if crawlers["hutchinson"] is None:
+            crawlers["hutchinson"] = HutchinsonNewsCrawler()
+        return crawlers["hutchinson"]
     return None
 
 def update_news_now(company: str):
@@ -296,6 +363,12 @@ def get_data_file_path(company: str) -> str:
         return "251215_yuil/data.json"
     elif company == "aia":
         return "251215_aia/data.json"
+    elif company == "cooper":
+        return "251215_cooper/data.json"
+    elif company == "saargummi":
+        return "251215_saargummi/data.json"
+    elif company == "hutchinson":
+        return "251215_hutchinson/data.json"
     return "data.json"
 
 def get_deleted_articles_file_path(company: str) -> str:
@@ -306,6 +379,12 @@ def get_deleted_articles_file_path(company: str) -> str:
         return "251215_yuil/deleted_articles.json"
     elif company == "aia":
         return "251215_aia/deleted_articles.json"
+    elif company == "cooper":
+        return "251215_cooper/deleted_articles.json"
+    elif company == "saargummi":
+        return "251215_saargummi/deleted_articles.json"
+    elif company == "hutchinson":
+        return "251215_hutchinson/deleted_articles.json"
     return "deleted_articles.json"
 
 def load_deleted_articles(company: str) -> set:
@@ -508,6 +587,12 @@ class UnifiedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.path = '/251215_yuil/index.html'
         elif path == '/aia' or path == '/aia/':
             self.path = '/251215_aia/index.html'
+        elif path == '/cooper' or path == '/cooper/':
+            self.path = '/251215_cooper/index.html'
+        elif path == '/saargummi' or path == '/saargummi/':
+            self.path = '/251215_saargummi/index.html'
+        elif path == '/hutchinson' or path == '/hutchinson/':
+            self.path = '/251215_hutchinson/index.html'
         
         # 정적 파일 서빙
         try:
@@ -533,6 +618,9 @@ def start_web_server(port=None):
             print(f"화승 R&A: http://localhost:{port}/hwasung")
             print(f"유일고무: http://localhost:{port}/yuil")
             print(f"AIA(아이아): http://localhost:{port}/aia")
+            print(f"Cooper Standard: http://localhost:{port}/cooper")
+            print(f"SaarGummi: http://localhost:{port}/saargummi")
+            print(f"Hutchinson: http://localhost:{port}/hutchinson")
             print()
             
             try:
@@ -556,9 +644,15 @@ def start_web_server(port=None):
 
 def main():
     """메인 함수"""
+    # 로그 파일로 출력 리다이렉트 (콘솔에도 출력)
+    tee = TeeOutput(LOG_FILE)
+    sys.stdout = tee
+    sys.stderr = tee
+    
     print("="*60)
     print("통합 경쟁사 뉴스 모니터링 시스템")
     print("="*60)
+    print(f"[로그] 로그 파일: {LOG_FILE.absolute()}")
     print()
     
     # GitHub에서 데이터 복원 (활성화된 경우)
@@ -588,13 +682,19 @@ def main():
     crawlers["hwasung"] = HwasungNewsCrawler()
     crawlers["yuil"] = YuilNewsCrawler()
     crawlers["aia"] = AIANewsCrawler()
+    crawlers["cooper"] = CooperStandardNewsCrawler()
+    crawlers["saargummi"] = SaarGummiNewsCrawler()
+    crawlers["hutchinson"] = HutchinsonNewsCrawler()
     print("[초기화] 완료\n")
     
     # 각 업체별 초기 데이터 파일 확인 및 생성
     companies = {
         "hwasung": ("251215", HwasungNewsCrawler),
         "yuil": ("251215_yuil", YuilNewsCrawler),
-        "aia": ("251215_aia", AIANewsCrawler)
+        "aia": ("251215_aia", AIANewsCrawler),
+        "cooper": ("251215_cooper", CooperStandardNewsCrawler),
+        "saargummi": ("251215_saargummi", SaarGummiNewsCrawler),
+        "hutchinson": ("251215_hutchinson", HutchinsonNewsCrawler)
     }
     
     for company_name, (folder, CrawlerClass) in companies.items():
@@ -636,7 +736,17 @@ def main():
     schedulers["aia"] = UnifiedNewsScheduler(crawlers["aia"], interval_seconds=3600, company_name="AIA(아이아)")
     schedulers["aia"].start()
     
-    print()
+    # Cooper Standard 스케줄러
+    schedulers["cooper"] = UnifiedNewsScheduler(crawlers["cooper"], interval_seconds=3600, company_name="Cooper Standard")
+    schedulers["cooper"].start()
+    
+    # SaarGummi 스케줄러
+    schedulers["saargummi"] = UnifiedNewsScheduler(crawlers["saargummi"], interval_seconds=3600, company_name="SaarGummi")
+    schedulers["saargummi"].start()
+    
+    # Hutchinson 스케줄러
+    schedulers["hutchinson"] = UnifiedNewsScheduler(crawlers["hutchinson"], interval_seconds=3600, company_name="Hutchinson")
+    schedulers["hutchinson"].start()
     
     print()
     
