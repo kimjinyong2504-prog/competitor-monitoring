@@ -327,26 +327,26 @@ class CooperStandardNewsCrawler:
                             link = item.get("originallink", "") or item.get("link", "")
                             print(f"  [경고] 출처를 찾을 수 없음 - 링크: {link[:80]}")
                         
-                            # 번역 추가 (영어인 경우)
-                            title_translated = None
-                            description_translated = None
-                            if self._is_mostly_english(title):
-                                title_translated = self._translate_to_korean(title)
-                            if description and self._is_mostly_english(description):
-                                description_translated = self._translate_to_korean(description)
-                            
-                            article = {
-                                "title": title,
-                                "title_translated": title_translated,
-                                "link": item.get("link", ""),
-                                "description": description,
-                                "description_translated": description_translated,
-                                "pub_date": item.get("pubDate", ""),
-                                "source": source,
-                                "article_id": self._generate_id(item.get("link", "")),
-                                "search_keyword": query,
-                                "source_type": "naver"
-                            }
+                        # 번역 추가 (영어인 경우)
+                        title_translated = None
+                        description_translated = None
+                        if self._is_mostly_english(title):
+                            title_translated = self._translate_to_korean(title)
+                        if description and self._is_mostly_english(description):
+                            description_translated = self._translate_to_korean(description)
+                        
+                        article = {
+                            "title": title,
+                            "title_translated": title_translated,
+                            "link": item.get("link", ""),
+                            "description": description,
+                            "description_translated": description_translated,
+                            "pub_date": item.get("pubDate", ""),
+                            "source": source,
+                            "article_id": self._generate_id(item.get("link", "")),
+                            "search_keyword": query,
+                            "source_type": "naver"
+                        }
                         all_articles.append(article)
                 
                 start += len(items)
