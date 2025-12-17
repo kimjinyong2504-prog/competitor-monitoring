@@ -28,6 +28,15 @@ import feedparser
 # SSL 경고 메시지 비활성화
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# 번역 라이브러리 (선택적 사용)
+try:
+    from googletrans import Translator
+    TRANSLATOR_AVAILABLE = True
+    translator = Translator()
+except ImportError:
+    TRANSLATOR_AVAILABLE = False
+    translator = None
+
 NAVER_CLIENT_ID = "00q938ugMTSfuzjWuLk4"
 NAVER_CLIENT_SECRET = "MrIG7TWaGW"
 
@@ -69,6 +78,40 @@ class CooperStandardNewsCrawler:
         text = text.replace("&#39;", "'")
         text = text.replace("&nbsp;", " ")
         return text.strip()
+    
+    def _is_mostly_english(self, text: str) -> bool:
+        """텍스트가 주로 영어인지 판단"""
+        if not text:
+            return False
+        # 한글이 포함되어 있으면 영어가 아님
+        if re.search(r'[가-힣]', text):
+            return False
+        # 영문자, 숫자, 공백, 기본 구두점이 주를 이루는지 확인
+        english_chars = len(re.findall(r'[a-zA-Z0-9\s.,!?;:\-()\[\]{}"\']', text))
+        total_chars = len(re.sub(r'\s', '', text))
+        if total_chars == 0:
+            return False
+        return (english_chars / total_chars) > 0.7
+    
+    def _translate_to_korean(self, text: str) -> Optional[str]:
+        """영어 텍스트를 한국어로 번역"""
+        if not text or not TRANSLATOR_AVAILABLE or not translator:
+            return None
+        
+        try:
+            # 텍스트가 너무 길면 잘라서 번역
+            max_length = 5000
+            if len(text) > max_length:
+                text = text[:max_length]
+            
+            result = translator.translate(text, src='en', dest='ko')
+            if result and result.text:
+                return result.text
+        except Exception as e:
+            print(f"    [번역 오류] {str(e)}")
+            return None
+        
+        return None
     
     def _extract_source(self, item: Dict) -> str:
         """출처 정보 추출"""
@@ -284,16 +327,26 @@ class CooperStandardNewsCrawler:
                             link = item.get("originallink", "") or item.get("link", "")
                             print(f"  [경고] 출처를 찾을 수 없음 - 링크: {link[:80]}")
                         
-                        article = {
-                            "title": title,
-                            "link": item.get("link", ""),
-                            "description": description,
-                            "pub_date": item.get("pubDate", ""),
-                            "source": source,
-                            "article_id": self._generate_id(item.get("link", "")),
-                            "search_keyword": query,
-                            "source_type": "naver"
-                        }
+                            # 번역 추가 (영어인 경우)
+                            title_translated = None
+                            description_translated = None
+                            if self._is_mostly_english(title):
+                                title_translated = self._translate_to_korean(title)
+                            if description and self._is_mostly_english(description):
+                                description_translated = self._translate_to_korean(description)
+                            
+                            article = {
+                                "title": title,
+                                "title_translated": title_translated,
+                                "link": item.get("link", ""),
+                                "description": description,
+                                "description_translated": description_translated,
+                                "pub_date": item.get("pubDate", ""),
+                                "source": source,
+                                "article_id": self._generate_id(item.get("link", "")),
+                                "search_keyword": query,
+                                "source_type": "naver"
+                            }
                         all_articles.append(article)
                 
                 start += len(items)
@@ -434,10 +487,20 @@ class CooperStandardNewsCrawler:
                                 elif hasattr(entry, "description"):
                                     description = self._clean_html(entry.description)
                             
+                            # 번역 추가 (영어인 경우)
+                            title_translated = None
+                            description_translated = None
+                            if self._is_mostly_english(title):
+                                title_translated = self._translate_to_korean(title)
+                            if description and self._is_mostly_english(description):
+                                description_translated = self._translate_to_korean(description)
+                            
                             article = {
                                 "title": title,
+                                "title_translated": title_translated,
                                 "link": link,
                                 "description": description,
+                                "description_translated": description_translated,
                                 "pub_date": pub_date,
                                 "source": source,
                                 "article_id": article_id,
@@ -621,10 +684,20 @@ class CooperStandardNewsCrawler:
                                     pub_date = meta['article:published_time']
                                     break
                         
+                        # 번역 추가 (영어인 경우)
+                        title_translated = None
+                        description_translated = None
+                        if self._is_mostly_english(title):
+                            title_translated = self._translate_to_korean(title)
+                        if description and self._is_mostly_english(description):
+                            description_translated = self._translate_to_korean(description)
+                        
                         article = {
                             "title": title,
+                            "title_translated": title_translated,
                             "link": link,
                             "description": description,
+                            "description_translated": description_translated,
                             "pub_date": pub_date,
                             "source": source,
                             "article_id": article_id,
